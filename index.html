@@ -12,105 +12,133 @@
             display: flex;
             flex-direction: column;
             min-height: 100vh;
-        }
-
-        header {
-            position: relative;
-            padding: 10px 20px;
-        }
-
-        .logo {
-            position: absolute;
-            top: 10px;
-            right: 20px;
-            width: 80px;
-            height: auto;
-        }
-
-        .container {
-            flex: 1;
             text-align: center;
-            padding: 20px;
         }
-
-        h1 {
-            color: #0077b6;
-            font-size: 2.5rem;
-            margin-top: 80px;
-        }
-
-        p {
-            color: #023047;
-            font-size: 1.2rem;
-        }
-
-        .quote {
-            font-style: italic;
-            color: #ff5733;
-            margin: 20px 0;
-            font-size: 1.3rem;
-        }
-
-        button {
-            background-color: #00b4d8;
-            color: white;
-            padding: 12px 24px;
-            border: none;
-            border-radius: 8px;
-            font-size: 1rem;
-            cursor: pointer;
-            transition: background 0.3s;
-        }
-
-        button:hover {
-            background-color: #0077b6;
-        }
-
-        footer {
-            background-color: #0077b6;
-            color: white;
-            text-align: center;
-            padding: 10px 0;
-            font-size: 0.9rem;
-        }
-
-        /* Make it mobile friendly */
+        header { position: relative; padding: 10px 20px; }
+        .logo { position: absolute; top: 10px; right: 20px; width: 80px; height: auto; }
+        .container { flex: 1; padding: 20px; }
+        h1, h2 { color: #222; }
+        p { color: #444; font-size: 18px; }
+        .quote { font-style: italic; color: #ff5733; margin: 20px 0; font-size: 1.3rem; }
+        button { background-color: #ff6600; color: white; padding: 12px 24px; font-size: 18px; border: none; cursor: pointer; border-radius: 8px; transition: background 0.3s; }
+        button:hover { background-color: #e65c00; }
+        input, select { display: block; margin: 10px auto; padding: 10px; width: 250px; border-radius: 6px; border: 1px solid #ccc; }
+        footer { background-color: #0077b6; color: white; text-align: center; padding: 10px 0; font-size: 0.9rem; }
         @media (max-width: 600px) {
-            .logo {
-                width: 60px;
-            }
-
-            h1 {
-                font-size: 2rem;
-            }
-
-            p, .quote {
-                font-size: 1rem;
-            }
+            .logo { width: 60px; }
+            h1 { font-size: 2rem; }
+            p, .quote { font-size: 1rem; }
         }
     </style>
 </head>
 <body>
-    <header>
-        <img src="Logo-removebg-preview.png" alt="Gyan Mandala Nepal Logo" class="logo">
-    </header>
 
-    <div class="container">
-        <h1>Welcome to Gyan Mandala Nepal</h1>
-        <p>Play, Learn, and Discover your world of knowledge!</p>
-        <div class="quote">"Learn smart, play hard, and discover the genius in you!"</div>
-        <button onclick="goToForm()">Go to Learning Portal</button>
+    <!-- Home Page -->
+    <div id="homePage">
+        <header>
+            <img src="Logo-removebg-preview.png" alt="Gyan Mandala Nepal Logo" class="logo">
+        </header>
+        <div class="container">
+            <h1>Welcome to Gyan Mandala Nepal</h1>
+            <p>Play, Learn, and Discover your world of knowledge!</p>
+            <div class="quote">"Learn smart, play hard, and discover the genius in you!"</div>
+            <button onclick="showForm()">Go to Learning Portal</button>
+        </div>
+        <footer>© 2025 Gyan Mandala Nepal, All Rights Reserved</footer>
     </div>
 
-    <footer>
-        © 2025 Gyan Mandala Nepal, All Rights Reserved
-    </footer>
+    <!-- Form Page -->
+    <div id="formPage" style="display:none;">
+        <div class="container">
+            <h2>Enter Your Details</h2>
+            <form id="studentForm">
+                <input type="text" id="schoolName" placeholder="School Name" required>
+                <input type="text" id="studentName" placeholder="Student Name" required>
+                <select id="grade" required>
+                    <option value="">Select Grade</option>
+                </select>
+                <select id="subject" required>
+                    <option value="">Select Subject</option>
+                    <option value="maths">Maths</option>
+                    <option value="english">English</option>
+                    <option value="science">Science</option>
+                    <option value="social">Social Study</option>
+                    <option value="nepali">Nepali</option>
+                </select>
+                <button type="submit">Enter</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Subject Page -->
+    <div id="subjectPage" style="display:none;">
+        <div class="container">
+            <h1 id="subjectTitle"></h1>
+            <p>This is your learning page for <span id="subjectName"></span>.</p>
+            <button onclick="goHome()">Go Home</button>
+        </div>
+    </div>
 
     <script>
-        function goToForm() {
-            // Change the URL to your learning portal page
-            window.location.href = "learning-portal.html";
+        // Generate grades without document.write
+        const gradeSelect = document.getElementById("grade");
+        for (let i = 1; i <= 10; i++) {
+            let option = document.createElement("option");
+            option.value = i;
+            option.textContent = `Grade ${i}`;
+            gradeSelect.appendChild(option);
         }
+
+        // Show Form only if coming from Home
+        function showForm() {
+            sessionStorage.setItem("cameFromHome", "true");
+            document.getElementById("homePage").style.display = "none";
+            document.getElementById("formPage").style.display = "block";
+        }
+
+        // Show Subject only if coming from Form
+        function showSubject(subject) {
+            sessionStorage.setItem("cameFromForm", "true");
+            const titleMap = {
+                maths: "Mathematics",
+                english: "English",
+                science: "Science",
+                social: "Social Studies",
+                nepali: "Nepali"
+            };
+            document.getElementById("subjectTitle").textContent = titleMap[subject] || "Unknown Subject";
+            document.getElementById("subjectName").textContent = titleMap[subject] || "";
+            document.getElementById("formPage").style.display = "none";
+            document.getElementById("subjectPage").style.display = "block";
+        }
+
+        function goHome() {
+            sessionStorage.clear();
+            document.getElementById("subjectPage").style.display = "none";
+            document.getElementById("homePage").style.display = "block";
+        }
+
+        // Handle form submission
+        document.getElementById("studentForm").addEventListener("submit", function(e) {
+            e.preventDefault();
+            if (!sessionStorage.getItem("cameFromHome")) {
+                goHome();
+                return;
+            }
+            const subject = document.getElementById("subject").value;
+            showSubject(subject);
+        });
+
+        // Redirect check on load (prevents direct access)
+        window.addEventListener("load", function() {
+            const hash = window.location.hash;
+            if (hash === "#form" && !sessionStorage.getItem("cameFromHome")) {
+                goHome();
+            } else if (hash === "#subject" && !sessionStorage.getItem("cameFromForm")) {
+                goHome();
+            }
+        });
     </script>
+
 </body>
 </html>
