@@ -4,161 +4,673 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>Gyan Mandala Nepal — Learning Portal</title>
-  <meta name="description" content="Interactive learning portal — classes, subjects, lessons for Gyan Mandala Nepal." />
+  <meta name="description" content="Gyan Mandala Nepal - Interactive learning portal" />
   <style>
-    /* Keep your original CSS here */
-    body { font-family: Arial, sans-serif; margin:0; background: linear-gradient(to bottom right, #f0f8ff, #d4f1f9);}
-    header { background: white; padding: 10px 20px; position: relative; box-shadow: 0 2px 6px rgba(0,0,0,0.1);}
-    .logo { width: 80px; position: absolute; right: 20px; top: 20px; cursor: pointer; }
-    main { padding-bottom: 60px; }
-    .page { display:none; }
-    .page.active { display:block; }
-    .welcome { margin-top: 50px; font-size: 2rem; text-align: center; }
-    .card { background: white; max-width: 400px; margin: 20px auto; padding: 20px; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.1);}
-    .field { margin-bottom: 15px; }
-    .field label { display:block; margin-bottom: 5px; font-weight: bold;}
-    select, input { width: 100%; padding: 8px; border-radius: 4px; border: 1px solid #ccc;}
-    button { padding: 10px 16px; border:none; border-radius: 6px; cursor: pointer; }
-    .btn-primary { background: orange; color: white; font-size: 1rem;}
-    footer { background:#0077b6; color:white; text-align:center; padding: 10px; position: fixed; bottom: 0; width: 100%;}
-    .lessons-header { display: flex; justify-content: space-between; padding: 10px 20px; font-size: 1.1rem; background: white; border-bottom: 1px solid #ccc; }
-    .lessons-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(120px, 1fr)); gap: 10px; padding: 20px;}
-    .lesson-btn { padding: 12px; background: #ff6600; color:white; border:none; border-radius: 6px; cursor:pointer; transition: transform 0.2s;}
-    .lesson-btn:hover { transform: scale(1.05); background: #e65c00; }
+    /* ---------------------
+       Design tokens
+       ----------------------*/
+    :root{
+      --bg-1: #fbfdff;
+      --bg-2: #e9f6fb;
+      --card: #ffffff;
+      --muted: #6b7280;
+      --accent-red: #B03A2E;        /* Nepalese red */
+      --accent-saffron: #FF8C2A;    /* saffron */
+      --accent-blue: #0B6FA4;
+      --accent-green: #2AA87A;
+      --radius: 14px;
+      --shadow-soft: 0 8px 30px rgba(12,34,56,0.06);
+      --shadow-lg: 0 18px 50px rgba(8,18,40,0.12);
+      --ease: cubic-bezier(.22,.9,.38,1);
+      --max-width: 1180px;
+      --ui-padding: 18px;
+    }
+
+    *{ box-sizing: border-box; }
+    html,body{ height:100%; margin:0; font-family: Inter, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial; -webkit-font-smoothing:antialiased; -moz-osx-font-smoothing:grayscale; background: linear-gradient(160deg,var(--bg-1),var(--bg-2)); color:#071225; }
+
+    /* ---------------------
+       Header & Logo
+       ----------------------*/
+    header{
+      position: relative;
+      padding: 18px var(--ui-padding);
+      background: rgba(255,255,255,0.6);
+      backdrop-filter: blur(6px);
+      box-shadow: var(--shadow-soft);
+      z-index: 40;
+    }
+    .logo {
+      position: absolute;
+      right: 22px;
+      top: 22px;            /* slightly lowered */
+      width: 72px;          /* small & neat */
+      height: auto;
+      border-radius: 10px;
+      cursor: pointer;
+      transition: transform .18s var(--ease), box-shadow .18s var(--ease);
+    }
+    .logo:hover, .logo:focus { transform: translateY(-2px) scale(1.03); box-shadow: 0 10px 30px rgba(11,111,164,0.08); outline: none; }
+
+    main { max-width: var(--max-width); margin: 24px auto; padding: 0 var(--ui-padding) 120px; }
+
+    /* ---------------------
+       Top bar (Grade & Subject directly beneath logo)
+       ----------------------*/
+    .topbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      margin: 18px 0;
+      padding: 12px;
+      background: linear-gradient(180deg, rgba(255,255,255,0.85), rgba(250,250,250,0.9));
+      border-radius: 12px;
+      border: 1px solid rgba(0,0,0,0.04);
+      box-shadow: var(--shadow-soft);
+    }
+    .top-left, .top-right { display:flex; gap:12px; align-items:center; min-width: 36%; }
+    .top-left { justify-content: flex-start; }
+    .top-right { justify-content: flex-end; }
+
+    .label { font-size: 14px; color: var(--muted); font-weight: 700; margin-right:6px; }
+
+    /* Select styling */
+    select, input[type="text"] {
+      padding: 10px 12px;
+      border-radius: 10px;
+      border: 1px solid #e6eef7;
+      font-size: 15px;
+      min-width: 170px;
+      background: linear-gradient(180deg,#fff,#fbfdff);
+      transition: box-shadow .12s var(--ease), border-color .12s var(--ease);
+    }
+    select:focus, input:focus { box-shadow: 0 12px 30px rgba(11,111,164,0.06); border-color: #cbe8ff; outline: none; }
+
+    /* Static displays used on lessons page */
+    .static-display { font-weight: 800; font-size: 16px; color: #111; }
+    .static-subject { color: var(--accent-red); font-weight: 900; font-size: 16px; }
+
+    /* Hide / show helpers */
+    .show { display: block; }
+    .hide { display: none; }
+
+    /* ---------------------
+       Page containers & transitions
+       ----------------------*/
+    .page { display: none; opacity:0; transform: translateY(8px); transition: all .42s var(--ease); }
+    .page.active { display:block; opacity:1; transform: translateY(0); }
+
+    .page-enter { animation: slideIn .36s var(--ease) forwards; }
+    .page-exit { animation: slideOut .28s var(--ease) forwards; }
+    @keyframes slideIn { from { opacity:0; transform: translateY(8px); } to { opacity:1; transform: translateY(0); } }
+    @keyframes slideOut { from { opacity:1; transform: translateY(0); } to { opacity:0; transform: translateY(-8px); } }
+
+    /* ---------------------
+       Hero / Welcome
+       ----------------------*/
+    .hero { text-align:center; padding: 40px 18px; }
+    .welcome-lines { display:flex; flex-direction:column; gap:10px; align-items:center; }
+    .welcome-line {
+      font-size: clamp(28px, 5.4vw, 46px);
+      font-weight: 800;
+      line-height: 1;
+      opacity: 0;
+      transform: translateY(12px);
+      animation: fadeUp .6s var(--ease) forwards;
+    }
+    .welcome-line.l1 { color: var(--accent-red); animation-delay: .12s; }
+    .welcome-line.l2 { color: var(--accent-saffron); animation-delay: .36s; }
+    .welcome-line.l3 { color: var(--accent-blue); animation-delay: .60s; }
+    @keyframes fadeUp { to { opacity: 1; transform: translateY(0); } }
+
+    .hero-sub { color: var(--muted); font-size: 16px; margin-top: 14px; max-width: 860px; margin-left:auto; margin-right:auto; }
+
+    .cta { margin-top: 22px; display:flex; gap:12px; justify-content:center; flex-wrap:wrap; }
+
+    .btn {
+      padding: 12px 18px;
+      border-radius: 12px;
+      border: none;
+      cursor: pointer;
+      font-weight: 800;
+      transition: transform .14s var(--ease), box-shadow .14s var(--ease);
+      font-size: 15px;
+    }
+    .btn-primary { background: linear-gradient(90deg,var(--accent-saffron),var(--accent-red)); color: white; box-shadow: 0 10px 30px rgba(176,58,46,0.12); }
+    .btn-primary:hover { transform: translateY(-3px); box-shadow: 0 20px 48px rgba(176,58,46,0.14); }
+    .btn-ghost { background: transparent; color: var(--accent-blue); border: 2px solid rgba(11,111,164,0.06); }
+
+    /* ---------------------
+       Form card (student name / school)
+       ----------------------*/
+    .card {
+      background: var(--card);
+      border-radius: 14px;
+      padding: 22px;
+      box-shadow: var(--shadow-lg);
+      max-width: 880px;
+      margin: 22px auto;
+    }
+    .form-row { display:flex; gap:12px; flex-wrap:wrap; align-items: center; }
+    .field { display:flex; flex-direction:column; gap:8px; min-width:200px; flex:1; }
+
+    .hint { color: var(--muted); font-size: 13px; margin-top:8px; }
+
+    /* ---------------------
+       Breadcrumb & lessons header (beneath topbar)
+       ----------------------*/
+    .breadcrumb { margin: 12px 0; color: var(--muted); font-size:14px; display:flex; gap:10px; align-items:center; }
+    .breadcrumb a { color: var(--accent-blue); cursor:pointer; font-weight: 700; text-decoration:none; }
+
+    /* ---------------------
+       Lessons grid & buttons
+       ----------------------*/
+    .lessons-sub { color: var(--muted); margin-bottom: 8px; font-size: 13px; }
+
+    .lessons-grid {
+      display:grid;
+      grid-template-columns: repeat(5, 1fr);  /* 5 columns on wide screens */
+      gap: 18px;
+      margin-top: 12px;
+    }
+    @media (max-width:1200px){ .lessons-grid{ grid-template-columns: repeat(4,1fr); } }
+    @media (max-width:900px){ .lessons-grid{ grid-template-columns: repeat(3,1fr); } }
+    @media (max-width:600px){ .lessons-grid{ grid-template-columns: repeat(2,1fr); } }
+
+    .lesson-tile {
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      height:90px;
+      border-radius: 14px;
+      background: linear-gradient(180deg,#ffffff,#fbfdff);
+      border: 1px solid rgba(0,0,0,0.04);
+      font-weight: 800;
+      font-size: 17px;
+      color: #071225;
+      cursor:pointer;
+      box-shadow: var(--shadow-soft);
+      transition: transform .14s var(--ease), box-shadow .14s var(--ease), filter .14s var(--ease);
+      position: relative;
+      overflow: hidden;
+      perspective: 900px;
+    }
+    /* playfully tilt & glow on hover */
+    .lesson-tile:hover { transform: translateY(-8px) rotateX(2deg) scale(1.03); box-shadow: 0 28px 60px rgba(11,111,164,0.10); filter: saturate(1.02); }
+    .lesson-tile:focus { outline: 3px solid rgba(11,111,164,0.12); outline-offset: 4px; }
+
+    /* subtle accent by subject (applies to a wrapper class on the lessons page) */
+    .subject-maths .lesson-tile { border-top: 8px solid #4a90e2; }
+    .subject-english .lesson-tile { border-top: 8px solid #ff9a3d; }
+    .subject-science .lesson-tile { border-top: 8px solid #2aa87a; }
+    .subject-social .lesson-tile { border-top: 8px solid #ec5a9a; }
+    .subject-nepali .lesson-tile { border-top: 8px solid #8b1f1f; }
+    .subject-hamro .lesson-tile { border-top: 8px solid #cc6600; }
+
+    /* ripple effect */
+    .ripple { position:absolute; border-radius:50%; transform: scale(0); animation: ripple .6s linear; background: rgba(11,111,164,0.12); pointer-events:none; }
+    @keyframes ripple { to { transform: scale(4); opacity: 0; } }
+
+    /* ---------------------
+       Modal
+       ----------------------*/
+    .overlay { position: fixed; inset:0; display:none; align-items:center; justify-content:center; background: rgba(8,12,20,0.42); z-index: 120; }
+    .overlay.open { display:flex; }
+    .modal { background: #fff; border-radius: 12px; padding:18px; width:min(720px,92%); box-shadow: 0 28px 80px rgba(8,18,40,0.22); }
+    .modal h3 { margin:0; }
+    .modal .meta { color:var(--muted); font-size:14px; margin-top:6px; }
+
+    /* ---------------------
+       Footer
+       ----------------------*/
+    footer {
+      position: fixed; left:0; right:0; bottom:0;
+      background: linear-gradient(90deg,var(--accent-blue), #06607f);
+      color: white; padding: 12px; text-align:center; font-weight:700; box-shadow: 0 -6px 22px rgba(2,22,40,0.06);
+    }
+
+    /* small utility */
+    .center { display:flex; justify-content:center; align-items:center; }
+    .muted-small { color:var(--muted); font-size:13px; }
   </style>
 </head>
 <body>
+  <!-- Header with clickable logo -->
   <header>
-    <img id="siteLogo" src="GMN Logo.png" alt="GMN Logo" class="logo">
+    <img id="siteLogo" src="GMN Logo.png" alt="GMN Logo" class="logo" tabindex="0" title="Back to Home">
   </header>
 
+  <!-- Topbar: Grade (left) & Subject (right) directly beneath logo -->
   <main>
-    <!-- HOME -->
-    <section id="homePage" class="page active">
-      <div class="welcome">Welcome<br>to<br>Gyan Mandala Nepal</div>
-      <div style="text-align:center;margin-top:20px;">
-        <button id="enterPortal" class="btn-primary">Go to Learning Portal</button>
+    <div class="topbar" id="topbar">
+      <!-- LEFT: Grade - either select (form) or static (lessons) -->
+      <div class="top-left">
+        <div class="label">Grade</div>
+
+        <!-- Grade select (visible on form) -->
+        <select id="gradeSelect" class="grade-select" aria-label="Select class">
+          <option value="">Select class</option>
+        </select>
+
+        <!-- Static grade (visible on lessons) -->
+        <div id="gradeStatic" class="static-display hide" aria-hidden="true">Grade: —</div>
+      </div>
+
+      <!-- RIGHT: Subject - either select (form) or static (lessons) -->
+      <div class="top-right">
+        <div class="label">Subject</div>
+
+        <!-- Subject select (visible on form) -->
+        <select id="subjectSelect" class="subject-select" aria-label="Select subject">
+          <option value="">Select subject</option>
+        </select>
+
+        <!-- Static subject (visible on lessons) -->
+        <div id="subjectStatic" class="static-subject hide" aria-hidden="true">Subject: —</div>
+      </div>
+    </div>
+
+    <!-- Page: Home -->
+    <section id="homePage" class="page active" aria-labelledby="homeTitle">
+      <div class="hero">
+        <div class="welcome-lines" aria-hidden="false">
+          <div id="homeTitle" class="welcome-line l1">Welcome</div>
+          <div class="welcome-line l2">to</div>
+          <div class="welcome-line l3">Gyan Mandala Nepal</div>
+        </div>
+        <p class="hero-sub">A warm, playful learning portal. Start by choosing your class and subject above.</p>
+        <div class="cta">
+          <button id="btnStart" class="btn btn-primary" aria-haspopup="true">Go to Learning Portal</button>
+          <button id="btnInfo" class="btn btn-ghost" onclick="alert('Select a class and subject, then the lessons will open automatically.')">How it works</button>
+        </div>
       </div>
     </section>
 
-    <!-- FORM -->
-    <section id="formPage" class="page">
+    <!-- Page: Form (student details) -->
+    <section id="formPage" class="page" aria-labelledby="formTitle" tabindex="-1" role="region">
       <div class="card">
-        <h2>Enter Your Details</h2>
-        <div class="field">
-          <label for="schoolName">School Name</label>
-          <input type="text" id="schoolName" placeholder="School Name">
+        <h2 id="formTitle">Student Details (optional)</h2>
+        <div class="form-row" style="margin-top:12px;">
+          <div class="field">
+            <label for="schoolInput">School</label>
+            <input id="schoolInput" type="text" placeholder="School name (optional)">
+          </div>
+          <div class="field">
+            <label for="studentInput">Student</label>
+            <input id="studentInput" type="text" placeholder="Student name (optional)">
+          </div>
         </div>
-        <div class="field">
-          <label for="studentName">Student Name</label>
-          <input type="text" id="studentName" placeholder="Student Name">
-        </div>
-        <div class="field">
-          <label for="grade">Class</label>
-          <select id="grade"></select>
-        </div>
-        <div class="field">
-          <label for="subject">Subject</label>
-          <select id="subject"></select>
-        </div>
+        <div class="hint">Use the Grade and Subject selectors in the top bar above. When both are chosen we automatically open the lessons.</div>
       </div>
     </section>
 
-    <!-- LESSONS -->
-    <section id="lessonsPage" class="page">
-      <div class="lessons-header">
-        <div id="lessonsGrade"></div>
-        <div id="lessonsSubject"></div>
+    <!-- Page: Lessons -->
+    <section id="lessonsPage" class="page" aria-labelledby="lessonsTitle" tabindex="-1" role="region">
+      <div style="max-width: var(--max-width); margin: 0 auto;">
+        <nav class="breadcrumb" aria-label="Breadcrumb">
+          <a id="crumbHome">Home</a>
+          <span>›</span>
+          <a id="crumbBackClass" style="cursor:pointer">Select Class</a>
+          <span>›</span>
+          <span id="crumbSubjectName" style="font-weight:900"></span>
+        </nav>
+
+        <div class="lessons-sub" id="lessonsIntro">20 lessons • click to preview</div>
+
+        <!-- Grid of lesson buttons labeled only "Lesson 1" ... "Lesson 20" -->
+        <div id="lessonsGrid" class="lessons-grid" role="list" aria-label="Lessons list">
+          <!-- injected elements -->
+        </div>
       </div>
-      <div id="lessonsGrid" class="lessons-grid"></div>
     </section>
   </main>
 
-  <footer>© 2025 Gyan Mandala Nepal, All Rights Reserved</footer>
+  <footer>© 2025 Gyan Mandala Nepal — All Rights Reserved</footer>
+
+  <!-- Modal for lesson preview -->
+  <div id="overlay" class="overlay" role="dialog" aria-modal="true" aria-hidden="true">
+    <div class="modal" role="document">
+      <h3 id="modalTitle">Lesson</h3>
+      <div class="meta" id="modalMeta">Subject • Class</div>
+      <p id="modalBody" style="margin-top:10px;color:#334155">Demo content for lesson preview. Replace with real lesson content or routes as required.</p>
+      <div style="display:flex;justify-content:flex-end;gap:8px;margin-top:14px">
+        <button class="btn btn-ghost" onclick="closeModal()">Close</button>
+        <button class="btn btn-primary" onclick="alert('Open lesson — demo')">Open Lesson</button>
+      </div>
+    </div>
+  </div>
 
   <script>
-    const state = {
-      grades: Array.from({ length: 10 }, (_, i) => i + 1),
-      subjectsLow: [
-        { id: "maths", name: "Mathematics" },
-        { id: "english", name: "English" },
-        { id: "hamro", name: "Hamro Serophero" },
-        { id: "nepali", name: "Nepali" }
-      ],
-      subjectsHigh: [
-        { id: "maths", name: "Mathematics" },
-        { id: "english", name: "English" },
-        { id: "science", name: "Science" },
-        { id: "nepali", name: "Nepali" },
-        { id: "social", name: "Social Studies" }
-      ],
-      subjectNames: {
-        maths: "Mathematics", english: "English", hamro: "Hamro Serophero",
-        nepali: "Nepali", science: "Science", social: "Social Studies"
-      }
-    };
+  /************************************************************************
+   * State & configuration
+   ************************************************************************/
+  const state = {
+    grades: Array.from({length:10}, (_,i) => i+1), // 1..10
+    subjectsLow: [ // grades 1-3
+      { id: 'maths', name: 'Mathematics' },
+      { id: 'english', name: 'English' },
+      { id: 'hamro', name: 'Hamro Serophero' },
+      { id: 'nepali', name: 'Nepali' }
+    ],
+    subjectsHigh: [ // grades 4-10
+      { id: 'maths', name: 'Mathematics' },
+      { id: 'english', name: 'English' },
+      { id: 'science', name: 'Science' },
+      { id: 'nepali', name: 'Nepali' },
+      { id: 'social', name: 'Social Studies' }
+    ],
+    subjectNames: {
+      maths:'Mathematics', english:'English', hamro:'Hamro Serophero',
+      nepali:'Nepali', science:'Science', social:'Social Studies'
+    },
+    page: 'home' // 'home' | 'form' | 'lessons'
+  };
 
-    const $ = sel => document.querySelector(sel);
+  // Helper selectors
+  const $ = s => document.querySelector(s);
+  const $$ = s => Array.from(document.querySelectorAll(s));
 
-    // Populate grade dropdown ONLY once
-    function populateGrades() {
-      const gradeSelect = $('#grade');
-      gradeSelect.innerHTML = '<option value="">Select class</option>';
-      state.grades.forEach(g => {
-        const opt = document.createElement('option');
-        opt.value = g;
-        opt.textContent = `Class ${g}`;
-        gradeSelect.appendChild(opt);
-      });
-    }
-
-    function updateSubjects(grade) {
-      const subjSelect = $('#subject');
-      subjSelect.innerHTML = '<option value="">Select subject</option>';
-      const list = grade <= 3 ? state.subjectsLow : state.subjectsHigh;
-      list.forEach(s => {
-        const opt = document.createElement('option');
-        opt.value = s.id;
-        opt.textContent = s.name;
-        subjSelect.appendChild(opt);
-      });
-    }
-
-    function renderLessons(grade, subject) {
-      $('#lessonsGrade').textContent = `Grade: ${grade}`;
-      $('#lessonsSubject').innerHTML = `Subject: <strong style="color:red">${state.subjectNames[subject]}</strong>`;
-      const grid = $('#lessonsGrid');
-      grid.innerHTML = '';
-      for (let i = 1; i <= 20; i++) {
-        const btn = document.createElement('button');
-        btn.className = 'lesson-btn';
-        btn.textContent = `Lesson ${i}`;
-        grid.appendChild(btn);
-      }
-    }
-
-    function showPage(pageId) {
-      document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-      $(`#${pageId}`).classList.add('active');
-    }
-
-    // Init
-    document.addEventListener('DOMContentLoaded', () => {
-      populateGrades();
-      $('#grade').addEventListener('change', e => {
-        updateSubjects(parseInt(e.target.value));
-      });
-      $('#subject').addEventListener('change', () => {
-        const g = parseInt($('#grade').value);
-        const s = $('#subject').value;
-        if (g && s) {
-          renderLessons(g, s);
-          showPage('lessonsPage');
-        }
-      });
-      $('#enterPortal').addEventListener('click', () => showPage('formPage'));
-      $('#siteLogo').addEventListener('click', () => showPage('homePage'));
+  /************************************************************************
+   * Populate the class dropdown ONCE (no duplicates)
+   ************************************************************************/
+  function populateGradesOnce(){
+    const sel = $('#gradeSelect');
+    // Clear first (precaution)
+    sel.innerHTML = '<option value="">Select class</option>';
+    state.grades.forEach(g => {
+      const opt = document.createElement('option');
+      opt.value = g;
+      opt.textContent = `Class ${g}`;
+      sel.appendChild(opt);
     });
+  }
+
+  /************************************************************************
+   * Update subjects for a selected grade
+   ************************************************************************/
+  function updateSubjectsForGrade(grade){
+    const sel = $('#subjectSelect');
+    sel.innerHTML = '<option value="">Select subject</option>';
+    if(!grade) return;
+    const list = grade <= 3 ? state.subjectsLow : state.subjectsHigh;
+    list.forEach(s => {
+      const opt = document.createElement('option');
+      opt.value = s.id;
+      opt.textContent = s.name;
+      sel.appendChild(opt);
+    });
+  }
+
+  /************************************************************************
+   * Page transitions & guard logic
+   ************************************************************************/
+  function showPage(page){
+    // page: 'home'|'form'|'lessons'
+    if(state.page === page) return;
+    const fromEl = document.getElementById(state.page + 'Page') || null;
+    const toEl = document.getElementById(page + 'Page');
+
+    if(fromEl){
+      fromEl.classList.remove('active');
+      fromEl.classList.add('page-exit');
+      setTimeout(()=> fromEl.classList.remove('page-exit'), 340);
+    }
+    toEl.classList.add('active','page-enter');
+    setTimeout(()=> toEl.classList.remove('page-enter'), 420);
+    state.page = page;
+
+    // handle topbar visibility: selects visible on form, static displays on lessons
+    if(page === 'form'){
+      // show selects, hide statics
+      $('#gradeSelect').classList.remove('hide');
+      $('#gradeStatic').classList.add('hide');
+      $('#subjectSelect').classList.remove('hide');
+      $('#subjectStatic').classList.add('hide');
+      // focus the first select
+      setTimeout(()=> $('#gradeSelect').focus(), 160);
+    } else if(page === 'lessons'){
+      // hide selects, show statics
+      $('#gradeSelect').classList.add('hide');
+      $('#gradeStatic').classList.remove('hide');
+      $('#subjectSelect').classList.add('hide');
+      $('#subjectStatic').classList.remove('hide');
+      setTimeout(()=> $('#lessonsGrid').focus(), 160);
+    } else {
+      // home
+      $('#gradeSelect').classList.remove('hide');
+      $('#gradeStatic').classList.add('hide');
+      $('#subjectSelect').classList.remove('hide');
+      $('#subjectStatic').classList.add('hide');
+    }
+  }
+
+  /************************************************************************
+   * Navigation guards:
+   * - Must visit 'home' first (visitedHome set) to access form
+   * - Must visit 'form' (visitedForm set) to access lessons
+   ************************************************************************/
+  function setVisitedHome(){ sessionStorage.setItem('visitedHome','1'); }
+  function setVisitedForm(){ sessionStorage.setItem('visitedForm','1'); }
+  function allowedForm(){ return sessionStorage.getItem('visitedHome') === '1'; }
+  function allowedLessons(){ return sessionStorage.getItem('visitedForm') === '1'; }
+
+  /************************************************************************
+   * Rendering lesson grid header & grid
+   ************************************************************************/
+  function renderLessonsPage(grade, subjectId){
+    // Update topbar static displays
+    $('#gradeStatic').textContent = `Grade: ${grade}`;
+    $('#subjectStatic').innerHTML = `Subject: <span style="font-weight:900;color:var(--accent-red)">${escapeHtml(state.subjectNames[subjectId] || subjectId)}</span>`;
+
+    // Breadcrumbs
+    $('#crumbBackClass').textContent = `Class ${grade}`;
+    $('#crumbSubjectName').textContent = state.subjectNames[subjectId] || subjectId;
+
+    // Body class for subject accent on tile borders
+    const lessonsSection = $('#lessonsPage');
+    // clear previous classes
+    lessonsSection.classList.remove('subject-maths','subject-english','subject-science','subject-social','subject-nepali','subject-hamro');
+    lessonsSection.classList.add('subject-' + subjectId);
+
+    // Render 20 lesson tiles
+    const grid = $('#lessonsGrid');
+    grid.innerHTML = ''; // clear
+    for(let i=1;i<=20;i++){
+      const tile = document.createElement('button');
+      tile.className = 'lesson-tile';
+      tile.setAttribute('role','listitem');
+      tile.setAttribute('aria-label', `Open Lesson ${i}`);
+      tile.tabIndex = 0;
+      tile.innerText = `Lesson ${i}`;
+
+      // click: ripple + modal open
+      tile.addEventListener('click', function(e){
+        createRipple(e, tile);
+        openLessonModal(grade, subjectId, i);
+      });
+
+      // keyboard support
+      tile.addEventListener('keydown', (e)=>{
+        if(e.key === 'Enter' || e.key === ' ') { e.preventDefault(); tile.click(); }
+      });
+
+      grid.appendChild(tile);
+    }
+
+    // smooth scroll to top
+    window.scrollTo({top:0, behavior:'smooth'});
+  }
+
+  /************************************************************************
+   * Modal - lesson preview
+   ************************************************************************/
+  function openLessonModal(grade, subjectId, lessonNumber){
+    $('#modalTitle').textContent = `Lesson ${lessonNumber}`;
+    $('#modalMeta').textContent = `${state.subjectNames[subjectId]} • Class ${grade}`;
+    $('#modalBody').textContent = `Preview for Lesson ${lessonNumber}. Replace this with real lesson content or route to lesson details.`;
+    $('#overlay').classList.add('open');
+    $('#overlay').setAttribute('aria-hidden','false');
+  }
+  function closeModal(){
+    $('#overlay').classList.remove('open');
+    $('#overlay').setAttribute('aria-hidden','true');
+  }
+  $('#overlay').addEventListener('click', (e)=> { if(e.target === $('#overlay')) closeModal(); });
+  document.addEventListener('keyup', (e) => { if(e.key === 'Escape') closeModal(); });
+
+  /************************************************************************
+   * Ripple effect for tiles
+   ************************************************************************/
+  function createRipple(e, container){
+    const circle = document.createElement('span');
+    circle.className = 'ripple';
+    const rect = container.getBoundingClientRect();
+    const size = Math.max(rect.width, rect.height);
+    circle.style.width = circle.style.height = size + 'px';
+    const x = e.clientX - rect.left - size/2;
+    const y = e.clientY - rect.top - size/2;
+    circle.style.left = `${x}px`;
+    circle.style.top = `${y}px`;
+    container.appendChild(circle);
+    setTimeout(()=> circle.remove(), 650);
+  }
+
+  /************************************************************************
+   * Utility & validation
+   ************************************************************************/
+  function isValidCombination(grade, subjectId){
+    if(!grade || !subjectId) return false;
+    const low = state.subjectsLow.map(s => s.id);
+    const high = state.subjectsHigh.map(s => s.id);
+    return (grade <= 3) ? low.includes(subjectId) : high.includes(subjectId);
+  }
+
+  function escapeHtml(s){ return String(s).replace(/[&<>"']/g, (m)=> ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m])); }
+  function capitalize(s){ return s.charAt(0).toUpperCase() + s.slice(1); }
+
+  /************************************************************************
+   * Auto-navigate when both grade & subject selected
+   ************************************************************************/
+  let autoNavTimer = null;
+  function tryAutoNavigate(){
+    // Only allow if user legitimately hit "Go to Learning Portal"
+    if(!allowedForm()) { navigateHome(); return; }
+    const grade = parseInt($('#gradeSelect').value);
+    const subjectId = $('#subjectSelect').value;
+    if(grade && subjectId){
+      if(autoNavTimer) clearTimeout(autoNavTimer);
+      autoNavTimer = setTimeout(()=> {
+        if(!isValidCombination(grade, subjectId)){ alert('Invalid class–subject combination'); return; }
+        // mark that user legitimately visited form
+        setVisitedForm();
+        // update static displays and render lessons
+        $('#gradeStatic').textContent = `Grade: ${grade}`;
+        $('#subjectStatic').innerHTML = `Subject: <span style="font-weight:900;color:var(--accent-red)">${escapeHtml(state.subjectNames[subjectId])}</span>`;
+        // navigate
+        location.hash = `#lessons/class-${grade}/${subjectId}`;
+        renderLessonsPage(grade, subjectId);
+        showPage('lessons');
+      }, 320);
+    }
+  }
+
+  /************************************************************************
+   * Hash handling & initial load guard
+   ************************************************************************/
+  function handleInitialHash(){
+    const hash = location.hash || '';
+    if(!hash){
+      showPage('home');
+      return;
+    }
+    if(hash.startsWith('#form')){
+      if(sessionStorage.getItem('visitedHome') === '1') { showPage('form'); }
+      else navigateHome();
+      return;
+    }
+    if(hash.startsWith('#lessons')){
+      const parts = hash.replace('#lessons/','').split('/');
+      if(parts.length === 2){
+        const classPart = parts[0].replace('class-','');
+        const subjectId = parts[1];
+        const gradeNum = parseInt(classPart);
+        if(Number.isInteger(gradeNum) && isValidCombination(gradeNum, subjectId) && sessionStorage.getItem('visitedForm') === '1'){
+          $('#gradeStatic').textContent = `Grade: ${gradeNum}`;
+          $('#subjectStatic').innerHTML = `Subject: <span style="font-weight:900;color:var(--accent-red)">${escapeHtml(state.subjectNames[subjectId])}</span>`;
+          renderLessonsPage(gradeNum, subjectId);
+          showPage('lessons');
+          return;
+        }
+      }
+      navigateHome();
+      return;
+    }
+    navigateHome();
+  }
+
+  /************************************************************************
+   * Navigation helpers
+   ************************************************************************/
+  function navigateHome(){
+    sessionStorage.clear();
+    location.hash = '';
+    showPage('home');
+  }
+
+  /************************************************************************
+   * Init - populate dropdowns ONCE & bind events
+   ************************************************************************/
+  document.addEventListener('DOMContentLoaded', () => {
+    // Populate grades once (no duplication)
+    populateGradesOnce();
+
+    // Logo click -> go home (clear session)
+    $('#siteLogo').addEventListener('click', ()=> navigateHome());
+    $('#siteLogo').addEventListener('keypress', (e)=> { if(e.key === 'Enter') navigateHome(); });
+
+    // "Go to Learning Portal" entry
+    $('#btnStart').addEventListener('click', ()=> {
+      setVisitedHome();
+      location.hash = '#form';
+      // show form (selects visible)
+      showPage('form');
+      // focus first select
+      setTimeout(()=> $('#gradeSelect').focus(), 180);
+    });
+
+    // When grade changes
+    $('#gradeSelect').addEventListener('change', (e)=> {
+      const grade = parseInt(e.target.value);
+      updateSubjectsForGrade(grade);
+      // also update small static grade display in case user navigates directly
+      $('#gradeStatic').textContent = grade ? `Grade: ${grade}` : 'Grade: —';
+      tryAutoNavigate();
+    });
+
+    // subject selection -> attempt navigate
+    $('#subjectSelect').addEventListener('change', (e)=> {
+      $('#subjectStatic').innerHTML = e.target.value ? `Subject: <span style="font-weight:900;color:var(--accent-red)">${escapeHtml(state.subjectNames[e.target.value])}</span>` : 'Subject: —';
+      tryAutoNavigate();
+    });
+
+    // Breadcrumb clicks
+    $('#crumbHome').addEventListener('click', ()=> { sessionStorage.clear(); navigateHome(); });
+    $('#crumbBackClass').addEventListener('click', ()=> {
+      // Go back to form and show selects while preserving prior selections
+      location.hash = '#form';
+      showPage('form');
+    });
+
+    // handle initial hash (guarded)
+    handleInitialHash();
+  });
+
+  /************************************************************************
+   * Small docs:
+   * Valid page count: Grades 1-3 -> 3*4 = 12 pages; Grades 4-10 -> 7*5 = 35 pages; total = 47 pages.
+   * Each page displays 20 lessons.
+   ************************************************************************/
   </script>
 </body>
 </html>
