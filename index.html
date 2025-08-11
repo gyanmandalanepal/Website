@@ -6,70 +6,69 @@
   <title>Gyan Mandala Nepal — Learning Portal</title>
   <meta name="description" content="Interactive learning portal — classes, subjects, lessons for Gyan Mandala Nepal." />
   <style>
-    /* (same styles as previous version, unchanged for brevity) */
-    /* ... FULL CSS FROM PREVIOUS VERSION ... */
+    /* Keep your original CSS here */
+    body { font-family: Arial, sans-serif; margin:0; background: linear-gradient(to bottom right, #f0f8ff, #d4f1f9);}
+    header { background: white; padding: 10px 20px; position: relative; box-shadow: 0 2px 6px rgba(0,0,0,0.1);}
+    .logo { width: 80px; position: absolute; right: 20px; top: 20px; cursor: pointer; }
+    main { padding-bottom: 60px; }
+    .page { display:none; }
+    .page.active { display:block; }
+    .welcome { margin-top: 50px; font-size: 2rem; text-align: center; }
+    .card { background: white; max-width: 400px; margin: 20px auto; padding: 20px; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.1);}
+    .field { margin-bottom: 15px; }
+    .field label { display:block; margin-bottom: 5px; font-weight: bold;}
+    select, input { width: 100%; padding: 8px; border-radius: 4px; border: 1px solid #ccc;}
+    button { padding: 10px 16px; border:none; border-radius: 6px; cursor: pointer; }
+    .btn-primary { background: orange; color: white; font-size: 1rem;}
+    footer { background:#0077b6; color:white; text-align:center; padding: 10px; position: fixed; bottom: 0; width: 100%;}
+    .lessons-header { display: flex; justify-content: space-between; padding: 10px 20px; font-size: 1.1rem; background: white; border-bottom: 1px solid #ccc; }
+    .lessons-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(120px, 1fr)); gap: 10px; padding: 20px;}
+    .lesson-btn { padding: 12px; background: #ff6600; color:white; border:none; border-radius: 6px; cursor:pointer; transition: transform 0.2s;}
+    .lesson-btn:hover { transform: scale(1.05); background: #e65c00; }
   </style>
 </head>
 <body>
   <header>
-    <img id="siteLogo" src="GMN Logo.png" alt="GMN Logo" class="logo" tabindex="0" title="Gyan Mandala Nepal - Home">
+    <img id="siteLogo" src="GMN Logo.png" alt="GMN Logo" class="logo">
   </header>
 
   <main>
-    <!-- HOME PAGE -->
-    <section id="homePage" class="page active" aria-labelledby="homeTitle">
-      <div class="welcome" role="banner">
-        <div id="homeTitle" class="welcome-line w1">Welcome</div>
-        <div class="welcome-line w2">to</div>
-        <div class="welcome-line w3">Gyan Mandala Nepal</div>
-      </div>
-      <p class="subtitle center">Engaging lessons, easy navigation, and delightful micro-interactions.</p>
-      <div class="hero-actions">
-        <button id="enterPortal" class="btn btn-primary">Go to Learning Portal</button>
+    <!-- HOME -->
+    <section id="homePage" class="page active">
+      <div class="welcome">Welcome<br>to<br>Gyan Mandala Nepal</div>
+      <div style="text-align:center;margin-top:20px;">
+        <button id="enterPortal" class="btn-primary">Go to Learning Portal</button>
       </div>
     </section>
 
-    <!-- FORM PAGE -->
-    <section id="formPage" class="page" aria-labelledby="formTitle">
+    <!-- FORM -->
+    <section id="formPage" class="page">
       <div class="card">
-        <h2 id="formTitle">Enter Your Details</h2>
-        <form id="studentForm" onsubmit="return false;">
-          <div class="field full">
-            <label for="schoolName">School Name</label>
-            <input id="schoolName" type="text" placeholder="School Name" />
-          </div>
-          <div class="field">
-            <label for="studentName">Student Name</label>
-            <input id="studentName" type="text" placeholder="Student Name" />
-          </div>
-          <div class="field">
-            <label for="grade">Class</label>
-            <select id="grade" required>
-              <option value="">Select class</option>
-              <!-- JS will add 1–10 here -->
-            </select>
-          </div>
-          <div class="field">
-            <label for="subject">Subject</label>
-            <select id="subject" required>
-              <option value="">Select subject</option>
-              <!-- JS updates dynamically -->
-            </select>
-          </div>
-        </form>
+        <h2>Enter Your Details</h2>
+        <div class="field">
+          <label for="schoolName">School Name</label>
+          <input type="text" id="schoolName" placeholder="School Name">
+        </div>
+        <div class="field">
+          <label for="studentName">Student Name</label>
+          <input type="text" id="studentName" placeholder="Student Name">
+        </div>
+        <div class="field">
+          <label for="grade">Class</label>
+          <select id="grade"></select>
+        </div>
+        <div class="field">
+          <label for="subject">Subject</label>
+          <select id="subject"></select>
+        </div>
       </div>
     </section>
 
-    <!-- LESSONS PAGE -->
-    <section id="lessonsPage" class="page" aria-labelledby="lessonsTitle">
-      <nav class="breadcrumb">
-        <a id="crumbHome">Home</a> › 
-        <a id="crumbClass">Class</a> › 
-        <span id="crumbSubject"></span>
-      </nav>
+    <!-- LESSONS -->
+    <section id="lessonsPage" class="page">
       <div class="lessons-header">
-        <div id="lessonsGrade">Grade: —</div>
-        <div id="lessonsSubject">Subject: —</div>
+        <div id="lessonsGrade"></div>
+        <div id="lessonsSubject"></div>
       </div>
       <div id="lessonsGrid" class="lessons-grid"></div>
     </section>
@@ -77,137 +76,89 @@
 
   <footer>© 2025 Gyan Mandala Nepal, All Rights Reserved</footer>
 
-  <!-- MODAL -->
-  <div id="overlay" class="overlay">
-    <div class="modal">
-      <h3 id="modalTitle">Lesson</h3>
-      <div class="meta" id="modalMeta">Subject • Class</div>
-      <p id="modalBody"></p>
-      <div style="text-align:right; margin-top:1em;">
-        <button class="btn btn-ghost" onclick="closeModal()">Close</button>
-      </div>
-    </div>
-  </div>
-
   <script>
     const state = {
-      current: 'home',
-      grades: Array.from({ length: 10 }, (_, i) => i + 1), // 1–10
+      grades: Array.from({ length: 10 }, (_, i) => i + 1),
       subjectsLow: [
-        { id: 'maths', name: 'Mathematics' },
-        { id: 'english', name: 'English' },
-        { id: 'hamro', name: 'Hamro Serophero' },
-        { id: 'nepali', name: 'Nepali' }
+        { id: "maths", name: "Mathematics" },
+        { id: "english", name: "English" },
+        { id: "hamro", name: "Hamro Serophero" },
+        { id: "nepali", name: "Nepali" }
       ],
       subjectsHigh: [
-        { id: 'maths', name: 'Mathematics' },
-        { id: 'english', name: 'English' },
-        { id: 'science', name: 'Science' },
-        { id: 'nepali', name: 'Nepali' },
-        { id: 'social', name: 'Social Studies' }
+        { id: "maths", name: "Mathematics" },
+        { id: "english", name: "English" },
+        { id: "science", name: "Science" },
+        { id: "nepali", name: "Nepali" },
+        { id: "social", name: "Social Studies" }
       ],
       subjectNames: {
-        maths: 'Mathematics', english: 'English', hamro: 'Hamro Serophero',
-        nepali: 'Nepali', science: 'Science', social: 'Social Studies'
+        maths: "Mathematics", english: "English", hamro: "Hamro Serophero",
+        nepali: "Nepali", science: "Science", social: "Social Studies"
       }
     };
 
     const $ = sel => document.querySelector(sel);
 
-    // Populate class dropdown once
-    document.addEventListener('DOMContentLoaded', () => {
-      const gradeEl = $('#grade');
+    // Populate grade dropdown ONLY once
+    function populateGrades() {
+      const gradeSelect = $('#grade');
+      gradeSelect.innerHTML = '<option value="">Select class</option>';
       state.grades.forEach(g => {
         const opt = document.createElement('option');
         opt.value = g;
         opt.textContent = `Class ${g}`;
-        gradeEl.appendChild(opt);
+        gradeSelect.appendChild(opt);
       });
-
-      $('#enterPortal').addEventListener('click', () => {
-        sessionStorage.setItem('visitedHome', '1');
-        showPage('form');
-      });
-
-      $('#siteLogo').addEventListener('click', () => showPage('home'));
-
-      $('#grade').addEventListener('change', e => {
-        updateSubjects(parseInt(e.target.value));
-        autoNavigate();
-      });
-
-      $('#subject').addEventListener('change', autoNavigate);
-
-      $('#crumbHome').addEventListener('click', () => showPage('home'));
-      $('#crumbClass').addEventListener('click', () => showPage('form'));
-    });
+    }
 
     function updateSubjects(grade) {
-      const subjEl = $('#subject');
-      subjEl.innerHTML = '<option value="">Select subject</option>';
+      const subjSelect = $('#subject');
+      subjSelect.innerHTML = '<option value="">Select subject</option>';
       const list = grade <= 3 ? state.subjectsLow : state.subjectsHigh;
       list.forEach(s => {
         const opt = document.createElement('option');
         opt.value = s.id;
         opt.textContent = s.name;
-        subjEl.appendChild(opt);
+        subjSelect.appendChild(opt);
       });
     }
 
-    function autoNavigate() {
-      const g = parseInt($('#grade').value);
-      const s = $('#subject').value;
-      if (g && s) {
-        if (!isValidCombo(g, s)) {
-          alert('Invalid combination');
-          return;
-        }
-        renderLessons(g, s);
-        showPage('lessons');
-      }
-    }
-
-    function isValidCombo(g, s) {
-      return g <= 3
-        ? state.subjectsLow.some(sub => sub.id === s)
-        : state.subjectsHigh.some(sub => sub.id === s);
-    }
-
-    function renderLessons(g, s) {
-      $('#lessonsGrade').textContent = `Grade: ${g}`;
-      $('#lessonsSubject').innerHTML = `Subject: <strong style="color:red">${state.subjectNames[s]}</strong>`;
-      $('#crumbClass').textContent = `Class ${g}`;
-      $('#crumbSubject').textContent = state.subjectNames[s];
+    function renderLessons(grade, subject) {
+      $('#lessonsGrade').textContent = `Grade: ${grade}`;
+      $('#lessonsSubject').innerHTML = `Subject: <strong style="color:red">${state.subjectNames[subject]}</strong>`;
       const grid = $('#lessonsGrid');
       grid.innerHTML = '';
       for (let i = 1; i <= 20; i++) {
         const btn = document.createElement('button');
         btn.className = 'lesson-btn';
         btn.textContent = `Lesson ${i}`;
-        btn.onclick = () => openModal(g, s, i);
         grid.appendChild(btn);
       }
     }
 
-    function openModal(g, s, i) {
-      $('#modalTitle').textContent = `Lesson ${i}`;
-      $('#modalMeta').textContent = `${state.subjectNames[s]} • Class ${g}`;
-      $('#modalBody').textContent = `This is Lesson ${i} for ${state.subjectNames[s]} in Class ${g}.`;
-      $('#overlay').style.display = 'flex';
-    }
-
-    function closeModal() {
-      $('#overlay').style.display = 'none';
-    }
-
-    function showPage(page) {
+    function showPage(pageId) {
       document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-      if (page === 'home') {
-        sessionStorage.clear();
-      }
-      $(`#${page}Page`).classList.add('active');
-      state.current = page;
+      $(`#${pageId}`).classList.add('active');
     }
+
+    // Init
+    document.addEventListener('DOMContentLoaded', () => {
+      populateGrades();
+      $('#grade').addEventListener('change', e => {
+        updateSubjects(parseInt(e.target.value));
+      });
+      $('#subject').addEventListener('change', () => {
+        const g = parseInt($('#grade').value);
+        const s = $('#subject').value;
+        if (g && s) {
+          renderLessons(g, s);
+          showPage('lessonsPage');
+        }
+      });
+      $('#enterPortal').addEventListener('click', () => showPage('formPage'));
+      $('#siteLogo').addEventListener('click', () => showPage('homePage'));
+    });
   </script>
 </body>
 </html>
