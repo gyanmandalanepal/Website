@@ -6,102 +6,149 @@
 <title>Gyan Mandala Nepal — Learning Portal</title>
 <meta name="description" content="Gyan Mandala Nepal — interactive learning portal" />
 <style>
+  /* -----------------------------
+     Design tokens / base
+     ----------------------------- */
   :root{
-    --bg-1:#fbfdff; --bg-2:#e9f6fb;
-    --muted:#6b7280;
-    --accent-orange:#ff7b00;
-    --accent-blue:#0B6FA4;
-    --accent-red:#B03A2E;
-    --radius:12px;
-    --ease:cubic-bezier(.22,.9,.38,1);
+    --bg-1: #fbfdff;
+    --bg-2: #e9f6fb;
+    --muted: #6b7280;
+    --accent-orange: #ff7b00; /* requested bold orange */
+    --accent-red: #B03A2E;
+    --accent-blue: #0B6FA4;
+    --radius: 12px;
+    --ease: cubic-bezier(.22,.9,.38,1);
     --card-shadow: 0 14px 40px rgba(12,34,56,0.06);
+    --max-w: 1120px;
   }
-  *{box-sizing:border-box}
-  html,body{height:100%;margin:0;font-family:Inter,system-ui,Segoe UI,Roboto,Arial;background:linear-gradient(160deg,var(--bg-1),var(--bg-2));color:#071225; -webkit-font-smoothing:antialiased}
-  a{color:inherit}
+  * { box-sizing: border-box; }
+  html,body { height:100%; margin:0; font-family: Inter, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial; -webkit-font-smoothing:antialiased; background: linear-gradient(160deg,var(--bg-1),var(--bg-2)); color:#071225; }
 
-  /* Header */
-  header{ padding:16px 20px; background: rgba(255,255,255,0.6); backdrop-filter:blur(6px); box-shadow:0 8px 20px rgba(8,18,40,0.05); display:flex; align-items:center; }
-  #logo{ width:78px; border-radius:10px; cursor:pointer; transition: transform .18s var(--ease), box-shadow .18s var(--ease); }
-  #logo:hover{ transform: translateY(-2px) scale(1.03); box-shadow:0 12px 36px rgba(11,111,164,0.08); }
+  /* Header / Logo */
+  header {
+    padding: 14px 20px;
+    background: rgba(255,255,255,0.6);
+    backdrop-filter: blur(6px);
+    box-shadow: 0 8px 18px rgba(8,18,40,0.05);
+    display:flex;
+    align-items:center;
+  }
+  #logo {
+    width:78px;
+    height:auto;
+    border-radius:10px;
+    cursor:pointer;
+    transition: transform .18s var(--ease), box-shadow .18s var(--ease);
+  }
+  #logo:hover { transform: translateY(-2px) scale(1.02); box-shadow: 0 10px 28px rgba(11,111,164,0.08); }
 
-  main{ max-width:1120px; margin:18px auto; padding:0 18px 120px; }
+  main { max-width: var(--max-w); margin: 18px auto; padding: 0 18px 120px; }
 
-  /* Topbar (under header) - shows selects on Form, static on Lessons */
-  .topbar{ margin:14px auto; max-width:1120px; padding:12px 14px; border-radius:12px; background:linear-gradient(180deg,rgba(255,255,255,0.95),rgba(250,250,250,0.98)); border:1px solid rgba(0,0,0,0.04); display:flex; justify-content:space-between; gap:12px; box-shadow:var(--card-shadow); }
-  .top-left,.top-right{ display:flex; gap:12px; align-items:center; }
-  .label{ font-size:13px; color:var(--muted); font-weight:700; margin-right:6px; }
-  select,input[type="text"]{ padding:10px 12px; border-radius:10px; border:1px solid #e6eef7; background:#fff; min-width:160px; font-size:15px; transition:box-shadow .12s var(--ease), border-color .12s var(--ease); }
-  select:focus,input:focus{ box-shadow:0 12px 30px rgba(11,111,164,0.06); border-color:#cbe8ff; outline:none; }
+  /* Topbar beneath logo (form & lessons) */
+  .topbar {
+    margin: 14px auto;
+    max-width: var(--max-w);
+    padding: 12px;
+    border-radius: 12px;
+    background: linear-gradient(180deg, rgba(255,255,255,0.96), rgba(250,250,250,0.98));
+    border: 1px solid rgba(0,0,0,0.04);
+    box-shadow: var(--card-shadow);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 12px;
+  }
+  .top-left, .top-right { display:flex; gap:12px; align-items:center; }
+  .label { font-size:13px; color:var(--muted); font-weight:700; margin-right:6px; }
+  select, input[type="text"] {
+    padding: 10px 12px; border-radius:10px; border:1px solid #e6eef7; background:#fff; font-size:15px; min-width:160px;
+    transition: box-shadow .12s var(--ease), border-color .12s var(--ease);
+  }
+  select:focus, input:focus { box-shadow: 0 12px 30px rgba(11,111,164,0.06); border-color:#cbe8ff; outline:none; }
 
-  .static{ font-weight:800; font-size:15px; color:#111; }
-  .static-orange{ color:var(--accent-orange); font-weight:900; }
+  .hidden { display: none !important; }
+  .static-left { font-weight:800; font-size:15px; color:#111; }
+  .static-subject { font-weight:900; color: var(--accent-red); } /* subject bold red */
+  .static-school { font-weight:900; color: var(--accent-orange); } /* school / student bold orange */
 
-  .hidden{ display:none !important; }
+  /* Pages & slide transitions (simple & robust) */
+  .page { opacity: 0; transform: translateY(8px); transition: all .36s var(--ease); pointer-events: none; }
+  .page.active { opacity: 1; transform: translateY(0); pointer-events: auto; }
 
-  /* Pages & transitions */
-  .page{ opacity:0; transform: translateY(8px); transition: all .42s var(--ease); pointer-events:none; }
-  .page.active{ opacity:1; transform: translateY(0); pointer-events:auto; }
-  .slide-in-right{ animation: slideInRight .36s var(--ease) forwards; }
-  .slide-out-left{ animation: slideOutLeft .28s var(--ease) forwards; }
-  .slide-in-left{ animation: slideInLeft .36s var(--ease) forwards; }
-  .slide-out-right{ animation: slideOutRight .28s var(--ease) forwards; }
-  @keyframes slideInRight{ from{opacity:0; transform:translateX(18px);} to{opacity:1; transform:translateX(0);} }
-  @keyframes slideOutLeft{ from{opacity:1; transform:translateX(0);} to{opacity:0; transform:translateX(-12px);} }
-  @keyframes slideInLeft{ from{opacity:0; transform:translateX(-18px);} to{opacity:1; transform:translateX(0);} }
-  @keyframes slideOutRight{ from{opacity:1; transform:translateX(0);} to{opacity:0; transform:translateX(12px);} }
+  .slide-in { animation: slideIn .34s var(--ease) forwards; }
+  .slide-out { animation: slideOut .26s var(--ease) forwards; }
+  @keyframes slideIn { from{ opacity:0; transform: translateY(8px); } to{ opacity:1; transform: translateY(0); } }
+  @keyframes slideOut { from{ opacity:1; transform: translateY(0); } to{ opacity:0; transform: translateY(-8px); } }
 
   /* Home hero */
-  .hero{ text-align:center; padding:44px 12px 6px; }
-  .welcome-line{ font-weight:800; line-height:1; font-size:clamp(28px,5.6vw,44px); opacity:0; transform:translateY(10px); animation: fadeUp .6s var(--ease) forwards; }
-  .welcome-line.w1{ color:var(--accent-red); animation-delay:.12s; }
-  .welcome-line.w2{ color:var(--accent-blue); animation-delay:.36s; }
-  .welcome-line.w3{ color:var(--accent-orange); animation-delay:.60s; }
-  @keyframes fadeUp{ to{ opacity:1; transform:translateY(0);} }
-  .hero-sub{ color:var(--muted); margin-top:12px; font-size:15px; max-width:860px; margin-left:auto; margin-right:auto; }
-  .cta{ margin-top:20px; display:flex; gap:12px; justify-content:center; }
-  .btn{ padding:12px 18px; border-radius:12px; border:0; cursor:pointer; font-weight:800; font-size:15px; transition: transform .14s var(--ease), box-shadow .14s var(--ease); }
-  .btn-primary{ background:linear-gradient(90deg,#ff9a3d,var(--accent-orange)); color:#fff; box-shadow:0 12px 30px rgba(255,123,0,0.12); }
-  .btn-primary:hover{ transform:translateY(-3px); box-shadow:0 22px 42px rgba(255,123,0,0.14); }
-  .btn-ghost{ background:transparent; border:1px solid rgba(11,111,164,0.08); color:var(--accent-blue); }
+  .hero { text-align:center; padding: 44px 12px 6px; }
+  .welcome-line { font-weight:800; line-height:1; font-size: clamp(28px,5.6vw,44px); opacity:0; transform: translateY(10px); animation: fadeUp .6s var(--ease) forwards; }
+  .welcome-line.w1 { color: var(--accent-red); animation-delay: .12s; }
+  .welcome-line.w2 { color: var(--accent-blue); animation-delay: .36s; }
+  .welcome-line.w3 { color: var(--accent-orange); animation-delay: .60s; }
+  @keyframes fadeUp { to { opacity:1; transform: translateY(0); } }
+  .hero-sub { color: var(--muted); margin-top:12px; font-size:15px; max-width:860px; margin-left:auto; margin-right:auto; }
+  .cta { margin-top:20px; display:flex; gap:12px; justify-content:center; }
+
+  .btn { padding:12px 18px; border-radius:12px; border:0; cursor:pointer; font-weight:800; font-size:15px; transition: transform .14s var(--ease), box-shadow .14s var(--ease); }
+  .btn-primary { background: linear-gradient(90deg,#ff9a3d,var(--accent-orange)); color:#fff; box-shadow:0 12px 30px rgba(255,123,0,0.12); }
+  .btn-primary:hover { transform: translateY(-3px); box-shadow:0 22px 42px rgba(255,123,0,0.14); }
+  .btn-ghost { background:transparent; border:1px solid rgba(11,111,164,0.08); color:var(--accent-blue); }
 
   /* Form card */
-  .card{ background:#fff; border-radius:12px; padding:18px; box-shadow:var(--card-shadow); max-width:760px; margin:18px auto; }
-  .form-row{ display:flex; gap:12px; flex-wrap:wrap; margin-top:12px; align-items:center; }
-  .field{ min-width:220px; flex:1; display:flex; flex-direction:column; gap:8px; }
-  label{ font-weight:700; color:#333; font-size:14px; }
-  .hint{ color:var(--muted); font-size:13px; margin-top:8px; }
+  .card { background: #fff; border-radius: 12px; padding: 18px; box-shadow: var(--card-shadow); max-width:760px; margin: 18px auto; }
+  .form-row { display:flex; gap:12px; flex-wrap:wrap; margin-top:12px; align-items:center; }
+  .field { min-width:220px; flex:1; display:flex; flex-direction:column; gap:8px; }
+  label { font-weight:700; color:#333; font-size:14px; }
+  .hint { color: var(--muted); font-size:13px; margin-top:8px; }
 
-  /* Info banner on Form (centered, bold orange) */
-  .info-banner{ margin:12px auto 6px; text-align:center; font-weight:900; color:var(--accent-orange); font-size:15px; }
+  /* Info banner (centered bold orange on Form) */
+  .info-banner { margin: 12px auto 6px; text-align:center; font-weight:900; color:var(--accent-orange); font-size:15px; }
 
-  /* Lessons grid: centered tiles */
-  .lessons-grid{ display:grid; grid-template-columns: repeat(5, 1fr); gap:20px; justify-items:center; max-width:980px; margin:12px auto; }
-  @media (max-width:1200px){ .lessons-grid{ grid-template-columns: repeat(4,1fr); } }
-  @media (max-width:900px){ .lessons-grid{ grid-template-columns: repeat(3,1fr); } }
-  @media (max-width:600px){ .lessons-grid{ grid-template-columns: repeat(2,1fr); } }
+  /* Lessons grid: centered attractive tiles */
+  .lessons-intro { text-align:center; color:var(--muted); margin-bottom:8px; font-size:14px; }
+  .lessons-grid {
+    display:grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 20px;
+    justify-items:center;
+    max-width: 980px;
+    margin: 12px auto;
+  }
+  @media (max-width:1200px){ .lessons-grid { grid-template-columns: repeat(4,1fr); } }
+  @media (max-width:900px){ .lessons-grid { grid-template-columns: repeat(3,1fr); } }
+  @media (max-width:600px){ .lessons-grid { grid-template-columns: repeat(2,1fr); } }
 
-  .lesson-tile{ width:100%; max-width:220px; height:98px; border-radius:16px; background:linear-gradient(180deg,#fff,#fbfdff); border:1px solid rgba(0,0,0,0.04); font-weight:900; font-size:18px; color:#071225; display:flex; align-items:center; justify-content:center; cursor:pointer; box-shadow:0 10px 30px rgba(12,34,56,0.06); transition: transform .14s var(--ease), box-shadow .14s var(--ease); position:relative; overflow:hidden; }
-  .lesson-tile:hover{ transform: translateY(-10px) rotateX(2deg) scale(1.03); box-shadow:0 28px 64px rgba(12,34,56,0.12); filter:saturate(1.02); }
+  .lesson-tile {
+    width:100%; max-width:220px; height:98px;
+    border-radius:16px; background: linear-gradient(180deg,#fff,#fbfdff);
+    border:1px solid rgba(0,0,0,0.04); font-weight:900; font-size:18px; color:#071225;
+    display:flex; align-items:center; justify-content:center; cursor:pointer;
+    box-shadow: 0 10px 30px rgba(12,34,56,0.06);
+    transition: transform .14s var(--ease), box-shadow .14s var(--ease);
+    position:relative; overflow:hidden;
+  }
+  .lesson-tile:hover { transform: translateY(-10px) rotateX(2deg) scale(1.03); box-shadow:0 28px 64px rgba(12,34,56,0.12); filter: saturate(1.02); }
 
-  .ripple{ position:absolute; border-radius:50%; transform:scale(0); animation:ripple .6s linear; background: rgba(11,111,164,0.12); pointer-events:none; }
-  @keyframes ripple{ to{ transform:scale(4); opacity:0; } }
+  .ripple { position:absolute; border-radius:50%; transform:scale(0); animation:ripple .6s linear; background: rgba(11,111,164,0.12); pointer-events:none; }
+  @keyframes ripple { to { transform:scale(4); opacity:0; } }
 
-  /* subject top border accents (applied to lessons page wrapper) */
-  .subject-maths .lesson-tile{ border-top:10px solid #4a90e2; }
-  .subject-english .lesson-tile{ border-top:10px solid #ff9a3d; }
-  .subject-science .lesson-tile{ border-top:10px solid #2aa87a; }
-  .subject-social .lesson-tile{ border-top:10px solid #ec5a9a; }
-  .subject-nepali .lesson-tile{ border-top:10px solid #8b1f1f; }
-  .subject-hamro .lesson-tile{ border-top:10px solid #cc6600; }
+  /* subject accent */
+  .subject-maths .lesson-tile { border-top:10px solid #4a90e2; }
+  .subject-english .lesson-tile { border-top:10px solid #ff9a3d; }
+  .subject-science .lesson-tile { border-top:10px solid #2aa87a; }
+  .subject-social .lesson-tile { border-top:10px solid #ec5a9a; }
+  .subject-nepali .lesson-tile { border-top:10px solid #8b1f1f; }
+  .subject-hamro .lesson-tile { border-top:10px solid #cc6600; }
 
-  /* overlay modal */
-  .overlay{ position:fixed; inset:0; display:none; align-items:center; justify-content:center; background: rgba(8,12,20,0.42); z-index:120; }
-  .overlay.open{ display:flex; }
-  .modal{ background:#fff; border-radius:12px; padding:18px; width:min(720px,92%); box-shadow:0 28px 80px rgba(8,18,40,0.22); }
-  .modal h3{ margin:0; } .modal .meta{ color:var(--muted); margin-top:6px; font-size:14px; }
+  /* modal */
+  .overlay { position:fixed; inset:0; display:none; align-items:center; justify-content:center; background: rgba(8,12,20,0.42); z-index:120; }
+  .overlay.open { display:flex; }
+  .modal { background:#fff; border-radius:12px; padding:18px; width:min(720px,92%); box-shadow:0 28px 80px rgba(8,18,40,0.22); }
+  .modal h3 { margin:0; }
+  .modal .meta { color:var(--muted); margin-top:6px; font-size:14px; }
 
-  footer{ position:fixed; left:0; right:0; bottom:0; background:linear-gradient(90deg,var(--accent-blue),#06607f); color:#fff; padding:12px 18px; text-align:center; font-weight:700; box-shadow:0 -6px 22px rgba(2,22,40,0.06); }
+  footer { position:fixed; left:0; right:0; bottom:0; background: linear-gradient(90deg,var(--accent-blue), #06607f); color:#fff; padding:12px 18px; text-align:center; font-weight:700; box-shadow:0 -6px 22px rgba(2,22,40,0.06); }
 </style>
 </head>
 <body>
@@ -109,14 +156,14 @@
     <img id="logo" src="GMN Logo.png" alt="GMN Logo" />
   </header>
 
-  <!-- Topbar (under logo). Hidden on Home. Shows selects on Form. On Lessons it shows static grade/subject. -->
+  <!-- Topbar under logo: hidden on home, visible on form & lessons -->
   <div id="topbar" class="topbar hidden" aria-hidden="true">
     <div class="top-left">
       <div class="label">Grade</div>
       <select id="gradeSelect" aria-label="Select Grade">
         <option value="">Select class</option>
       </select>
-      <div id="gradeStatic" class="static hidden" aria-hidden="true">Grade: —</div>
+      <div id="gradeStatic" class="static-left hidden" aria-hidden="true">Grade: —</div>
     </div>
 
     <div class="top-right">
@@ -124,7 +171,7 @@
       <select id="subjectSelect" aria-label="Select Subject">
         <option value="">Select subject</option>
       </select>
-      <div id="subjectStatic" class="static-orange hidden" aria-hidden="true">Subject: —</div>
+      <div id="subjectStatic" class="static-subject hidden" aria-hidden="true">Subject: —</div>
     </div>
   </div>
 
@@ -137,28 +184,35 @@
           <div class="welcome-line w2">to</div>
           <div class="welcome-line w3">Gyan Mandala Nepal</div>
         </div>
-        <p class="hero-sub">Warm, modern, and playful learning. Click start to choose your class and subject.</p>
+        <p class="hero-sub">Warm, engaging learning for students. Click to begin.</p>
         <div class="cta">
           <button id="btnPortal" class="btn btn-primary">Go to Learning Portal</button>
-          <button id="btnHelp" class="btn btn-ghost" onclick="alert('Pick a grade, subject and enter School name; lessons open automatically — student name is optional.')">How it works</button>
+          <button id="btnHelp" class="btn btn-ghost" onclick="alert('Select Grade, Subject, and enter School name (student optional). Lessons open automatically.')">How it works</button>
         </div>
       </div>
     </section>
 
-    <!-- FORM PAGE (School & Student inputs, Start Lessons button optional) -->
+    <!-- FORM PAGE -->
     <section id="formPage" class="page" tabindex="-1" style="display:none;">
-      <div class="card">
-        <h2>Student Details</h2>
+      <div class="card" role="region" aria-labelledby="formTitle">
+        <h2 id="formTitle">Student Details</h2>
 
-        <!-- Info banner (centered, bold orange) shown when info present -->
+        <!-- Centered orange banner on Form when info present -->
         <div id="infoBanner" class="info-banner hidden" aria-hidden="true"></div>
 
         <div class="form-row">
-          <div class="field"><label for="schoolInput">School Name <span style="color:var(--muted); font-weight:600; font-size:13px;">(required)</span></label><input id="schoolInput" type="text" placeholder="e.g., Everest School"></div>
-          <div class="field"><label for="studentInput">Student Name <span style="color:var(--muted); font-weight:600; font-size:13px;">(optional)</span></label><input id="studentInput" type="text" placeholder="e.g., Rishi"></div>
+          <div class="field">
+            <label for="schoolInput">School Name <span style="color:var(--muted); font-weight:600; font-size:13px;">(required)</span></label>
+            <input id="schoolInput" type="text" placeholder="e.g., Everest School" />
+          </div>
+
+          <div class="field">
+            <label for="studentInput">Student Name <span style="color:var(--muted); font-weight:600; font-size:13px;">(optional)</span></label>
+            <input id="studentInput" type="text" placeholder="e.g., Rishi" />
+          </div>
         </div>
 
-        <div class="hint">Use Grade & Subject in the topbar above. Lessons will auto-open when School + Grade + Subject are set. You may also click Start Lessons manually.</div>
+        <div class="hint">Choose Grade & Subject in the topbar above. Lessons open automatically when School + Grade + Subject are set. Or click Start Lessons.</div>
 
         <div style="display:flex; gap:12px; margin-top:14px;">
           <button id="btnStartLessons" class="btn btn-primary">Start Lessons</button>
@@ -178,7 +232,17 @@
           <span id="crumbSubjectName" style="font-weight:900"></span>
         </nav>
 
-        <div id="lessonsIntro" class="lessons-intro" style="text-align:center; margin-bottom:12px;">20 lessons • click to preview</div>
+        <!-- Header beneath topbar: left Grade, right Subject (subject bold red). School & Student below in bold orange -->
+        <div style="display:flex; justify-content:space-between; align-items:center; gap:12px; margin-bottom:8px;">
+          <div id="lessonsGrade" class="static-left">Grade: —</div>
+          <div id="lessonsSubject" class="static-subject">Subject: —</div>
+        </div>
+        <div style="text-align:center; margin-bottom:10px;">
+          <span id="lessonsSchool" class="static-school"></span>
+          <span id="lessonsStudent" class="static-school" style="margin-left:14px"></span>
+        </div>
+
+        <div id="lessonsIntro" class="lessons-intro">20 lessons • click to preview</div>
 
         <div id="lessonsGrid" class="lessons-grid" role="list" aria-label="Lessons list"></div>
       </div>
@@ -192,7 +256,7 @@
     <div class="modal" role="document">
       <h3 id="modalTitle">Lesson</h3>
       <div id="modalMeta" class="meta"></div>
-      <p id="modalBody" style="margin-top:10px;color:#334155;">Preview — replace with actual lesson content.</p>
+      <p id="modalBody" style="margin-top:10px;color:#334155;">This is a demo preview — replace with actual lesson content.</p>
       <div style="display:flex; justify-content:flex-end; gap:8px; margin-top:12px;">
         <button class="btn btn-ghost" onclick="closeModal()">Close</button>
         <button class="btn btn-primary" onclick="alert('Open lesson — demo')">Open</button>
@@ -201,178 +265,191 @@
   </div>
 
 <script>
-/* =========================
-   App state / mappings
-   ========================= */
+/* ============================
+   App state & mappings
+   ============================ */
 const state = {
-  grades: Array.from({length:10}, (_,i)=>i+1),
+  grades: Array.from({length:10}, (_,i) => i+1),
   subjectsLow: [
-    {id:'maths', name:'Mathematics'},
-    {id:'english', name:'English'},
-    {id:'hamro', name:'Hamro Serophero'},
-    {id:'nepali', name:'Nepali'}
+    {id: 'maths', name: 'Mathematics'},
+    {id: 'english', name: 'English'},
+    {id: 'hamro', name: 'Hamro Serophero'},
+    {id: 'nepali', name: 'Nepali'}
   ],
   subjectsHigh: [
-    {id:'maths', name:'Mathematics'},
-    {id:'english', name:'English'},
-    {id:'science', name:'Science'},
-    {id:'nepali', name:'Nepali'},
-    {id:'social', name:'Social Studies'}
+    {id: 'maths', name: 'Mathematics'},
+    {id: 'english', name: 'English'},
+    {id: 'science', name: 'Science'},
+    {id: 'nepali', name: 'Nepali'},
+    {id: 'social', name: 'Social Studies'}
   ],
-  subjectNames: {maths:'Mathematics', english:'English', hamro:'Hamro Serophero', nepali:'Nepali', science:'Science', social:'Social Studies'},
-  page: 'home'
+  subjectNames: { maths:'Mathematics', english:'English', hamro:'Hamro Serophero', nepali:'Nepali', science:'Science', social:'Social Studies' },
+  page: 'home'  // current page
 };
 
-const $ = sel => document.querySelector(sel);
+const $ = selector => document.querySelector(selector);
 
-/* =========================
-   Utilities
-   ========================= */
-function escapeHtml(s){ return String(s).replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m])); }
-function debounce(fn, ms=260){ let t; return (...a)=>{ clearTimeout(t); t=setTimeout(()=>fn(...a), ms); }; }
+/* ============================
+   Utility helpers
+   ============================ */
+function escapeHtml(s) { return String(s).replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m])); }
+function debounce(fn, wait=260) { let t; return (...args)=>{ clearTimeout(t); t=setTimeout(()=>fn(...args), wait); }; }
 
-/* =========================
-   DOM init: populate grade select once
-   ========================= */
-function populateGrades(){
+/* ============================
+   DOM initialization
+   ============================ */
+function populateGradesOnce() {
   const sel = $('#gradeSelect');
   sel.innerHTML = '<option value="">Select class</option>';
   state.grades.forEach(g => {
-    const opt = document.createElement('option'); opt.value = g; opt.textContent = `Class ${g}`; sel.appendChild(opt);
+    const o = document.createElement('option');
+    o.value = g;
+    o.textContent = `Class ${g}`;
+    sel.appendChild(o);
   });
 }
 
-/* =========================
-   Update subjects based on grade
-   ========================= */
-function updateSubjectsForGrade(grade){
+/* update the subject dropdown depending on grade */
+function updateSubjectsForGrade(grade) {
   const sel = $('#subjectSelect');
   sel.innerHTML = '<option value="">Select subject</option>';
   if(!grade) return;
   const list = grade <= 3 ? state.subjectsLow : state.subjectsHigh;
-  list.forEach(s => { const opt = document.createElement('option'); opt.value = s.id; opt.textContent = s.name; sel.appendChild(opt); });
+  list.forEach(s => {
+    const o = document.createElement('option');
+    o.value = s.id;
+    o.textContent = s.name;
+    sel.appendChild(o);
+  });
 }
 
-/* =========================
-   Page show with slide animations
-   ========================= */
-function showPage(target, direction='right'){
-  const map = {home:'#homePage', form:'#formPage', lessons:'#lessonsPage'};
+/* smooth page show */
+function showPage(target) {
+  const mapping = { home: '#homePage', form: '#formPage', lessons: '#lessonsPage' };
   if(state.page === target) return;
-  const fromEl = document.querySelector(map[state.page]);
-  const toEl = document.querySelector(map[target]);
+  const fromEl = document.querySelector(mapping[state.page]);
+  const toEl = document.querySelector(mapping[target]);
 
-  // topbar visibility
-  if(target === 'home'){ $('#topbar').classList.add('hidden'); $('#topbar').setAttribute('aria-hidden','true'); }
-  else { $('#topbar').classList.remove('hidden'); $('#topbar').removeAttribute('aria-hidden'); }
-
-  if(fromEl){
-    fromEl.classList.remove('active');
-    if(direction === 'right'){ fromEl.classList.add('slide-out-left'); setTimeout(()=> fromEl.classList.remove('slide-out-left'), 340); }
-    else { fromEl.classList.add('slide-out-right'); setTimeout(()=> fromEl.classList.remove('slide-out-right'), 340); }
+  // topbar visibility: hide on home, show on form & lessons
+  if(target === 'home') {
+    $('#topbar').classList.add('hidden');
+    $('#topbar').setAttribute('aria-hidden', 'true');
+  } else {
+    $('#topbar').classList.remove('hidden');
+    $('#topbar').removeAttribute('aria-hidden');
   }
 
-  toEl.classList.add('active');
-  if(direction === 'right'){ toEl.classList.add('slide-in-right'); setTimeout(()=> toEl.classList.remove('slide-in-right'), 380); }
-  else { toEl.classList.add('slide-in-left'); setTimeout(()=> toEl.classList.remove('slide-in-left'), 380); }
+  // simple fade/slide classes
+  if(fromEl) { fromEl.classList.remove('active'); fromEl.classList.add('slide-out'); setTimeout(()=>fromEl.classList.remove('slide-out'), 350); }
+  toEl.classList.add('active'); toEl.classList.add('slide-in'); setTimeout(()=>toEl.classList.remove('slide-in'), 360);
 
   state.page = target;
-  setTimeout(()=> toEl.focus && toEl.focus(), 220);
+  // focus for accessibility
+  setTimeout(()=> { try { toEl.focus(); } catch(e) {} }, 220);
 }
 
-/* =========================
-   Validate if subject is allowed for grade
-   ========================= */
-function isValidCombination(grade, subjectId){
+/* validate subject membership for grade */
+function isValidCombo(grade, subjectId) {
   if(!grade || !subjectId) return false;
   const low = state.subjectsLow.map(s=>s.id);
   const high = state.subjectsHigh.map(s=>s.id);
-  return (grade <= 3) ? low.includes(subjectId) : high.includes(subjectId);
+  return grade <= 3 ? low.includes(subjectId) : high.includes(subjectId);
 }
 
-/* =========================
-   Sync topbar to static (lessons) or selects (form)
-   ========================= */
-function setTopbarToForm(){
-  $('#gradeSelect').classList.remove('hidden'); $('#subjectSelect').classList.remove('hidden');
-  $('#gradeStatic').classList.add('hidden'); $('#subjectStatic').classList.add('hidden');
-  $('#infoBanner').classList.add('hidden'); $('#infoBanner').setAttribute('aria-hidden','true');
+/* set topbar to form mode (show selects) */
+function topbarFormMode() {
+  $('#gradeSelect').classList.remove('hidden');
+  $('#subjectSelect').classList.remove('hidden');
+  $('#gradeStatic').classList.add('hidden');
+  $('#subjectStatic').classList.add('hidden');
+  $('#infoBanner').classList.add('hidden');
 }
-function setTopbarToStatic(grade, subjectId){
-  $('#gradeSelect').classList.add('hidden'); $('#subjectSelect').classList.add('hidden');
-  $('#gradeStatic').classList.remove('hidden'); $('#subjectStatic').classList.remove('hidden');
+
+/* set topbar to lessons mode (show static grade/subject) */
+function topbarLessonsMode(grade, subjectId) {
+  $('#gradeSelect').classList.add('hidden');
+  $('#subjectSelect').classList.add('hidden');
+  $('#gradeStatic').classList.remove('hidden');
+  $('#subjectStatic').classList.remove('hidden');
+
   $('#gradeStatic').textContent = `Grade: ${grade}`;
-  $('#subjectStatic').innerHTML = `Subject: <span style="font-weight:900;color:var(--accent-orange)">${escapeHtml(state.subjectNames[subjectId]||subjectId)}</span>`;
+  $('#subjectStatic').innerHTML = `Subject: <span class="static-subject">${escapeHtml(state.subjectNames[subjectId] || subjectId)}</span>`;
 }
 
-/* =========================
-   Info Banner on Form (centered bold orange)
-   Shows when grade+subject+school present
-   ========================= */
-function updateInfoBanner(grade, subjectId, school, student){
+/* update centered info banner on form */
+function updateInfoBanner(grade, subjectId, school, student) {
   const banner = $('#infoBanner');
-  if(grade && subjectId && school){
-    const studentTxt = student ? ` Student: ${escapeHtml(student)}` : '';
-    banner.textContent = `Grade: ${grade}   Subject: ${state.subjectNames[subjectId]}   School: ${school}${student? '   Student: ' + student : ''}`;
-    banner.classList.remove('hidden'); banner.removeAttribute('aria-hidden');
+  if(grade && subjectId && school) {
+    const studentTxt = student ? `   Student: ${escapeHtml(student)}` : '';
+    banner.textContent = `Grade: ${grade}   Subject: ${state.subjectNames[subjectId]}   School: ${school}${studentTxt}`;
+    banner.classList.remove('hidden');
+    banner.removeAttribute('aria-hidden');
   } else {
-    banner.classList.add('hidden'); banner.setAttribute('aria-hidden','true');
+    banner.classList.add('hidden');
+    banner.setAttribute('aria-hidden', 'true');
   }
 }
 
-/* =========================
-   Render lesson tiles
-   ========================= */
-function renderLessons(grade, subjectId, school='', student=''){
+/* render 20 lesson tiles */
+function renderLessonsGrid(grade, subjectId, school='', student='') {
   $('#crumbSubjectName').textContent = state.subjectNames[subjectId] || subjectId;
-  $('#lessonsIntro').textContent = `20 lessons • ${state.subjectNames[subjectId]} • Class ${grade}` + (school? ` • ${school}`: '') + (student? ` • ${student}`: '');
-  // subject accent class on lessons page
-  const lessonsEl = $('#lessonsPage');
-  lessonsEl.classList.remove('subject-maths','subject-english','subject-science','subject-social','subject-nepali','subject-hamro');
-  lessonsEl.classList.add('subject-' + subjectId);
+  $('#lessonsIntro').textContent = `20 lessons • ${state.subjectNames[subjectId]} • Class ${grade}` + (school ? ` • ${school}` : '') + (student ? ` • ${student}` : '');
 
-  const grid = $('#lessonsGrid'); grid.innerHTML = '';
+  // show school & student near header as bold orange
+  $('#lessonsGrade').textContent = `Grade: ${grade}`;
+  $('#lessonsSubject').innerHTML = `Subject: <span class="static-subject">${escapeHtml(state.subjectNames[subjectId] || subjectId)}</span>`;
+  $('#lessonsSchool').textContent = school ? `School: ${school}` : '';
+  $('#lessonsStudent').textContent = student ? `Student: ${student}` : '';
+
+  // subject accent class on lessons page
+  const lessonsPage = $('#lessonsPage');
+  lessonsPage.classList.remove('subject-maths','subject-english','subject-science','subject-social','subject-nepali','subject-hamro');
+  lessonsPage.classList.add('subject-' + subjectId);
+
+  const grid = $('#lessonsGrid');
+  grid.innerHTML = '';
   for(let i=1;i<=20;i++){
-    const tile = document.createElement('button');
-    tile.className = 'lesson-tile';
-    tile.setAttribute('aria-label', `Lesson ${i}`);
-    tile.textContent = `Lesson ${i}`;
-    tile.addEventListener('click', ev => { createRipple(ev, tile); openModal(grade, subjectId, i, school, student); });
-    tile.addEventListener('keydown', e => { if(e.key==='Enter' || e.key===' ') { e.preventDefault(); tile.click(); } });
-    grid.appendChild(tile);
+    const btn = document.createElement('button');
+    btn.className = 'lesson-tile';
+    btn.type = 'button';
+    btn.textContent = `Lesson ${i}`;
+    btn.setAttribute('aria-label', `Lesson ${i}`);
+    // ripple + modal
+    btn.addEventListener('click', (ev) => { rippleEffect(ev, btn); openLessonModal(grade, subjectId, i, school, student); });
+    btn.addEventListener('keydown', (e)=> { if(e.key === 'Enter' || e.key === ' ') { e.preventDefault(); btn.click(); } });
+    grid.appendChild(btn);
   }
 }
 
-/* =========================
-   Ripple effect
-   ========================= */
-function createRipple(e, el){
-  const circle = document.createElement('span'); circle.className = 'ripple';
+/* ripple implementation */
+function rippleEffect(e, el) {
+  const r = document.createElement('span');
+  r.className = 'ripple';
   const rect = el.getBoundingClientRect();
   const size = Math.max(rect.width, rect.height);
-  circle.style.width = circle.style.height = size + 'px';
-  circle.style.left = (e.clientX - rect.left - size/2) + 'px';
-  circle.style.top  = (e.clientY - rect.top - size/2) + 'px';
-  el.appendChild(circle);
-  setTimeout(()=> circle.remove(), 650);
+  r.style.width = r.style.height = size + 'px';
+  r.style.left = (e.clientX - rect.left - size/2) + 'px';
+  r.style.top  = (e.clientY - rect.top - size/2) + 'px';
+  el.appendChild(r);
+  setTimeout(()=> r.remove(), 650);
 }
 
-/* =========================
-   Modal
-   ========================= */
-function openModal(grade, subjectId, lessonNum, school, student){
-  $('#modalTitle').textContent = `Lesson ${lessonNum}`;
-  $('#modalMeta').textContent = `${state.subjectNames[subjectId]} • Class ${grade}` + (school?` • ${school}`:'') + (student?` • ${student}`:'');
-  $('#overlay').classList.add('open'); $('#overlay').setAttribute('aria-hidden','false');
+/* modal for lesson preview */
+function openLessonModal(grade, subjectId, lessonNumber, school, student) {
+  $('#modalTitle').textContent = `Lesson ${lessonNumber}`;
+  $('#modalMeta').textContent = `${state.subjectNames[subjectId]} • Class ${grade}` + (school ? ` • ${school}` : '') + (student ? ` • ${student}` : '');
+  $('#overlay').classList.add('open');
+  $('#overlay').setAttribute('aria-hidden','false');
 }
-function closeModal(){ $('#overlay').classList.remove('open'); $('#overlay').setAttribute('aria-hidden','true'); }
-$('#overlay').addEventListener('click', e => { if(e.target === $('#overlay')) closeModal(); });
-document.addEventListener('keyup', e => { if(e.key === 'Escape') closeModal(); });
+function closeModal() {
+  $('#overlay').classList.remove('open');
+  $('#overlay').setAttribute('aria-hidden','true');
+}
+document.getElementById('overlay').addEventListener('click', (e) => { if(e.target === $('#overlay')) closeModal(); });
+document.addEventListener('keyup', (e)=> { if(e.key === 'Escape') closeModal(); });
 
-/* =========================
-   Auto-navigation: debounce wrapper
-   ========================= */
-const autoNavigate = debounce(() => {
+/* check required values and auto-navigate: debounce to avoid jumpy behavior */
+const attemptAutoNavigate = debounce(() => {
   const grade = parseInt($('#gradeSelect').value);
   const subjectId = $('#subjectSelect').value;
   const school = $('#schoolInput').value.trim();
@@ -380,109 +457,99 @@ const autoNavigate = debounce(() => {
 
   updateInfoBanner(grade, subjectId, school, student);
 
-  if(grade && subjectId && school){
-    if(!isValidCombination(grade, subjectId)){
-      alert('Invalid class–subject combination for that grade.');
+  if(grade && subjectId && school) {
+    if(!isValidCombo(grade, subjectId)) {
+      alert('Invalid class–subject combination for this grade.');
       return;
     }
-    // make topbar static & navigate
-    setTopbarToStatic(grade, subjectId);
-    renderLessons(grade, subjectId, school, student);
-    showPage('lessons','right');
+    // switch topbar to static and show lessons
+    topbarLessonsMode(grade, subjectId);
+    renderLessonsGrid(grade, subjectId, school, student);
+    showPage('lessons');
   }
 }, 300);
 
-/* =========================
-   Start Lessons (manual) handler
-   ========================= */
-function startLessonsManual(){
+/* manual start lessons button fallback */
+function startLessonsManual() {
   const grade = parseInt($('#gradeSelect').value);
   const subjectId = $('#subjectSelect').value;
   const school = $('#schoolInput').value.trim();
   const student = $('#studentInput').value.trim();
 
-  if(!grade || !subjectId){
-    alert('Please choose Grade and Subject from the topbar.');
-    return;
-  }
-  if(!school){
-    alert('Please enter School Name.');
-    return;
-  }
-  if(!isValidCombination(grade, subjectId)){
-    alert('Invalid class–subject combination for that grade.');
-    return;
-  }
+  if(!grade || !subjectId) { alert('Please choose Grade and Subject in the top bar.'); return; }
+  if(!school) { alert('Please enter School Name.'); return; }
+  if(!isValidCombo(grade, subjectId)) { alert('Invalid class–subject combination for this grade.'); return; }
 
-  // set static topbar and navigate
-  setTopbarToStatic(grade, subjectId);
-  renderLessons(grade, subjectId, school, student);
-  showPage('lessons','right');
+  topbarLessonsMode(grade, subjectId);
+  renderLessonsGrid(grade, subjectId, school, student);
+  showPage('lessons');
 }
 
-/* =========================
-   Initialization: bind events & populate
-   ========================= */
-document.addEventListener('DOMContentLoaded', ()=>{
-  populateGrades();
+/* ============================
+   Attach events & boot
+   ============================ */
+document.addEventListener('DOMContentLoaded', () => {
+  // populate grade dropdown once
+  populateGradesOnce();
 
-  // initially hide topbar on home
+  // start with topbar hidden (home)
   $('#topbar').classList.add('hidden'); $('#topbar').setAttribute('aria-hidden','true');
 
-  // logo returns to home and resets selections
-  $('#logo').addEventListener('click', ()=>{
-    // reset selects & inputs
+  // logo -> always go home (reset)
+  $('#logo').addEventListener('click', () => {
+    // reset all form inputs & selects
     $('#gradeSelect').value = '';
     $('#subjectSelect').innerHTML = '<option value="">Select subject</option>';
     $('#schoolInput').value = '';
     $('#studentInput').value = '';
-    setTopbarToForm(); // make sure selects visible
+
+    topbarFormMode();
     $('#infoBanner').classList.add('hidden'); $('#infoBanner').setAttribute('aria-hidden','true');
     $('#topbar').classList.add('hidden'); $('#topbar').setAttribute('aria-hidden','true');
-    showPage('home','left');
+    showPage('home');
   });
 
-  // Portal button -> show form and topbar selects
-  $('#btnPortal').addEventListener('click', ()=>{
+  // portal button -> show form and topbar selects
+  $('#btnPortal').addEventListener('click', () => {
     $('#topbar').classList.remove('hidden'); $('#topbar').removeAttribute('aria-hidden');
-    setTopbarToForm();
-    showPage('form','right');
-    setTimeout(()=> $('#gradeSelect').focus(), 220);
+    topbarFormMode();
+    showPage('form');
+    setTimeout(()=> $('#gradeSelect').focus(), 200);
   });
 
-  // grade change -> update subjects + auto navigate attempt
-  $('#gradeSelect').addEventListener('change', e => {
-    const grade = parseInt(e.target.value);
-    updateSubjectsForGrade(grade);
-    autoNavigate();
+  // grade change -> populate subjects and attempt auto navigate
+  $('#gradeSelect').addEventListener('change', (e) => {
+    const g = parseInt(e.target.value);
+    updateSubjectsForGrade(g);
+    attemptAutoNavigate();
   });
 
-  // subject change -> auto navigate attempt
-  $('#subjectSelect').addEventListener('change', autoNavigate);
+  // subject change -> try auto navigate
+  $('#subjectSelect').addEventListener('change', attemptAutoNavigate);
 
-  // school/student input -> auto navigate attempt
-  $('#schoolInput').addEventListener('input', autoNavigate);
-  $('#studentInput').addEventListener('input', () => { autoNavigate(); });
+  // school & student inputs -> try auto navigate (student optional)
+  $('#schoolInput').addEventListener('input', attemptAutoNavigate);
+  $('#studentInput').addEventListener('input', attemptAutoNavigate);
 
-  // Start Lessons button (manual)
+  // start lessons manual button
   $('#btnStartLessons').addEventListener('click', startLessonsManual);
 
-  // Back Home from Form
-  $('#btnBackHome').addEventListener('click', ()=>{
+  // back home button on form
+  $('#btnBackHome').addEventListener('click', () => {
     $('#topbar').classList.add('hidden'); $('#topbar').setAttribute('aria-hidden','true');
-    showPage('home','left');
+    showPage('home');
   });
 
-  // Breadcrumbs on Lessons
-  $('#crumbChange').addEventListener('click', ()=>{
-    // show selects again (preserve values)
-    setTopbarToForm();
+  // lesson page crumbs
+  $('#crumbChange').addEventListener('click', () => {
+    // show form with selects visible (retain current values)
+    topbarFormMode();
     $('#topbar').classList.remove('hidden'); $('#topbar').removeAttribute('aria-hidden');
-    showPage('form','left');
+    showPage('form');
   });
-  $('#crumbHome').addEventListener('click', ()=>{
+  $('#crumbHome').addEventListener('click', () => {
     $('#topbar').classList.add('hidden'); $('#topbar').setAttribute('aria-hidden','true');
-    showPage('home','left');
+    showPage('home');
   });
 });
 </script>
