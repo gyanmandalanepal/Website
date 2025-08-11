@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Learning Portal</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <h2>Enter Your Details</h2>
+        <form id="studentForm">
+            <input type="text" id="schoolName" placeholder="School Name" required>
+            <input type="text" id="studentName" placeholder="Student Name" required>
+
+            <select id="grade" required>
+                <option value="">Select Grade</option>
+                <script>
+                    for (let i = 1; i <= 10; i++) {
+                        document.write(`<option value="${i}">Grade ${i}</option>`);
+                    }
+                </script>
+            </select>
+
+            <select id="subject" required>
+                <option value="">Select Subject</option>
+                <option value="maths">Maths</option>
+                <option value="english">English</option>
+                <option value="science">Science</option>
+                <option value="social">Social Study</option>
+                <option value="nepali">Nepali</option>
+            </select>
+
+            <button type="submit">Enter</button>
+        </form>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
