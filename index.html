@@ -14,8 +14,16 @@
             min-height: 100vh;
             text-align: center;
         }
-        header { position: relative; padding: 10px 20px; }
-        .logo { position: absolute; top: 10px; right: 20px; width: 80px; height: auto; }
+        header {
+            background-color: white;
+            padding: 15px 0;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+        }
+        .logo {
+            width: 150px;
+            max-width: 80%;
+            height: auto;
+        }
         .container { flex: 1; padding: 20px; }
         h1, h2 { color: #222; }
         p { color: #444; font-size: 18px; }
@@ -25,7 +33,7 @@
         input, select { display: block; margin: 10px auto; padding: 10px; width: 250px; border-radius: 6px; border: 1px solid #ccc; }
         footer { background-color: #0077b6; color: white; text-align: center; padding: 10px 0; font-size: 0.9rem; }
         @media (max-width: 600px) {
-            .logo { width: 60px; }
+            .logo { width: 120px; }
             h1 { font-size: 2rem; }
             p, .quote { font-size: 1rem; }
         }
@@ -33,11 +41,13 @@
 </head>
 <body>
 
+    <!-- Shared Logo Header -->
+    <header>
+        <img src="GMN Logo.png" alt="Gyan Mandala Nepal Logo" class="logo">
+    </header>
+
     <!-- Home Page -->
     <div id="homePage">
-        <header>
-            <img src="Logo-removebg-preview.png" alt="Gyan Mandala Nepal Logo" class="logo">
-        </header>
         <div class="container">
             <h1>Welcome to Gyan Mandala Nepal</h1>
             <p>Play, Learn, and Discover your world of knowledge!</p>
@@ -80,7 +90,7 @@
     </div>
 
     <script>
-        // Generate grades without document.write
+        // Generate grades
         const gradeSelect = document.getElementById("grade");
         for (let i = 1; i <= 10; i++) {
             let option = document.createElement("option");
@@ -129,7 +139,7 @@
             showSubject(subject);
         });
 
-        // Redirect check on load (prevents direct access)
+        // Redirect check on load
         window.addEventListener("load", function() {
             const hash = window.location.hash;
             if (hash === "#form" && !sessionStorage.getItem("cameFromHome")) {
