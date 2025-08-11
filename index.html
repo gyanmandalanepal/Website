@@ -1,169 +1,662 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gyan Mandala Nepal</title>
-    <style>
-        body {
-            margin: 0;
-            font-family: Arial, sans-serif;
-            background: linear-gradient(to bottom right, #f0f8ff, #d4f1f9);
-            display: flex;
-            flex-direction: column;
-            min-height: 100vh;
-            text-align: center;
-        }
-        header {
-            background-color: white;
-            padding: 10px 20px;
-            position: relative;
-            box-shadow: 0 2px 6px rgba(0,0,0,0.1);
-        }
-        .logo {
-            width: 80px;
-            height: auto;
-            position: absolute;
-            right: 20px;
-            top: 10px;
-        }
-        .container { flex: 1; padding: 20px; }
-        h1, h2 { color: #222; }
-        p { color: #444; font-size: 18px; }
-        .quote { font-style: italic; color: #ff5733; margin: 20px 0; font-size: 1.3rem; }
-        button { background-color: #ff6600; color: white; padding: 12px 24px; font-size: 18px; border: none; cursor: pointer; border-radius: 8px; transition: background 0.3s; }
-        button:hover { background-color: #e65c00; }
-        input, select { display: block; margin: 10px auto; padding: 10px; width: 250px; border-radius: 6px; border: 1px solid #ccc; }
-        footer {
-            background-color: #0077b6;
-            color: white;
-            text-align: center;
-            padding: 10px 0;
-            font-size: 0.9rem;
-            position: fixed;
-            bottom: 0;
-            left: 0;
-            width: 100%;
-        }
-        @media (max-width: 600px) {
-            .logo { width: 60px; }
-            h1 { font-size: 2rem; }
-            p, .quote { font-size: 1rem; }
-        }
-    </style>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Gyan Mandala Nepal — Learning Portal</title>
+  <style>
+    /* ----------------------------------------
+       Base / Layout
+    -----------------------------------------*/
+    :root{
+      --accent-red:#B22222;
+      --accent-saffron:#FF8800;
+      --accent-deepblue:#0B6FA4;
+      --bg-grad-1: #f0f8ff;
+      --bg-grad-2: #d4f1f9;
+      --muted:#666;
+      --card:#ffffff;
+      --radius:12px;
+    }
+    *{box-sizing:border-box}
+    body{
+      margin:0;
+      min-height:100vh;
+      display:flex;
+      flex-direction:column;
+      font-family:Inter,system-ui,Segoe UI,Roboto,"Helvetica Neue",Arial;
+      background: linear-gradient(135deg,var(--bg-grad-1),var(--bg-grad-2));
+      color:#111;
+      -webkit-font-smoothing:antialiased;
+      -moz-osx-font-smoothing:grayscale;
+    }
+    header{
+      position:relative;
+      padding:12px 20px;
+      background:rgba(255,255,255,0.65);
+      backdrop-filter: blur(6px);
+      box-shadow:0 6px 18px rgba(8,30,40,0.06);
+      z-index:10;
+    }
+    main{flex:1; padding:28px 20px; max-width:1100px; margin:0 auto; width:100%;}
+    footer{
+      background:var(--accent-deepblue);
+      color:#fff;
+      text-align:center;
+      padding:10px 12px;
+      font-size:14px;
+      position:fixed;
+      left:0; right:0; bottom:0;
+    }
+
+    /* ----------------------------------------
+       Logo (top-right, slightly lower)
+    -----------------------------------------*/
+    .logo{
+      position:absolute;
+      right:18px;
+      top:18px;              /* slightly lowered visually */
+      width:72px;            /* smaller */
+      height:auto;
+      cursor:pointer;
+      transition: transform .18s ease;
+      border-radius:8px;
+    }
+    .logo:hover{ transform: translateY( -2px ) scale(1.03); }
+
+    /* ----------------------------------------
+       Page container + transitions
+    -----------------------------------------*/
+    .page{ display:none; opacity:0; transform: translateY(6px); transition: all .38s cubic-bezier(.22,.9,.38,1); }
+    .page.active{ display:block; opacity:1; transform: translateY(0); }
+
+    .page-enter{ animation: pageIn .38s forwards; }
+    .page-exit { animation: pageOut .32s forwards; }
+    @keyframes pageIn{
+      from{opacity:0; transform: translateX(12px);}
+      to{opacity:1; transform: translateX(0);}
+    }
+    @keyframes pageOut{
+      from{opacity:1; transform: translateX(0);}
+      to{opacity:0; transform: translateX(-12px);}
+    }
+
+    /* ----------------------------------------
+       Home: animated 3-line greeting
+    -----------------------------------------*/
+    .welcome {
+      display:flex;
+      flex-direction:column;
+      align-items:center;
+      gap:12px;
+      margin-top:40px;
+      margin-bottom:30px;
+    }
+    .welcome-line{
+      font-weight:700;
+      font-size:clamp(28px,5.2vw,46px);
+      line-height:1;
+      opacity:0;
+      transform: translateY(10px);
+      animation: fadeUp .6s forwards;
+    }
+    .welcome-line.w1{ color: #b03a2e; /* warm red */ animation-delay: .15s; }
+    .welcome-line.w2{ color: #ff8c2a; /* saffron */ animation-delay: .36s; font-weight:600; }
+    .welcome-line.w3{ color: #0b6fa4; /* deep blue */ animation-delay: .58s; }
+    @keyframes fadeUp {
+      to{ opacity:1; transform: translateY(0); }
+    }
+
+    .cta{
+      margin-top:20px;
+      display:flex;
+      gap:12px;
+      align-items:center;
+      justify-content:center;
+    }
+    .btn{
+      padding:12px 18px;
+      border-radius:12px;
+      border:0;
+      font-weight:600;
+      cursor:pointer;
+      transition: transform .12s ease, box-shadow .12s ease;
+    }
+    .btn.primary{ background:linear-gradient(90deg,#ff7b2d,#ff3a3a); color:white; box-shadow:0 8px 22px rgba(255,88,64,0.12); }
+    .btn.primary:hover{ transform: translateY(-3px); box-shadow:0 12px 30px rgba(255,88,64,0.16); }
+    .btn.ghost{ background:transparent; border:2px solid rgba(0,0,0,0.06); color:#111; }
+
+    /* ----------------------------------------
+       Form Page: card style, larger, accessible
+    -----------------------------------------*/
+    .card{
+      background:var(--card);
+      border-radius:var(--radius);
+      padding:28px;
+      box-shadow: 0 10px 30px rgba(12,34,56,0.06);
+      max-width:760px;
+      margin: 30px auto;
+    }
+    form{ display:flex; flex-wrap:wrap; gap:14px; justify-content:center; align-items:flex-start; }
+    label{ width:100%; color:var(--muted); font-size:14px; }
+    .field{ display:flex; flex-direction:column; gap:6px; min-width:220px; width:calc(50% - 24px); }
+    .field.full{ width:100%; }
+    input[type="text"], select{
+      padding:14px;
+      border-radius:10px;
+      border:1px solid #e5e7eb;
+      font-size:16px;
+      outline:none;
+      transition:box-shadow .12s ease, border-color .12s ease;
+    }
+    input:focus, select:focus{ box-shadow:0 6px 20px rgba(12,34,56,0.06); border-color:#c6e0ff; }
+    .hint{ font-size:13px; color:#7a7a7a; margin-top:6px; }
+
+    /* Submit hidden (we auto-navigate on selection); kept accessible */
+    .actions{ width:100%; display:flex; justify-content:center; margin-top:12px; }
+
+    /* ----------------------------------------
+       Lessons Page: breadcrumb + lessons grid
+    -----------------------------------------*/
+    .breadcrumb{
+      display:flex; gap:8px; align-items:center; color:#444; font-size:14px;
+      margin-bottom:18px;
+    }
+    .breadcrumb a{ color:var(--accent-deepblue); text-decoration:none; font-weight:600; cursor:pointer; }
+    .lessons-grid{
+      display:grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap:14px;
+      margin-top:10px;
+    }
+    @media (max-width:900px){ .lessons-grid{ grid-template-columns: repeat(3,1fr); } }
+    @media (max-width:640px){ .lessons-grid{ grid-template-columns: repeat(2,1fr); } }
+
+    .lesson-btn{
+      background:#fff;
+      border-radius:12px;
+      padding:14px;
+      display:flex;
+      gap:12px;
+      align-items:center;
+      border:1px solid rgba(0,0,0,0.05);
+      cursor:pointer;
+      transition: transform .14s ease, box-shadow .14s ease, background .14s ease;
+      box-shadow: 0 6px 18px rgba(12,34,56,0.04);
+      text-align:left;
+      font-weight:600;
+    }
+    .lesson-btn:hover{
+      transform: translateY(-6px) scale(1.02);
+      box-shadow: 0 14px 34px rgba(12,34,56,0.09);
+      background: linear-gradient(180deg, rgba(255,255,255,1), rgba(248,248,250,1));
+    }
+    .lesson-icon{
+      width:36px; height:36px; border-radius:8px; display:flex; align-items:center; justify-content:center; flex:0 0 36px;
+    }
+    .lesson-meta{ font-size:14px; color:#222; }
+
+    /* color accents per subject (example) */
+    .sub-maths .lesson-icon{ background:linear-gradient(135deg,#70b6ff,#4a90e2); color:#fff }
+    .sub-science .lesson-icon{ background:linear-gradient(135deg,#8de28a,#2aa87a); color:#fff }
+    .sub-english .lesson-icon{ background:linear-gradient(135deg,#ffd27c,#ff9a3d); color:#fff }
+    .sub-social .lesson-icon{ background:linear-gradient(135deg,#f196b8,#ec5a9a); color:#fff }
+    .sub-nepali .lesson-icon{ background:linear-gradient(135deg,#b03a2e,#8b1f1f); color:#fff }
+
+    /* small lesson modal */
+    .overlay{ position:fixed; inset:0; display:none; align-items:center; justify-content:center; background:rgba(8,12,20,0.38); z-index:60; }
+    .overlay.open{ display:flex; }
+    .modal{
+      background:#fff; border-radius:12px; padding:20px; width:min(560px,92%); box-shadow:0 22px 60px rgba(8,18,40,0.2);
+    }
+    .modal h3{ margin:0 0 8px 0; }
+    .modal p{ margin:8px 0 0 0; color:#555; }
+
+    /* small utilities */
+    .muted{ color:#777; }
+    .small{ font-size:13px; }
+  </style>
 </head>
 <body>
+  <header>
+    <!-- clickable logo (top-right, slightly lower) -->
+    <img src="GMN Logo.png" alt="GMN Logo" class="logo" id="siteLogo" title="Gyan Mandala Nepal - Home">
+  </header>
 
-    <!-- Shared Header -->
-    <header>
-        <img src="GMN Logo.png" alt="Gyan Mandala Nepal Logo" class="logo">
-    </header>
+  <main>
+    <!-- ========== HOME PAGE ========== -->
+    <section id="homePage" class="page active" aria-labelledby="home-heading">
+      <div class="welcome" role="region" aria-label="Welcome">
+        <div class="welcome-line w1" id="home-heading">Welcome</div>
+        <div class="welcome-line w2">to</div>
+        <div class="welcome-line w3">Gyan Mandala Nepal</div>
+      </div>
 
-    <!-- Home Page -->
-    <div id="homePage">
-        <div class="container">
-            <h1>Welcome to Gyan Mandala Nepal</h1>
-            <p>Play, Learn, and Discover your world of knowledge!</p>
-            <div class="quote">"Learn smart, play hard, and discover the genius in you!"</div>
-            <button onclick="showForm()">Go to Learning Portal</button>
+      <div style="display:flex;align-items:center;flex-direction:column;gap:16px;">
+        <div class="muted small">A friendly learning portal for students — pick your class and subject to begin.</div>
+        <div class="cta">
+          <button class="btn primary" id="goPortal">Go to Learning Portal</button>
+          <button class="btn ghost" id="learnMore" onclick="alert('This demo shows dynamic lessons generation.');">About</button>
         </div>
-    </div>
+      </div>
+    </section>
 
-    <!-- Form Page -->
-    <div id="formPage" style="display:none;">
-        <div class="container">
-            <h2>Enter Your Details</h2>
-            <form id="studentForm">
-                <input type="text" id="schoolName" placeholder="School Name" required>
-                <input type="text" id="studentName" placeholder="Student Name" required>
-                <select id="grade" required>
-                    <option value="">Select Grade</option>
-                </select>
-                <select id="subject" required>
-                    <option value="">Select Subject</option>
-                    <option value="maths">Maths</option>
-                    <option value="english">English</option>
-                    <option value="science">Science</option>
-                    <option value="social">Social Study</option>
-                    <option value="nepali">Nepali</option>
-                </select>
-                <button type="submit">Enter</button>
-            </form>
+    <!-- ========== FORM PAGE ========== -->
+    <section id="formPage" class="page" aria-labelledby="form-heading" >
+      <div class="card" role="form" aria-describedby="form-desc">
+        <h2 id="form-heading" style="margin:0 0 8px 0;">Enter Details</h2>
+        <div id="form-desc" class="muted small" style="margin-bottom:12px;">Select class & subject. Navigation will proceed automatically.</div>
+
+        <form id="studentForm" onsubmit="return false;">
+          <div class="field full">
+            <label for="schoolName">School Name</label>
+            <input id="schoolName" type="text" placeholder="Your school name (optional)" />
+          </div>
+
+          <div class="field">
+            <label for="studentName">Student Name</label>
+            <input id="studentName" type="text" placeholder="Student name" />
+            <span class="hint">Optional — helpful to personalize the lessons</span>
+          </div>
+
+          <div class="field">
+            <label for="grade">Class</label>
+            <select id="grade" aria-required="true" required>
+              <option value="">Select class</option>
+              <!-- options filled by script -->
+            </select>
+          </div>
+
+          <div class="field">
+            <label for="subject">Subject</label>
+            <select id="subject" aria-required="true" required>
+              <option value="">Select subject</option>
+              <option value="maths">Maths</option>
+              <option value="english">English</option>
+              <option value="science">Science</option>
+              <option value="social">Social</option>
+              <option value="nepali">Nepali</option>
+            </select>
+          </div>
+
+          <div class="actions">
+            <!-- Keep a fallback submit for accessibility -->
+            <button class="btn primary" id="submitFallback" style="display:none;">Go</button>
+          </div>
+        </form>
+      </div>
+    </section>
+
+    <!-- ========== LESSONS PAGE (dynamic) ========== -->
+    <section id="lessonsPage" class="page" aria-labelledby="lessons-heading">
+      <div style="max-width:1100px;margin:0 auto;">
+        <div class="breadcrumb" aria-hidden="false" id="breadcrumb">
+          <a id="crumbHome">Home</a>
+          <span> › </span>
+          <a id="crumbClass" style="cursor: pointer;"></a>
+          <span> › </span>
+          <span id="crumbSubject" style="font-weight:700;"></span>
         </div>
-    </div>
 
-    <!-- Subject Page -->
-    <div id="subjectPage" style="display:none;">
-        <div class="container">
-            <h1 id="subjectTitle"></h1>
-            <p>This is your learning page for <span id="subjectName"></span>.</p>
-            <button onclick="goHome()">Go Home</button>
+        <div id="lessonsHeader">
+          <h2 id="lessons-heading" style="margin:4px 0 6px 0;">Lessons</h2>
+          <div class="muted small" id="lessonsSub">Choose a lesson to open its detail.</div>
         </div>
+
+        <div id="lessonsWrap" style="margin-top:18px;">
+          <div class="lessons-grid" id="lessonsGrid" role="list">
+            <!-- 20 lesson buttons will be injected here -->
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer>© 2025 Gyan Mandala Nepal, All Rights Reserved</footer>
+
+  <!-- Lesson modal -->
+  <div class="overlay" id="overlay" role="dialog" aria-modal="true" aria-hidden="true">
+    <div class="modal" role="document">
+      <div style="display:flex;align-items:center;gap:12px;">
+        <div id="modalIcon" style="width:44px;height:44px;border-radius:8px;display:flex;align-items:center;justify-content:center;color:#fff"></div>
+        <div>
+          <h3 id="modalTitle" style="margin:0">Lesson</h3>
+          <div class="muted small" id="modalSub">Subject • Class</div>
+        </div>
+      </div>
+      <p id="modalDesc" style="margin-top:12px;">This is demo content for the lesson. Replace with real lesson material or link to a lesson page.</p>
+      <div style="display:flex;justify-content:flex-end;margin-top:12px;">
+        <button class="btn ghost" onclick="closeModal()">Close</button>
+        <button class="btn primary" style="margin-left:10px;" onclick="alert('Open lesson content (demo)')">Open</button>
+      </div>
     </div>
+  </div>
 
-    <!-- Footer at Bottom -->
-    <footer>© 2025 Gyan Mandala Nepal, All Rights Reserved</footer>
+  <script>
+    /************************************************************************
+     * App state + helpers
+     ************************************************************************/
+    const state = {
+      currentPage: 'home',   // 'home' | 'form' | 'lessons'
+      classes: Array.from({length:10}, (_,i) => i+1), // Class 1..10
+      subjects: ['maths','english','science','social','nepali'],
+      subjectMap: {
+        maths: 'Mathematics',
+        english: 'English',
+        science: 'Science',
+        social: 'Social Studies',
+        nepali: 'Nepali'
+      }
+    };
 
-    <script>
-        // Generate grades
-        const gradeSelect = document.getElementById("grade");
-        for (let i = 1; i <= 10; i++) {
-            let option = document.createElement("option");
-            option.value = i;
-            option.textContent = `Grade ${i}`;
-            gradeSelect.appendChild(option);
+    // Short utility
+    const $ = (s) => document.querySelector(s);
+    const $$ = (s) => Array.from(document.querySelectorAll(s));
+
+    /************************************************************************
+     * Page show/hide with transitions
+     ************************************************************************/
+    function showPage(pageId){
+      const pages = { home: '#homePage', form: '#formPage', lessons: '#lessonsPage' };
+      if(state.currentPage === pageId) return;
+      const fromEl = document.querySelector(pages[state.currentPage]);
+      const toEl = document.querySelector(pages[pageId]);
+      if(!toEl || !fromEl) return;
+
+      // exit animation
+      fromEl.classList.remove('active');
+      fromEl.classList.add('page-exit');
+
+      // ensure we clear exit after animation
+      setTimeout(()=> fromEl.classList.remove('page-exit'), 360);
+
+      // show new page
+      toEl.classList.add('active', 'page-enter');
+      setTimeout(()=> toEl.classList.remove('page-enter'), 420);
+
+      state.currentPage = pageId;
+
+      // accessibility: focus top of page
+      toEl.setAttribute('tabindex','-1');
+      toEl.focus && toEl.focus();
+    }
+
+    /************************************************************************
+     * Navigation guards:
+     * - can't open form unless user pressed "Go to Learning Portal"
+     * - can't open lessons unless they visited form (in same session)
+     *
+     * We set sessionStorage flags on each legit transition.
+     ************************************************************************/
+    function allowFormAccess(){ return sessionStorage.getItem('visitedHome') === '1'; }
+    function allowLessonsAccess(){ return sessionStorage.getItem('visitedForm') === '1'; }
+
+    /************************************************************************
+     * Setup: fill class options and events
+     ************************************************************************/
+    document.addEventListener('DOMContentLoaded', ()=> {
+      // Fill class options
+      const grade = $('#grade');
+      state.classes.forEach(c => {
+        const opt = document.createElement('option');
+        opt.value = c;
+        opt.textContent = `Class ${c}`;
+        grade.appendChild(opt);
+      });
+
+      // Logo click -> go home
+      $('#siteLogo').addEventListener('click', () => {
+        // clear flow flags so clicking the logo resets session (optional)
+        sessionStorage.clear();
+        navigateHome();
+      });
+
+      // Home button to portal
+      $('#goPortal').addEventListener('click', () => {
+        // Mark that user legitimately visited home (so they can access form)
+        sessionStorage.setItem('visitedHome','1');
+        // show form
+        navigateToForm();
+      });
+
+      // Breadcrumb home
+      $('#crumbHome').addEventListener('click', () => {
+        sessionStorage.clear();
+        navigateHome();
+      });
+
+      // When form is shown, mark visitedForm
+      // Auto-navigate to lessons when both grade & subject chosen
+      $('#grade').addEventListener('change', onFormSelection);
+      $('#subject').addEventListener('change', onFormSelection);
+
+      // fallback: submit button (hidden)
+      $('#submitFallback').addEventListener('click', () => {
+        onFormSubmit();
+      });
+
+      // hash handle on load - but enforce guards
+      handleInitialHash();
+
+      // ensure home welcome animations replay on load (if user returns)
+      // small trick: force reflow to restart keyframe animation if needed
+      const wlines = $$('.welcome-line');
+      wlines.forEach(el => el.style.animation = el.style.animation); // no-op but safe
+    });
+
+    /************************************************************************
+     * Navigation helpers
+     ************************************************************************/
+    function navigateHome(){
+      // clear everything and show home
+      sessionStorage.clear();
+      location.hash = '';
+      showPage('home');
+    }
+
+    function navigateToForm(){
+      // Only allow if came from home
+      if(!allowFormAccess()){
+        navigateHome();
+        return;
+      }
+      // mark form visited
+      sessionStorage.setItem('visitedForm','1');
+      // update hash
+      location.hash = '#form';
+      showPage('form');
+    }
+
+    function navigateToLessons(classId, subjectId){
+      // only allow if visited form in this session
+      if(!allowLessonsAccess()){
+        navigateHome();
+        return;
+      }
+      // set route marker
+      sessionStorage.setItem('visitedLessons', `${classId}-${subjectId}`);
+      // update hash for shareable link (but guarded)
+      location.hash = `#lessons/class-${classId}/${subjectId}`;
+      renderLessonsPage(classId, subjectId);
+      showPage('lessons');
+    }
+
+    /************************************************************************
+     * Form selection handling (auto-navigate)
+     ************************************************************************/
+    let autoNavTimer = null;
+    function onFormSelection(){
+      // only allow access if they legitimately pressed goPortal
+      if(!allowFormAccess()){
+        navigateHome();
+        return;
+      }
+
+      // show card subtle highlight (no op here)
+      // When both selections are set, automatically navigate
+      const gradeVal = $('#grade').value;
+      const subjectVal = $('#subject').value;
+      if(gradeVal && subjectVal){
+        // small delay for better UX
+        if(autoNavTimer) clearTimeout(autoNavTimer);
+        autoNavTimer = setTimeout(()=> {
+          navigateToLessons(gradeVal, subjectVal);
+        }, 380);
+      }
+    }
+
+    /************************************************************************
+     * Render lessons page
+     ************************************************************************/
+    function renderLessonsPage(classId, subjectId){
+      // update crumbs
+      $('#crumbClass').textContent = `Class ${classId}`;
+      $('#crumbSubject').textContent = state.subjectMap[subjectId] || subjectId;
+      $('#crumbClass').onclick = () => {
+        // go back to form selection but preserve previous inputs
+        showPage('form');
+        location.hash = '#form';
+      };
+
+      // style wrapper with subject class for coloring
+      const wrap = $('#lessonsGrid');
+      wrap.innerHTML = ''; // clear
+
+      // add class style to wrap parent for coloring icon backgrounds
+      const lessonsPageEl = $('#lessonsPage');
+      lessonsPageEl.classList.remove('sub-maths','sub-science','sub-english','sub-social','sub-nepali');
+      lessonsPageEl.classList.add(`sub-${subjectId}`);
+
+      // create 20 uniform lesson buttons
+      const lessonCount = 20;
+      const types = ['book','video','quiz']; // cycle
+      for(let i=1;i<=lessonCount;i++){
+        const type = types[(i-1)%types.length];
+        const btn = document.createElement('button');
+        btn.className = 'lesson-btn';
+        btn.setAttribute('role','listitem');
+        btn.innerHTML = `
+          <div class="lesson-icon" aria-hidden="true">${iconForType(type)}</div>
+          <div>
+            <div class="lesson-meta">Lesson ${i}</div>
+            <div class="muted small">${capitalize(type)} • Class ${classId} • ${state.subjectMap[subjectId]}</div>
+          </div>
+        `;
+        // click opens small modal with more detail
+        btn.addEventListener('click', ()=> openLessonModal(classId, subjectId, i, type));
+        wrap.appendChild(btn);
+      }
+      // ensure smooth scroll to top on page open
+      window.scrollTo({top:0,behavior:'smooth'});
+    }
+
+    /************************************************************************
+     * Small modal for lesson details
+     ************************************************************************/
+    function openLessonModal(classId, subjectId, lessonNum, type){
+      const overlay = $('#overlay');
+      $('#modalTitle').textContent = `Lesson ${lessonNum}`;
+      $('#modalSub').textContent = `${state.subjectMap[subjectId]} • Class ${classId}`;
+      $('#modalDesc').textContent = `Demo lesson description for Lesson ${lessonNum}. This button represents a ${type} type lesson. Replace this with real content or a link to the lesson.`;
+      const iconBox = $('#modalIcon');
+      iconBox.innerHTML = iconForType(type, true);
+      // color the modal icon background consistently
+      const colorMap = {
+        maths:'#4a90e2', science:'#2aa87a', english:'#ff9a3d', social:'#ec5a9a', nepali:'#8b1f1f'
+      };
+      iconBox.style.background = colorMap[subjectId] || '#333';
+      overlay.classList.add('open');
+      overlay.setAttribute('aria-hidden','false');
+    }
+    function closeModal(){
+      const overlay = $('#overlay');
+      overlay.classList.remove('open');
+      overlay.setAttribute('aria-hidden','true');
+    }
+    // click outside modal to close
+    $('#overlay').addEventListener('click', (e)=>{
+      if(e.target === $('#overlay')) closeModal();
+    });
+
+    /************************************************************************
+     * Small icon helper (SVG, returns html string)
+     ************************************************************************/
+    function iconForType(type, raw=false){
+      if(type==='book'){
+        return raw ? '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M3 6C3 4.89543 3.89543 4 5 4H19" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/><path d="M19 20C19 20 19 7 5 7V20C5 20 7.5 18 12 18C16.5 18 19 20 19 20Z" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>' :
+          '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M3 6C3 4.89543 3.89543 4 5 4H19" stroke="white" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/><path d="M19 20C19 20 19 7 5 7V20C5 20 7.5 18 12 18C16.5 18 19 20 19 20Z" stroke="white" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+      }
+      if(type==='video'){
+        return raw ? '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><rect x="2" y="5" width="15" height="14" rx="2" stroke="currentColor" stroke-width="1.6"/><path d="M22 15L17 12L22 9V15Z" fill="currentColor"/></svg>':
+          '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><rect x="2" y="5" width="15" height="14" rx="2" stroke="white" stroke-width="1.6"/><path d="M22 15L17 12L22 9V15Z" fill="white"/></svg>';
+      }
+      // quiz
+      return raw ? '<svg width="20" height="20" viewBox="0 0 24 24" stroke="currentColor" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M12 2C8.1 2 5 5.1 5 9c0 5 7 11 7 11s7-6 7-11c0-3.9-3.1-7-7-7z" stroke-width="1.6"/><path d="M11 11h2v2h-2z" stroke-width="1.6"/></svg>' :
+        '<svg width="18" height="18" viewBox="0 0 24 24" stroke="white" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M12 2C8.1 2 5 5.1 5 9c0 5 7 11 7 11s7-6 7-11c0-3.9-3.1-7-7-7z" stroke="white" stroke-width="1.6"/><path d="M11 11h2v2h-2z" stroke="white" stroke-width="1.6"/></svg>';
+    }
+
+    function capitalize(s){ return s.charAt(0).toUpperCase() + s.slice(1); }
+
+    /************************************************************************
+     * Handle initial hash & direct navigation attempts
+     ************************************************************************/
+    function handleInitialHash(){
+      const hash = location.hash || '';
+      if(!hash){
+        // default home
+        navigateHome();
+        return;
+      }
+      // Protect #form and #lessons: require previous step flags
+      if(hash.startsWith('#form')){
+        // if visitedHome is set, show form; else go home
+        if(sessionStorage.getItem('visitedHome') === '1') navigateToForm();
+        else navigateHome();
+        return;
+      }
+      if(hash.startsWith('#lessons')){
+        // parse class & subject from hash
+        // format: #lessons/class-3/maths
+        const parts = hash.replace('#lessons/','').split('/');
+        if(parts.length===2){
+          const classStr = parts[0].replace('class-','');
+          const subjectId = parts[1];
+          // Only allow if visitedForm exists
+          if(sessionStorage.getItem('visitedForm') === '1'){
+            renderLessonsPage(classStr, subjectId);
+            showPage('lessons');
+          } else {
+            navigateHome();
+          }
+        } else {
+          navigateHome();
         }
+        return;
+      }
+      // unknown hash - fallback home
+      navigateHome();
+    }
 
-        // Show Form only if coming from Home
-        function showForm() {
-            sessionStorage.setItem("cameFromHome", "true");
-            document.getElementById("homePage").style.display = "none";
-            document.getElementById("formPage").style.display = "block";
-        }
+    /************************************************************************
+     * Fallback: if user manually chooses "Go" or other flow
+     ************************************************************************/
+    function onFormSubmit(){
+      const gradeVal = $('#grade').value;
+      const subjectVal = $('#subject').value;
+      if(gradeVal && subjectVal){
+        navigateToLessons(gradeVal, subjectVal);
+      } else {
+        alert('Please select both class and subject.');
+      }
+    }
 
-        // Show Subject only if coming from Form
-        function showSubject(subject) {
-            sessionStorage.setItem("cameFromForm", "true");
-            const titleMap = {
-                maths: "Mathematics",
-                english: "English",
-                science: "Science",
-                social: "Social Studies",
-                nepali: "Nepali"
-            };
-            document.getElementById("subjectTitle").textContent = titleMap[subject] || "Unknown Subject";
-            document.getElementById("subjectName").textContent = titleMap[subject] || "";
-            document.getElementById("formPage").style.display = "none";
-            document.getElementById("subjectPage").style.display = "block";
-        }
+    /************************************************************************
+     * Small keyboard + focus helpers (nice-to-have)
+     ************************************************************************/
+    document.addEventListener('keyup', (e)=>{
+      if(e.key === 'Escape') closeModal();
+    });
 
-        function goHome() {
-            sessionStorage.clear();
-            document.getElementById("subjectPage").style.display = "none";
-            document.getElementById("homePage").style.display = "block";
-        }
-
-        // Handle form submission
-        document.getElementById("studentForm").addEventListener("submit", function(e) {
-            e.preventDefault();
-            if (!sessionStorage.getItem("cameFromHome")) {
-                goHome();
-                return;
-            }
-            const subject = document.getElementById("subject").value;
-            showSubject(subject);
-        });
-
-        // Redirect check on load
-        window.addEventListener("load", function() {
-            const hash = window.location.hash;
-            if (hash === "#form" && !sessionStorage.getItem("cameFromHome")) {
-                goHome();
-            } else if (hash === "#subject" && !sessionStorage.getItem("cameFromForm")) {
-                goHome();
-            }
-        });
-    </script>
-
+  </script>
 </body>
 </html>
