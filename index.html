@@ -4,309 +4,306 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>Gyan Mandala Nepal — Learning Portal</title>
+  <meta name="description" content="Interactive learning portal — classes, subjects, and lessons for Gyan Mandala Nepal." />
   <style>
-    /* ----------------------------------------
-       Base / Layout
-    -----------------------------------------*/
+    /* ============================
+       Design tokens & base
+       ============================ */
     :root{
-      --accent-red:#B22222;
-      --accent-saffron:#FF8800;
-      --accent-deepblue:#0B6FA4;
-      --bg-grad-1: #f0f8ff;
-      --bg-grad-2: #d4f1f9;
-      --muted:#666;
+      --bg1:#f7fbff;
+      --bg2:#e9f6fb;
       --card:#ffffff;
-      --radius:12px;
+      --muted:#6b7280;
+      --glass: rgba(255,255,255,0.6);
+      --accent1:#b03a2e; /* Nepal-inspired red */
+      --accent2:#ff8c2a; /* saffron */
+      --accent3:#0b6fa4; /* deep blue */
+      --accent4:#2aa87a; /* green (science) */
+      --radius:14px;
+      --shadow-lg: 0 18px 50px rgba(8,18,40,0.12);
+      --soft: 0 8px 30px rgba(12,34,56,0.06);
+      --ease: cubic-bezier(.22,.9,.38,1);
+      --max-width:1100px;
     }
     *{box-sizing:border-box}
+    html,body{height:100%}
     body{
       margin:0;
       min-height:100vh;
-      display:flex;
-      flex-direction:column;
-      font-family:Inter,system-ui,Segoe UI,Roboto,"Helvetica Neue",Arial;
-      background: linear-gradient(135deg,var(--bg-grad-1),var(--bg-grad-2));
-      color:#111;
+      font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,"Helvetica Neue",Arial;
       -webkit-font-smoothing:antialiased;
       -moz-osx-font-smoothing:grayscale;
-    }
-    header{
-      position:relative;
-      padding:12px 20px;
-      background:rgba(255,255,255,0.65);
-      backdrop-filter: blur(6px);
-      box-shadow:0 6px 18px rgba(8,30,40,0.06);
-      z-index:10;
-    }
-    main{flex:1; padding:28px 20px; max-width:1100px; margin:0 auto; width:100%;}
-    footer{
-      background:var(--accent-deepblue);
-      color:#fff;
-      text-align:center;
-      padding:10px 12px;
-      font-size:14px;
-      position:fixed;
-      left:0; right:0; bottom:0;
+      background: linear-gradient(160deg,var(--bg1),var(--bg2));
+      color:#0b1220;
+      display:flex;
+      flex-direction:column;
     }
 
-    /* ----------------------------------------
-       Logo (top-right, slightly lower)
-    -----------------------------------------*/
+    /* ============================
+       Header / logo
+       ============================ */
+    header{
+      position:relative;
+      padding:14px 20px;
+      background: linear-gradient(0deg, rgba(255,255,255,0.55), rgba(255,255,255,0.45));
+      backdrop-filter: blur(6px);
+      box-shadow: var(--soft);
+      z-index:40;
+    }
     .logo{
       position:absolute;
       right:18px;
-      top:18px;              /* slightly lowered visually */
-      width:72px;            /* smaller */
-      height:auto;
+      top:18px;             /* slightly lowered as requested */
+      width:72px;           /* small and neat */
+      border-radius:10px;
       cursor:pointer;
-      transition: transform .18s ease;
-      border-radius:8px;
+      transition: transform .18s var(--ease), box-shadow .18s var(--ease);
     }
-    .logo:hover{ transform: translateY( -2px ) scale(1.03); }
+    .logo:focus, .logo:hover{ transform: translateY(-2px) scale(1.02); box-shadow:0 8px 28px rgba(12,34,56,0.12); }
 
-    /* ----------------------------------------
-       Page container + transitions
-    -----------------------------------------*/
-    .page{ display:none; opacity:0; transform: translateY(6px); transition: all .38s cubic-bezier(.22,.9,.38,1); }
+    main{flex:1; width:100%; max-width:var(--max-width); margin:18px auto; padding:0 20px 80px;} /* footer leaves space */
+
+    /* ============================
+       Pages + transitions
+       ============================ */
+    .page{ display:none; opacity:0; transform: translateY(8px); transition: all .42s var(--ease); }
     .page.active{ display:block; opacity:1; transform: translateY(0); }
 
-    .page-enter{ animation: pageIn .38s forwards; }
-    .page-exit { animation: pageOut .32s forwards; }
-    @keyframes pageIn{
-      from{opacity:0; transform: translateX(12px);}
-      to{opacity:1; transform: translateX(0);}
-    }
-    @keyframes pageOut{
-      from{opacity:1; transform: translateX(0);}
-      to{opacity:0; transform: translateX(-12px);}
-    }
+    /* nice slide in/out */
+    .page-enter{ animation: slideIn .36s var(--ease) forwards; }
+    .page-exit{ animation: slideOut .28s var(--ease) forwards; }
+    @keyframes slideIn{ from{opacity:0; transform:translateY(8px);} to{opacity:1; transform:translateY(0);} }
+    @keyframes slideOut{ from{opacity:1; transform:translateY(0);} to{opacity:0; transform:translateY(-8px);} }
 
-    /* ----------------------------------------
-       Home: animated 3-line greeting
-    -----------------------------------------*/
-    .welcome {
+    /* ============================
+       Home: animated greeting
+       ============================ */
+    .welcome{
+      margin-top:44px;
       display:flex;
       flex-direction:column;
       align-items:center;
       gap:12px;
-      margin-top:40px;
-      margin-bottom:30px;
     }
     .welcome-line{
-      font-weight:700;
-      font-size:clamp(28px,5.2vw,46px);
+      font-weight:800;
       line-height:1;
+      text-align:center;
+      font-size:clamp(28px,6vw,48px);
       opacity:0;
-      transform: translateY(10px);
-      animation: fadeUp .6s forwards;
+      transform: translateY(12px);
+      animation: fadeUp .56s var(--ease) forwards;
+      text-shadow: 0 2px 0 rgba(255,255,255,0.1);
     }
-    .welcome-line.w1{ color: #b03a2e; /* warm red */ animation-delay: .15s; }
-    .welcome-line.w2{ color: #ff8c2a; /* saffron */ animation-delay: .36s; font-weight:600; }
-    .welcome-line.w3{ color: #0b6fa4; /* deep blue */ animation-delay: .58s; }
-    @keyframes fadeUp {
-      to{ opacity:1; transform: translateY(0); }
-    }
+    .w1{ color: var(--accent1); animation-delay: .12s; letter-spacing: -0.5px;}
+    .w2{ color: var(--accent2); animation-delay: .34s;}
+    .w3{ color: var(--accent3); animation-delay: .58s;}
+    @keyframes fadeUp{ to{opacity:1; transform:translateY(0);} }
 
-    .cta{
-      margin-top:20px;
-      display:flex;
-      gap:12px;
-      align-items:center;
-      justify-content:center;
-    }
+    .subtitle{ color:var(--muted); font-size:16px; margin-top:8px; text-align:center; max-width:780px; }
+
+    .hero-actions{ margin-top:20px; display:flex; gap:12px; justify-content:center; align-items:center; }
+
     .btn{
       padding:12px 18px;
       border-radius:12px;
       border:0;
-      font-weight:600;
       cursor:pointer;
-      transition: transform .12s ease, box-shadow .12s ease;
+      font-weight:700;
+      transition: transform .12s var(--ease), box-shadow .12s var(--ease);
     }
-    .btn.primary{ background:linear-gradient(90deg,#ff7b2d,#ff3a3a); color:white; box-shadow:0 8px 22px rgba(255,88,64,0.12); }
-    .btn.primary:hover{ transform: translateY(-3px); box-shadow:0 12px 30px rgba(255,88,64,0.16); }
-    .btn.ghost{ background:transparent; border:2px solid rgba(0,0,0,0.06); color:#111; }
+    .btn-primary{ background: linear-gradient(90deg,var(--accent2),var(--accent1)); color:#fff; box-shadow: 0 10px 30px rgba(176,58,46,0.12); }
+    .btn-primary:hover{ transform: translateY(-3px); box-shadow: 0 18px 42px rgba(176,58,46,0.14); }
+    .btn-ghost{ background:transparent; border:2px solid rgba(12,34,56,0.06); color:var(--accent3); }
 
-    /* ----------------------------------------
-       Form Page: card style, larger, accessible
-    -----------------------------------------*/
+    /* ============================
+       Card / form
+       ============================ */
     .card{
-      background:var(--card);
-      border-radius:var(--radius);
-      padding:28px;
-      box-shadow: 0 10px 30px rgba(12,34,56,0.06);
-      max-width:760px;
-      margin: 30px auto;
+      background: var(--card);
+      border-radius: var(--radius);
+      padding:24px;
+      box-shadow: var(--shadow-lg);
+      margin:26px auto;
+      max-width:880px;
     }
-    form{ display:flex; flex-wrap:wrap; gap:14px; justify-content:center; align-items:flex-start; }
-    label{ width:100%; color:var(--muted); font-size:14px; }
-    .field{ display:flex; flex-direction:column; gap:6px; min-width:220px; width:calc(50% - 24px); }
+    h2{ margin:0; font-size:20px; }
+    .muted{ color:var(--muted); }
+
+    form{ display:flex; flex-wrap:wrap; gap:14px; margin-top:12px; align-items:flex-start; }
+    .field{ display:flex; flex-direction:column; gap:8px; min-width:220px; width:calc(50% - 16px); }
     .field.full{ width:100%; }
+    label{ font-size:14px; color:var(--muted); font-weight:600; }
     input[type="text"], select{
-      padding:14px;
+      padding:12px 14px;
       border-radius:10px;
-      border:1px solid #e5e7eb;
-      font-size:16px;
+      border:1px solid #e6eef7;
+      font-size:15px;
       outline:none;
-      transition:box-shadow .12s ease, border-color .12s ease;
+      transition: box-shadow .12s var(--ease), border-color .12s var(--ease);
+      background:linear-gradient(180deg,#fff,#fbfdff);
     }
-    input:focus, select:focus{ box-shadow:0 6px 20px rgba(12,34,56,0.06); border-color:#c6e0ff; }
-    .hint{ font-size:13px; color:#7a7a7a; margin-top:6px; }
+    input:focus, select:focus{ box-shadow:0 10px 28px rgba(11,111,164,0.06); border-color:#cbe8ff; }
 
-    /* Submit hidden (we auto-navigate on selection); kept accessible */
-    .actions{ width:100%; display:flex; justify-content:center; margin-top:12px; }
+    .hint{ font-size:13px; color:#8b96a8; }
 
-    /* ----------------------------------------
-       Lessons Page: breadcrumb + lessons grid
-    -----------------------------------------*/
-    .breadcrumb{
-      display:flex; gap:8px; align-items:center; color:#444; font-size:14px;
-      margin-bottom:18px;
-    }
-    .breadcrumb a{ color:var(--accent-deepblue); text-decoration:none; font-weight:600; cursor:pointer; }
+    /* ============================
+       Breadcrumb & lessons
+       ============================ */
+    .breadcrumb{ display:flex; gap:10px; align-items:center; color:var(--muted); margin-bottom:12px; font-size:14px; }
+    .breadcrumb a{ color:var(--accent3); text-decoration:none; font-weight:700; cursor:pointer; }
+
     .lessons-grid{
       display:grid;
       grid-template-columns: repeat(4, 1fr);
       gap:14px;
-      margin-top:10px;
+      margin-top:12px;
     }
-    @media (max-width:900px){ .lessons-grid{ grid-template-columns: repeat(3,1fr); } }
-    @media (max-width:640px){ .lessons-grid{ grid-template-columns: repeat(2,1fr); } }
+    @media (max-width:1000px){ .lessons-grid{ grid-template-columns: repeat(3,1fr); } }
+    @media (max-width:700px){ .lessons-grid{ grid-template-columns: repeat(2,1fr); } }
 
-    .lesson-btn{
-      background:#fff;
-      border-radius:12px;
-      padding:14px;
+    .lesson{
       display:flex;
       gap:12px;
       align-items:center;
-      border:1px solid rgba(0,0,0,0.05);
+      background:linear-gradient(180deg,#fff,#fbfdff);
+      border-radius:12px;
+      padding:12px;
+      border:1px solid rgba(0,0,0,0.04);
       cursor:pointer;
-      transition: transform .14s ease, box-shadow .14s ease, background .14s ease;
-      box-shadow: 0 6px 18px rgba(12,34,56,0.04);
-      text-align:left;
-      font-weight:600;
+      transition: transform .12s var(--ease), box-shadow .12s var(--ease), background .12s var(--ease);
+      box-shadow: var(--soft);
     }
-    .lesson-btn:hover{
-      transform: translateY(-6px) scale(1.02);
-      box-shadow: 0 14px 34px rgba(12,34,56,0.09);
-      background: linear-gradient(180deg, rgba(255,255,255,1), rgba(248,248,250,1));
-    }
-    .lesson-icon{
-      width:36px; height:36px; border-radius:8px; display:flex; align-items:center; justify-content:center; flex:0 0 36px;
-    }
-    .lesson-meta{ font-size:14px; color:#222; }
+    .lesson:hover{ transform: translateY(-6px) scale(1.01); box-shadow: 0 22px 48px rgba(12,34,56,0.09); }
+    .lesson-icon{ width:44px; height:44px; border-radius:10px; display:flex; align-items:center; justify-content:center; color:#fff; font-weight:700; flex:0 0 44px; }
+    .lesson-meta{ display:flex; flex-direction:column; }
+    .lesson-title{ font-weight:700; }
+    .lesson-sub{ font-size:13px; color:var(--muted); margin-top:4px; }
 
-    /* color accents per subject (example) */
-    .sub-maths .lesson-icon{ background:linear-gradient(135deg,#70b6ff,#4a90e2); color:#fff }
-    .sub-science .lesson-icon{ background:linear-gradient(135deg,#8de28a,#2aa87a); color:#fff }
-    .sub-english .lesson-icon{ background:linear-gradient(135deg,#ffd27c,#ff9a3d); color:#fff }
-    .sub-social .lesson-icon{ background:linear-gradient(135deg,#f196b8,#ec5a9a); color:#fff }
-    .sub-nepali .lesson-icon{ background:linear-gradient(135deg,#b03a2e,#8b1f1f); color:#fff }
+    /* color accents by subject (includes hamro) */
+    .sub-maths .lesson-icon{ background: linear-gradient(135deg,#70b6ff,#4a90e2); }
+    .sub-english .lesson-icon{ background: linear-gradient(135deg,#ffd27c,#ff9a3d); }
+    .sub-science .lesson-icon{ background: linear-gradient(135deg,#8de28a,#2aa87a); }
+    .sub-social .lesson-icon{ background: linear-gradient(135deg,#f196b8,#ec5a9a); }
+    .sub-nepali .lesson-icon{ background: linear-gradient(135deg,#b03a2e,#8b1f1f); }
+    .sub-hamro .lesson-icon{ background: linear-gradient(135deg,#ffcc66,#cc6600); }
 
-    /* small lesson modal */
-    .overlay{ position:fixed; inset:0; display:none; align-items:center; justify-content:center; background:rgba(8,12,20,0.38); z-index:60; }
+    /* ============================
+       Modal overlay
+       ============================ */
+    .overlay{ position:fixed; inset:0; display:none; align-items:center; justify-content:center; background: rgba(8,12,20,0.42); z-index:80; }
     .overlay.open{ display:flex; }
-    .modal{
-      background:#fff; border-radius:12px; padding:20px; width:min(560px,92%); box-shadow:0 22px 60px rgba(8,18,40,0.2);
-    }
-    .modal h3{ margin:0 0 8px 0; }
-    .modal p{ margin:8px 0 0 0; color:#555; }
+    .modal{ background: #fff; border-radius:12px; padding:18px; width:min(680px,92%); box-shadow: 0 28px 80px rgba(8,18,40,0.22); }
+    .modal h3{ margin:0; }
+    .modal .meta{ color:var(--muted); font-size:14px; margin-top:6px; }
 
-    /* small utilities */
-    .muted{ color:#777; }
-    .small{ font-size:13px; }
+    /* ============================
+       Footer bottom
+       ============================ */
+    footer{
+      position:fixed;
+      left:0; right:0; bottom:0;
+      background: linear-gradient(90deg,var(--accent3),#06607f);
+      color:#fff;
+      padding:12px 18px;
+      text-align:center;
+      font-weight:600;
+      box-shadow: 0 -6px 22px rgba(2,22,40,0.08);
+    }
+
+    /* small helpers */
+    .center{ display:flex; justify-content:center; align-items:center; }
+    .sr-only{ position:absolute; width:1px; height:1px; padding:0; margin:-1px; overflow:hidden; clip:rect(0,0,0,0); white-space:nowrap; border:0; }
   </style>
 </head>
 <body>
   <header>
-    <!-- clickable logo (top-right, slightly lower) -->
-    <img src="GMN Logo.png" alt="GMN Logo" class="logo" id="siteLogo" title="Gyan Mandala Nepal - Home">
+    <!-- clickable logo top-right -->
+    <img id="siteLogo" src="GMN Logo.png" alt="GMN Logo" class="logo" tabindex="0" title="Back to Home (Gyan Mandala Nepal)">
   </header>
 
   <main>
-    <!-- ========== HOME PAGE ========== -->
-    <section id="homePage" class="page active" aria-labelledby="home-heading">
-      <div class="welcome" role="region" aria-label="Welcome">
-        <div class="welcome-line w1" id="home-heading">Welcome</div>
+    <!-- ===== HOME ===== -->
+    <section id="homePage" class="page active" aria-labelledby="homeTitle">
+      <div class="welcome" role="banner">
+        <div id="homeTitle" class="welcome-line w1">Welcome</div>
         <div class="welcome-line w2">to</div>
         <div class="welcome-line w3">Gyan Mandala Nepal</div>
       </div>
 
-      <div style="display:flex;align-items:center;flex-direction:column;gap:16px;">
-        <div class="muted small">Play, Learn and Discover</div>
-        <div class="cta">
-          <button class="btn primary" id="goPortal">Go to Learning Portal</button>
-          <button class="btn ghost" id="learnMore" onclick="alert('This demo shows dynamic lessons generation.');">About</button>
-        </div>
+      <p class="subtitle center" style="max-width:820px;">
+        A friendly, modern learning portal — designed for clarity, accessibility, and delight.
+        Choose your class and subject to explore lessons crafted for every learner.
+      </p>
+
+      <div class="hero-actions">
+        <button id="enterPortal" class="btn btn-primary" aria-haspopup="true">Go to Learning Portal</button>
+        <button id="demoInfo" class="btn btn-ghost" onclick="alert('Demo: select class & subject to auto-open lessons.');">How it works</button>
       </div>
     </section>
 
-    <!-- ========== FORM PAGE ========== -->
-    <section id="formPage" class="page" aria-labelledby="form-heading" >
-      <div class="card" role="form" aria-describedby="form-desc">
-        <h2 id="form-heading" style="margin:0 0 8px 0;">Enter Details</h2>
-        <div id="form-desc" class="muted small" style="margin-bottom:12px;">Select class & subject. Navigation will proceed automatically.</div>
+    <!-- ===== FORM / SELECTION ===== -->
+    <section id="formPage" class="page" aria-labelledby="formTitle" tabindex="-1">
+      <div class="card" role="region" aria-labelledby="formTitle">
+        <h2 id="formTitle">Enter Your Details</h2>
+        <p class="muted">Select class and subject below. When both are chosen we automatically open the lesson page.</p>
 
-        <form id="studentForm" onsubmit="return false;">
+        <form id="studentForm" onsubmit="return false;" aria-describedby="formDesc">
           <div class="field full">
             <label for="schoolName">School Name</label>
-            <input id="schoolName" type="text" placeholder="Your school name (optional)" />
+            <input id="schoolName" type="text" placeholder="e.g., Gyan Mandala Higher School" />
+            <div class="hint">Optional — saved in your session for convenience.</div>
           </div>
 
           <div class="field">
             <label for="studentName">Student Name</label>
-            <input id="studentName" type="text" placeholder="Student name" />
-            <span class="hint">Optional — helpful to personalize the lessons</span>
+            <input id="studentName" type="text" placeholder="Student name (optional)" />
           </div>
 
           <div class="field">
-            <label for="grade">Class</label>
-            <select id="grade" aria-required="true" required>
+            <label for="grade">Class (1 - 10)</label>
+            <select id="grade" required aria-required="true">
               <option value="">Select class</option>
-              <!-- options filled by script -->
+              <!-- filled by script -->
             </select>
           </div>
 
           <div class="field">
             <label for="subject">Subject</label>
-            <select id="subject" aria-required="true" required>
+            <select id="subject" required aria-required="true">
               <option value="">Select subject</option>
-              <option value="maths">Maths</option>
-              <option value="english">English</option>
-              <option value="science">Science</option>
-              <option value="social">Social</option>
-              <option value="nepali">Nepali</option>
+              <!-- dynamic by grade -->
             </select>
           </div>
 
-          <div class="actions">
-            <!-- Keep a fallback submit for accessibility -->
-            <button class="btn primary" id="submitFallback" style="display:none;">Go</button>
+          <div class="field full center" style="margin-top:12px;">
+            <div class="muted small">Selections auto-navigate — you may change them anytime via breadcrumb.</div>
           </div>
         </form>
       </div>
     </section>
 
-    <!-- ========== LESSONS PAGE (dynamic) ========== -->
-    <section id="lessonsPage" class="page" aria-labelledby="lessons-heading">
-      <div style="max-width:1100px;margin:0 auto;">
-        <div class="breadcrumb" aria-hidden="false" id="breadcrumb">
-          <a id="crumbHome">Home</a>
-          <span> › </span>
-          <a id="crumbClass" style="cursor: pointer;"></a>
-          <span> › </span>
+    <!-- ===== LESSONS PAGE (dynamic) ===== -->
+    <section id="lessonsPage" class="page" aria-labelledby="lessonsTitle" tabindex="-1">
+      <div style="max-width:var(--max-width); margin:0 auto;">
+        <nav class="breadcrumb" aria-label="Breadcrumb">
+          <a id="crumbHome" role="link">Home</a>
+          <span>›</span>
+          <a id="crumbClass" role="link" style="text-decoration:underline; cursor:pointer;">Class</a>
+          <span>›</span>
           <span id="crumbSubject" style="font-weight:700;"></span>
-        </div>
+        </nav>
 
-        <div id="lessonsHeader">
-          <h2 id="lessons-heading" style="margin:4px 0 6px 0;">Lessons</h2>
-          <div class="muted small" id="lessonsSub">Choose a lesson to open its detail.</div>
-        </div>
-
-        <div id="lessonsWrap" style="margin-top:18px;">
-          <div class="lessons-grid" id="lessonsGrid" role="list">
-            <!-- 20 lesson buttons will be injected here -->
+        <header style="display:flex;justify-content:space-between;align-items:center;">
+          <div>
+            <h2 id="lessonsTitle" style="margin:0;">Lessons</h2>
+            <div class="muted small" id="lessonsIntro">Choose a lesson — preview modal opens for demo content.</div>
           </div>
+          <div class="muted small">20 interactive lessons • responsive • accessible</div>
+        </header>
+
+        <div id="lessonsGrid" class="lessons-grid" role="list" aria-labelledby="lessonsTitle" style="margin-top:18px;">
+          <!-- injected buttons -->
         </div>
       </div>
     </section>
@@ -314,349 +311,316 @@
 
   <footer>© 2025 Gyan Mandala Nepal, All Rights Reserved</footer>
 
-  <!-- Lesson modal -->
-  <div class="overlay" id="overlay" role="dialog" aria-modal="true" aria-hidden="true">
-    <div class="modal" role="document">
-      <div style="display:flex;align-items:center;gap:12px;">
-        <div id="modalIcon" style="width:44px;height:44px;border-radius:8px;display:flex;align-items:center;justify-content:center;color:#fff"></div>
-        <div>
-          <h3 id="modalTitle" style="margin:0">Lesson</h3>
-          <div class="muted small" id="modalSub">Subject • Class</div>
-        </div>
-      </div>
-      <p id="modalDesc" style="margin-top:12px;">This is demo content for the lesson. Replace with real lesson material or link to a lesson page.</p>
-      <div style="display:flex;justify-content:flex-end;margin-top:12px;">
-        <button class="btn ghost" onclick="closeModal()">Close</button>
-        <button class="btn primary" style="margin-left:10px;" onclick="alert('Open lesson content (demo)')">Open</button>
+  <!-- Lesson Modal -->
+  <div id="overlay" class="overlay" role="dialog" aria-modal="true" aria-hidden="true">
+    <div class="modal" role="document" aria-labelledby="modalTitle">
+      <h3 id="modalTitle">Lesson</h3>
+      <div class="meta" id="modalMeta">Subject • Class</div>
+      <p id="modalBody" style="margin-top:12px;color:#334155;">This is a demo lesson preview. Replace with actual lesson content or route to a lesson page. Buttons can link to video, reading, quiz or downloadable resources.</p>
+      <div style="display:flex;justify-content:flex-end;gap:8px;margin-top:14px;">
+        <button class="btn btn-ghost" onclick="closeModal()">Close</button>
+        <button class="btn btn-primary" onclick="alert('Open full lesson — demo')">Open Lesson</button>
       </div>
     </div>
   </div>
 
   <script>
     /************************************************************************
-     * App state + helpers
+     * App state & subject mapping per grade (updated per your request)
      ************************************************************************/
     const state = {
-      currentPage: 'home',   // 'home' | 'form' | 'lessons'
-      classes: Array.from({length:10}, (_,i) => i+1), // Class 1..10
-      subjects: ['maths','english','science','social','nepali'],
-      subjectMap: {
-        maths: 'Mathematics',
-        english: 'English',
-        science: 'Science',
-        social: 'Social Studies',
-        nepali: 'Nepali'
+      current: 'home', // 'home' | 'form' | 'lessons'
+      grades: Array.from({length:10}, (_,i) => i+1), // 1..10
+      // subjects by group:
+      subjectsLow: [ // grades 1-3
+        { id:'maths', name:'Mathematics' },
+        { id:'english', name:'English' },
+        { id:'hamro', name:'Hamro Serophero' },
+        { id:'nepali', name:'Nepali' }
+      ],
+      subjectsHigh: [ // grades 4-10
+        { id:'maths', name:'Mathematics' },
+        { id:'english', name:'English' },
+        { id:'science', name:'Science' },
+        { id:'nepali', name:'Nepali' },
+        { id:'social', name:'Social Studies' }
+      ],
+      // friendly name map for rendering
+      subjectNames: {
+        maths:'Mathematics', english:'English', hamro:'Hamro Serophero',
+        nepali:'Nepali', science:'Science', social:'Social Studies'
       }
     };
 
-    // Short utility
-    const $ = (s) => document.querySelector(s);
-    const $$ = (s) => Array.from(document.querySelectorAll(s));
+    // shorthand selectors
+    const $ = s => document.querySelector(s);
+    const $$ = s => Array.from(document.querySelectorAll(s));
 
     /************************************************************************
      * Page show/hide with transitions
      ************************************************************************/
     function showPage(pageId){
-      const pages = { home: '#homePage', form: '#formPage', lessons: '#lessonsPage' };
-      if(state.currentPage === pageId) return;
-      const fromEl = document.querySelector(pages[state.currentPage]);
-      const toEl = document.querySelector(pages[pageId]);
-      if(!toEl || !fromEl) return;
+      const map = { home:'#homePage', form:'#formPage', lessons:'#lessonsPage' };
+      if(state.current === pageId) return;
+      const from = document.querySelector(map[state.current]);
+      const to = document.querySelector(map[pageId]);
+      if(!to) return;
 
       // exit animation
-      fromEl.classList.remove('active');
-      fromEl.classList.add('page-exit');
+      if(from){
+        from.classList.remove('active');
+        from.classList.add('page-exit');
+        setTimeout(()=> from.classList.remove('page-exit'), 360);
+      }
 
-      // ensure we clear exit after animation
-      setTimeout(()=> fromEl.classList.remove('page-exit'), 360);
+      to.classList.add('active', 'page-enter');
+      setTimeout(()=> to.classList.remove('page-enter'), 420);
+      state.current = pageId;
 
-      // show new page
-      toEl.classList.add('active', 'page-enter');
-      setTimeout(()=> toEl.classList.remove('page-enter'), 420);
-
-      state.currentPage = pageId;
-
-      // accessibility: focus top of page
-      toEl.setAttribute('tabindex','-1');
-      toEl.focus && toEl.focus();
+      // focus for accessibility
+      setTimeout(()=> to.focus && to.focus(), 200);
     }
 
     /************************************************************************
-     * Navigation guards:
-     * - can't open form unless user pressed "Go to Learning Portal"
-     * - can't open lessons unless they visited form (in same session)
-     *
-     * We set sessionStorage flags on each legit transition.
+     * Navigation guards using sessionStorage
      ************************************************************************/
-    function allowFormAccess(){ return sessionStorage.getItem('visitedHome') === '1'; }
-    function allowLessonsAccess(){ return sessionStorage.getItem('visitedForm') === '1'; }
+    function setVisitedHome(){ sessionStorage.setItem('visitedHome','1'); }
+    function setVisitedForm(){ sessionStorage.setItem('visitedForm','1'); }
+    function allowedForm(){ return sessionStorage.getItem('visitedHome') === '1'; }
+    function allowedLessons(){ return sessionStorage.getItem('visitedForm') === '1'; }
 
     /************************************************************************
-     * Setup: fill class options and events
+     * Populate grade dropdown and bind events
      ************************************************************************/
-    document.addEventListener('DOMContentLoaded', ()=> {
-      // Fill class options
-      const grade = $('#grade');
-      state.classes.forEach(c => {
+    document.addEventListener('DOMContentLoaded', () => {
+      // populate grade
+      const gradeEl = $('#grade');
+      state.grades.forEach(g => {
         const opt = document.createElement('option');
-        opt.value = c;
-        opt.textContent = `Class ${c}`;
-        grade.appendChild(opt);
+        opt.value = g;
+        opt.textContent = `Class ${g}`;
+        gradeEl.appendChild(opt);
       });
 
-      // Logo click -> go home
+      // logo click returns to home (clears session flags)
       $('#siteLogo').addEventListener('click', () => {
-        // clear flow flags so clicking the logo resets session (optional)
         sessionStorage.clear();
         navigateHome();
       });
-
-      // Home button to portal
-      $('#goPortal').addEventListener('click', () => {
-        // Mark that user legitimately visited home (so they can access form)
-        sessionStorage.setItem('visitedHome','1');
-        // show form
-        navigateToForm();
+      $('#siteLogo').addEventListener('keypress', (e) => {
+        if(e.key === 'Enter') { sessionStorage.clear(); navigateHome(); }
       });
 
-      // Breadcrumb home
-      $('#crumbHome').addEventListener('click', () => {
-        sessionStorage.clear();
-        navigateHome();
+      // go portal button
+      $('#enterPortal').addEventListener('click', () => {
+        setVisitedHome();
+        navigateForm();
       });
 
-      // When form is shown, mark visitedForm
-      // Auto-navigate to lessons when both grade & subject chosen
-      $('#grade').addEventListener('change', onFormSelection);
-      $('#subject').addEventListener('change', onFormSelection);
-
-      // fallback: submit button (hidden)
-      $('#submitFallback').addEventListener('click', () => {
-        onFormSubmit();
+      // breadcrumbs
+      $('#crumbHome').addEventListener('click', () => { sessionStorage.clear(); navigateHome(); });
+      $('#crumbClass').addEventListener('click', () => {
+        // jump back to form while preserving selections
+        location.hash = '#form';
+        showPage('form');
       });
 
-      // hash handle on load - but enforce guards
+      // grade change updates subject options
+      $('#grade').addEventListener('change', (e) => {
+        updateSubjectsForGrade(parseInt(e.target.value));
+        handleAutoNavigate();
+      });
+      $('#subject').addEventListener('change', handleAutoNavigate);
+
+      // initialize based on URL hash (protects direct access)
       handleInitialHash();
-
-      // ensure home welcome animations replay on load (if user returns)
-      // small trick: force reflow to restart keyframe animation if needed
-      const wlines = $$('.welcome-line');
-      wlines.forEach(el => el.style.animation = el.style.animation); // no-op but safe
     });
+
+    /************************************************************************
+     * Determine subject list based on grade
+     ************************************************************************/
+    function updateSubjectsForGrade(grade){
+      const subjEl = $('#subject');
+      subjEl.innerHTML = '<option value="">Select subject</option>';
+      if(!grade) return;
+      const list = grade <= 3 ? state.subjectsLow : state.subjectsHigh;
+      list.forEach(s => {
+        const opt = document.createElement('option');
+        opt.value = s.id;
+        opt.textContent = s.name;
+        subjEl.appendChild(opt);
+      });
+    }
+
+    /************************************************************************
+     * Auto navigation when both grade & subject chosen
+     ************************************************************************/
+    let autoTimer = null;
+    function handleAutoNavigate(){
+      if(!allowedForm()) { navigateHome(); return; }
+      const grade = parseInt($('#grade').value);
+      const subject = $('#subject').value;
+      if(grade && subject){
+        if(autoTimer) clearTimeout(autoTimer);
+        autoTimer = setTimeout(()=> {
+          // validate combination
+          if(!isValidCombination(grade, subject)){ alert('Invalid class-subject combination.'); return; }
+          setVisitedForm();
+          navigateLessons(grade, subject);
+        }, 360);
+      }
+    }
+
+    /************************************************************************
+     * Validate class-subject combos with updated mapping
+     ************************************************************************/
+    function isValidCombination(grade, subjectId){
+      const low = state.subjectsLow.map(s => s.id);
+      const high = state.subjectsHigh.map(s => s.id);
+      if(grade <= 3) return low.includes(subjectId);
+      return high.includes(subjectId);
+    }
 
     /************************************************************************
      * Navigation helpers
      ************************************************************************/
     function navigateHome(){
-      // clear everything and show home
-      sessionStorage.clear();
       location.hash = '';
       showPage('home');
     }
-
-    function navigateToForm(){
-      // Only allow if came from home
-      if(!allowFormAccess()){
-        navigateHome();
-        return;
-      }
-      // mark form visited
-      sessionStorage.setItem('visitedForm','1');
-      // update hash
+    function navigateForm(){
+      if(!allowedForm()){ navigateHome(); return; }
       location.hash = '#form';
       showPage('form');
     }
-
-    function navigateToLessons(classId, subjectId){
-      // only allow if visited form in this session
-      if(!allowLessonsAccess()){
-        navigateHome();
-        return;
-      }
-      // set route marker
-      sessionStorage.setItem('visitedLessons', `${classId}-${subjectId}`);
-      // update hash for shareable link (but guarded)
-      location.hash = `#lessons/class-${classId}/${subjectId}`;
-      renderLessonsPage(classId, subjectId);
+    function navigateLessons(grade, subjectId){
+      if(!allowedLessons() || !isValidCombination(grade, subjectId)){ navigateHome(); return; }
+      // set hash for shareability (still guarded)
+      location.hash = `#lessons/class-${grade}/${subjectId}`;
+      renderLessons(grade, subjectId);
       showPage('lessons');
     }
 
     /************************************************************************
-     * Form selection handling (auto-navigate)
+     * Render lessons page: 20 uniform interactive buttons
      ************************************************************************/
-    let autoNavTimer = null;
-    function onFormSelection(){
-      // only allow access if they legitimately pressed goPortal
-      if(!allowFormAccess()){
-        navigateHome();
-        return;
-      }
+    function renderLessons(grade, subjectId){
+      // update breadcrumb & header
+      $('#crumbClass').textContent = `Class ${grade}`;
+      $('#crumbSubject').textContent = state.subjectNames[subjectId] || subjectId;
+      $('#lessonsIntro').textContent = `Showing 20 lessons for ${state.subjectNames[subjectId]} • Class ${grade}`;
 
-      // show card subtle highlight (no op here)
-      // When both selections are set, automatically navigate
-      const gradeVal = $('#grade').value;
-      const subjectVal = $('#subject').value;
-      if(gradeVal && subjectVal){
-        // small delay for better UX
-        if(autoNavTimer) clearTimeout(autoNavTimer);
-        autoNavTimer = setTimeout(()=> {
-          navigateToLessons(gradeVal, subjectVal);
-        }, 380);
-      }
-    }
+      // add class on page for subject coloring
+      const lessonsPage = $('#lessonsPage');
+      lessonsPage.classList.remove('sub-maths','sub-english','sub-science','sub-social','sub-nepali','sub-hamro');
+      lessonsPage.classList.add(`sub-${subjectId}`);
 
-    /************************************************************************
-     * Render lessons page
-     ************************************************************************/
-    function renderLessonsPage(classId, subjectId){
-      // update crumbs
-      $('#crumbClass').textContent = `Class ${classId}`;
-      $('#crumbSubject').textContent = state.subjectMap[subjectId] || subjectId;
-      $('#crumbClass').onclick = () => {
-        // go back to form selection but preserve previous inputs
-        showPage('form');
-        location.hash = '#form';
-      };
+      const grid = $('#lessonsGrid');
+      grid.innerHTML = ''; // clear
 
-      // style wrapper with subject class for coloring
-      const wrap = $('#lessonsGrid');
-      wrap.innerHTML = ''; // clear
+      const icons = { book: '📘', video: '🎬', quiz: '📝' };
+      const types = ['book','video','quiz'];
 
-      // add class style to wrap parent for coloring icon backgrounds
-      const lessonsPageEl = $('#lessonsPage');
-      lessonsPageEl.classList.remove('sub-maths','sub-science','sub-english','sub-social','sub-nepali');
-      lessonsPageEl.classList.add(`sub-${subjectId}`);
-
-      // create 20 uniform lesson buttons
-      const lessonCount = 20;
-      const types = ['book','video','quiz']; // cycle
-      for(let i=1;i<=lessonCount;i++){
-        const type = types[(i-1)%types.length];
+      for(let i=1;i<=20;i++){
+        const t = types[(i-1)%types.length];
         const btn = document.createElement('button');
-        btn.className = 'lesson-btn';
+        btn.className = 'lesson';
         btn.setAttribute('role','listitem');
         btn.innerHTML = `
-          <div class="lesson-icon" aria-hidden="true">${iconForType(type)}</div>
-          <div>
-            <div class="lesson-meta">Lesson ${i}</div>
-            <div class="muted small">${capitalize(type)} • Class ${classId} • ${state.subjectMap[subjectId]}</div>
+          <div class="lesson-icon" aria-hidden="true">${icons[t]}</div>
+          <div class="lesson-meta">
+            <div class="lesson-title">Lesson ${i}</div>
+            <div class="lesson-sub">${capitalize(t)} • Class ${grade} • ${state.subjectNames[subjectId]}</div>
           </div>
         `;
-        // click opens small modal with more detail
-        btn.addEventListener('click', ()=> openLessonModal(classId, subjectId, i, type));
-        wrap.appendChild(btn);
+        // click opens modal for demo
+        btn.addEventListener('click', ()=> openModal(grade, subjectId, i, t));
+        grid.appendChild(btn);
       }
-      // ensure smooth scroll to top on page open
-      window.scrollTo({top:0,behavior:'smooth'});
+
+      // scroll top & focus
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+      setTimeout(()=> $('#lessonsGrid').focus && $('#lessonsGrid').focus(), 220);
     }
 
     /************************************************************************
-     * Small modal for lesson details
+     * Modal: lesson preview
      ************************************************************************/
-    function openLessonModal(classId, subjectId, lessonNum, type){
-      const overlay = $('#overlay');
+    function openModal(grade, subjectId, lessonNum, type){
       $('#modalTitle').textContent = `Lesson ${lessonNum}`;
-      $('#modalSub').textContent = `${state.subjectMap[subjectId]} • Class ${classId}`;
-      $('#modalDesc').textContent = `Demo lesson description for Lesson ${lessonNum}. This button represents a ${type} type lesson. Replace this with real content or a link to the lesson.`;
-      const iconBox = $('#modalIcon');
-      iconBox.innerHTML = iconForType(type, true);
-      // color the modal icon background consistently
-      const colorMap = {
-        maths:'#4a90e2', science:'#2aa87a', english:'#ff9a3d', social:'#ec5a9a', nepali:'#8b1f1f'
-      };
-      iconBox.style.background = colorMap[subjectId] || '#333';
-      overlay.classList.add('open');
-      overlay.setAttribute('aria-hidden','false');
+      $('#modalMeta').textContent = `${state.subjectNames[subjectId]} • Class ${grade} • ${capitalize(type)}`;
+      $('#modalBody').textContent = `Demo preview for Lesson ${lessonNum}. Replace this with the lesson's actual content (text, video, exercises). This portal dynamically generates pages for valid class-subject pairs.`;
+      $('#overlay').classList.add('open');
+      $('#overlay').setAttribute('aria-hidden','false');
     }
     function closeModal(){
-      const overlay = $('#overlay');
-      overlay.classList.remove('open');
-      overlay.setAttribute('aria-hidden','true');
+      $('#overlay').classList.remove('open');
+      $('#overlay').setAttribute('aria-hidden','true');
     }
-    // click outside modal to close
-    $('#overlay').addEventListener('click', (e)=>{
-      if(e.target === $('#overlay')) closeModal();
-    });
+    $('#overlay').addEventListener('click', (e)=> { if(e.target === $('#overlay')) closeModal(); });
+    document.addEventListener('keyup', (e)=> { if(e.key === 'Escape') closeModal(); });
 
     /************************************************************************
-     * Small icon helper (SVG, returns html string)
+     * Helpers & initial hash handling (guards direct access)
      ************************************************************************/
-    function iconForType(type, raw=false){
-      if(type==='book'){
-        return raw ? '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M3 6C3 4.89543 3.89543 4 5 4H19" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/><path d="M19 20C19 20 19 7 5 7V20C5 20 7.5 18 12 18C16.5 18 19 20 19 20Z" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>' :
-          '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M3 6C3 4.89543 3.89543 4 5 4H19" stroke="white" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/><path d="M19 20C19 20 19 7 5 7V20C5 20 7.5 18 12 18C16.5 18 19 20 19 20Z" stroke="white" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>';
-      }
-      if(type==='video'){
-        return raw ? '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><rect x="2" y="5" width="15" height="14" rx="2" stroke="currentColor" stroke-width="1.6"/><path d="M22 15L17 12L22 9V15Z" fill="currentColor"/></svg>':
-          '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><rect x="2" y="5" width="15" height="14" rx="2" stroke="white" stroke-width="1.6"/><path d="M22 15L17 12L22 9V15Z" fill="white"/></svg>';
-      }
-      // quiz
-      return raw ? '<svg width="20" height="20" viewBox="0 0 24 24" stroke="currentColor" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M12 2C8.1 2 5 5.1 5 9c0 5 7 11 7 11s7-6 7-11c0-3.9-3.1-7-7-7z" stroke-width="1.6"/><path d="M11 11h2v2h-2z" stroke-width="1.6"/></svg>' :
-        '<svg width="18" height="18" viewBox="0 0 24 24" stroke="white" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M12 2C8.1 2 5 5.1 5 9c0 5 7 11 7 11s7-6 7-11c0-3.9-3.1-7-7-7z" stroke="white" stroke-width="1.6"/><path d="M11 11h2v2h-2z" stroke="white" stroke-width="1.6"/></svg>';
-    }
-
     function capitalize(s){ return s.charAt(0).toUpperCase() + s.slice(1); }
 
-    /************************************************************************
-     * Handle initial hash & direct navigation attempts
-     ************************************************************************/
     function handleInitialHash(){
       const hash = location.hash || '';
-      if(!hash){
-        // default home
-        navigateHome();
-        return;
-      }
-      // Protect #form and #lessons: require previous step flags
+      if(!hash){ navigateHome(); return; }
+
       if(hash.startsWith('#form')){
-        // if visitedHome is set, show form; else go home
-        if(sessionStorage.getItem('visitedHome') === '1') navigateToForm();
+        // only if visitedHome
+        if(sessionStorage.getItem('visitedHome') === '1'){ showPage('form'); }
         else navigateHome();
         return;
       }
+
       if(hash.startsWith('#lessons')){
-        // parse class & subject from hash
-        // format: #lessons/class-3/maths
+        // parse pattern #lessons/class-<n>/<subject>
         const parts = hash.replace('#lessons/','').split('/');
-        if(parts.length===2){
-          const classStr = parts[0].replace('class-','');
-          const subjectId = parts[1];
-          // Only allow if visitedForm exists
-          if(sessionStorage.getItem('visitedForm') === '1'){
-            renderLessonsPage(classStr, subjectId);
+        if(parts.length === 2){
+          const classPart = parts[0].replace('class-','');
+          const sub = parts[1];
+          const gradeNum = parseInt(classPart);
+          if(Number.isInteger(gradeNum) && isValidCombination(gradeNum, sub) && sessionStorage.getItem('visitedForm') === '1'){
+            renderLessons(gradeNum, sub);
             showPage('lessons');
-          } else {
-            navigateHome();
+            return;
           }
-        } else {
-          navigateHome();
         }
+        navigateHome();
         return;
       }
-      // unknown hash - fallback home
+
+      // unknown -> home
       navigateHome();
     }
 
-    /************************************************************************
-     * Fallback: if user manually chooses "Go" or other flow
-     ************************************************************************/
-    function onFormSubmit(){
-      const gradeVal = $('#grade').value;
-      const subjectVal = $('#subject').value;
-      if(gradeVal && subjectVal){
-        navigateToLessons(gradeVal, subjectVal);
-      } else {
-        alert('Please select both class and subject.');
-      }
-    }
+    // call after DOM ready
+    window.addEventListener('load', () => {
+      // ensure welcome animation replay if returning
+      $$('.welcome-line').forEach((el)=> { el.style.animation = el.style.animation; });
 
-    /************************************************************************
-     * Small keyboard + focus helpers (nice-to-have)
-     ************************************************************************/
-    document.addEventListener('keyup', (e)=>{
-      if(e.key === 'Escape') closeModal();
+      // handle initial hash protected by session flags
+      handleInitialHash();
     });
 
+    /************************************************************************
+     * Clean UX: prevent direct access to form/lessons:
+     * when user clicks "Go to Learning Portal" we set visitedHome flag
+     ************************************************************************/
+    // clicking enterPortal above sets visitedHome and calls navigateForm
+    // When navigateForm is called, we set visitedForm after both selections (in handleAutoNavigate)
+    // The guards check these session flags.
+
+    /************************************************************************
+     * Note for devs:
+     * Total generated pages calculation (per updated mapping):
+     * Grades 1-3: 3 grades × 4 subjects = 12 pages
+     * Grades 4-10: 7 grades × 5 subjects = 35 pages
+     * Total = 47 dynamically generated lesson pages (each shows 20 lessons)
+     ************************************************************************/
   </script>
 </body>
 </html>
