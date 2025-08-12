@@ -309,11 +309,12 @@ function startLearning() {
     return;
   }
   state.formComplete = true;
+  // Reordered pills: School, Student, Grade, Subject
   $('#topInfoBar').innerHTML = `
-    <div class="info-pill">Grade: ${grade}</div>
-    <div class="info-pill">Subject: ${state.subjectNames[subjectId]}</div>
     <div class="info-pill">School: ${school}</div>
     <div class="info-pill">Student: ${student}</div>
+    <div class="info-pill">Grade: ${grade}</div>
+    <div class="info-pill">Subject: ${state.subjectNames[subjectId]}</div>
   `;
   renderLessons();
   showPage('#lessonsPage');
