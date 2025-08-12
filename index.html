@@ -12,6 +12,7 @@
   --accent-orange: #ff7b00;
   --accent-red: #B03A2E;
   --accent-blue: #0B6FA4;
+  --accent-green: #2ecc71;
   --radius: 12px;
   --ease: cubic-bezier(.22,.9,.38,1);
   --card-shadow: 0 14px 40px rgba(12,34,56,0.06);
@@ -71,11 +72,16 @@ header {
   border: none;
   cursor: pointer;
   font-size: 15px;
+  transition: transform .14s var(--ease), box-shadow .14s var(--ease);
 }
 .btn-primary {
   background: linear-gradient(90deg,#ff9a3d,var(--accent-orange));
   color: white;
   box-shadow: 0 12px 30px rgba(255,123,0,0.12);
+}
+.btn-primary:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 22px 42px rgba(255,123,0,0.18);
 }
 .btn-ghost {
   background: transparent;
@@ -111,11 +117,29 @@ input:focus, select:focus {
 .top-info {
   display: flex;
   flex-wrap: wrap;
-  justify-content: space-between;
-  align-items: center;
+  gap: 10px;
+  justify-content: center;
+  margin-bottom: 15px;
+}
+.info-pill {
+  background: var(--accent-green);
+  color: white;
+  padding: 8px 14px;
+  border-radius: 20px;
+  font-weight: 700;
+}
+.lesson-guide {
+  text-align: center;
+  font-size: 18px;
+  font-weight: 800;
+  color: var(--accent-orange);
   margin-bottom: 20px;
-  font-weight: 900;
-  color: var(--accent-red);
+  animation: pulseText 1.2s ease-in-out infinite;
+}
+@keyframes pulseText {
+  0% { opacity: 0.6; }
+  50% { opacity: 1; }
+  100% { opacity: 0.6; }
 }
 .lessons-grid {
   display: grid;
@@ -197,12 +221,15 @@ footer {
         <option value="">Select Subject</option>
       </select>
     </div>
+    <!-- New Start Learning Button -->
+    <button id="startBtn" class="btn btn-primary" style="margin-top:10px;">Let’s Start Learning!</button>
   </div>
 </section>
 
 <!-- LESSONS PAGE -->
 <section id="lessonsPage" class="page">
   <div class="top-info" id="topInfoBar"></div>
+  <div class="lesson-guide">Please choose your lesson</div>
   <div class="lessons-grid" id="lessonsGrid"></div>
 </section>
 
@@ -258,7 +285,6 @@ function updateSubjects(grade) {
   });
 }
 function showPage(id) {
-  // Block skipping
   if(id === '#formPage' && state.page !== '#homePage') return;
   if(id === '#lessonsPage' && !state.formComplete) return;
   document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
@@ -269,17 +295,28 @@ function isValidCombo(grade, subjectId) {
   const list = grade <= 3 ? state.subjectsLow : state.subjectsHigh;
   return list.some(s => s.id === subjectId);
 }
-function tryNavigate() {
+function startLearning() {
   const school = $('#schoolInput').value.trim();
   const student = $('#studentInput').value.trim();
   const grade = parseInt($('#gradeSelect').value);
   const subjectId = $('#subjectSelect').value;
-  if(school && student && grade && subjectId && isValidCombo(grade, subjectId)) {
-    state.formComplete = true;
-    $('#topInfoBar').textContent = `Grade: ${grade} | Subject: ${state.subjectNames[subjectId]} | School: ${school} | Student: ${student}`;
-    renderLessons();
-    showPage('#lessonsPage');
+  if(!school || !student || !grade || !subjectId) {
+    alert('Please complete all required fields.');
+    return;
   }
+  if(!isValidCombo(grade, subjectId)) {
+    alert('Invalid class–subject combination.');
+    return;
+  }
+  state.formComplete = true;
+  $('#topInfoBar').innerHTML = `
+    <div class="info-pill">Grade: ${grade}</div>
+    <div class="info-pill">Subject: ${state.subjectNames[subjectId]}</div>
+    <div class="info-pill">School: ${school}</div>
+    <div class="info-pill">Student: ${student}</div>
+  `;
+  renderLessons();
+  showPage('#lessonsPage');
 }
 function renderLessons() {
   const grid = $('#lessonsGrid');
@@ -294,13 +331,8 @@ function renderLessons() {
 
 // Events
 $('#btnPortal').addEventListener('click', () => showPage('#formPage'));
-$('#gradeSelect').addEventListener('change', e => {
-  updateSubjects(parseInt(e.target.value));
-  tryNavigate();
-});
-['#schoolInput','#studentInput','#subjectSelect'].forEach(sel => {
-  $(sel).addEventListener('input', tryNavigate);
-});
+$('#gradeSelect').addEventListener('change', e => updateSubjects(parseInt(e.target.value)));
+$('#startBtn').addEventListener('click', startLearning);
 $('#logo').addEventListener('click', () => showPage('#homePage'));
 
 populateGrades();
