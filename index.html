@@ -29,7 +29,6 @@ header {
   align-items: center;
   padding: 14px 20px;
   background: rgba(255,255,255,0.6);
-  -webkit-backdrop-filter: blur(6px);
   backdrop-filter: blur(6px);
   box-shadow: 0 8px 18px rgba(8,18,40,0.05);
 }
@@ -193,7 +192,7 @@ footer {
     <div class="welcome-line w3">Gyan Mandala Nepal</div>
     <p class="hero-sub">Play, Learn and Discover !!!</p>
     <div class="cta">
-      <button id="btnPortal" class="btn btn-primary">Start your Journey Here</button>
+      <button id="btnPortal" class="btn btn-primary">Go to Learning Portal</button>
     </div>
   </div>
 </section>
@@ -230,7 +229,7 @@ footer {
 <!-- LESSONS PAGE -->
 <section id="lessonsPage" class="page">
   <div class="top-info" id="topInfoBar"></div>
-  <div class="lesson-guide">Which Lesson you want to Learn ??? !!!</div>
+  <div class="lesson-guide">Please choose your lesson !!!</div>
   <div class="lessons-grid" id="lessonsGrid"></div>
 </section>
 
@@ -240,25 +239,25 @@ footer {
 const state = {
   grades: Array.from({length:10}, (_,i) => i+1),
   subjectsLow: [
-    {id:'maths', name:'Mathematics (गणित)'},
-    {id:'english', name:'English (अंग्रेजी)'},
-    {id:'hamro', name:'Hamro Serophero (हाम्रो सेरोफेरो)'},
-    {id:'nepali', name:'Nepali (नेपाली)'},
+    {id:'maths', name:'Mathematics'},
+    {id:'english', name:'English'},
+    {id:'hamro', name:'Hamro Serophero'},
+    {id:'nepali', name:'Nepali'}
   ],
   subjectsHigh: [
-    {id:'maths', name:'Mathematics (गणित)'},
-    {id:'english', name:'English (अंग्रेजी)'},
-    {id:'science', name:'Science (विज्ञान)'},
-    {id:'nepali', name:'Nepali(नेपाली)'},
-    {id:'social', name:'Social Studies (सामाजिक अध्ययन)'}
+    {id:'maths', name:'Mathematics'},
+    {id:'english', name:'English'},
+    {id:'science', name:'Science'},
+    {id:'nepali', name:'Nepali'},
+    {id:'social', name:'Social Studies'}
   ],
   subjectNames: {
-    maths:'Mathematics (गणित)',
-    english:'English (अंग्रेजी)',
-    hamro:'Hamro Serophero (हाम्रो सेरोफेरो)',
-    nepali:'Nepali (नेपाली)',
-    science:'Science (विज्ञान)',
-    social:'Social Studies (सामाजिक अध्ययन)'
+    maths:'Mathematics',
+    english:'English',
+    hamro:'Hamro Serophero',
+    nepali:'Nepali',
+    science:'Science',
+    social:'Social Studies'
   },
   formComplete: false
 };
@@ -323,25 +322,10 @@ function startLearning() {
 function renderLessons() {
   const grid = $('#lessonsGrid');
   grid.innerHTML = '';
-  const grade = parseInt($('#gradeSelect').value);
-  const subjectId = $('#subjectSelect').value;
-
   for(let i=1; i<=20; i++) {
     const btn = document.createElement('div');
     btn.className = 'lesson-tile';
-
-    // Special case for Grade 1 Mathematics, first lesson
-    if(i === 1 && grade === 1 && subjectId === 'maths') {
-      btn.textContent = 'size and position';
-      btn.style.background = 'linear-gradient(90deg,#ffecd2,#fcb69f)';
-      btn.style.color = '#0B6FA4';
-      btn.style.fontWeight = 'bold';
-      btn.addEventListener('click', () => {
-        window.open('1math1.html', '_blank');
-      });
-    } else {
-      btn.textContent = `Lesson ${i}`;
-    }
+    btn.textContent = `Lesson ${i}`;
     grid.appendChild(btn);
   }
 }
