@@ -2,7 +2,8 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Inside and Outside</title>
+  <title>Inside and Outside - Grade 1 Maths</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"> <!-- Makes it responsive -->
   <style>
     body {
       font-family: Arial, sans-serif;
@@ -14,19 +15,34 @@
     h1 {
       color: #333;
       margin-top: 20px;
+      padding: 0 10px;
     }
     .image-container {
-      margin: 20px auto;
-      padding: 10px;
+      max-width: 900px;  /* Limit content width for big screens */
+      margin: 0 auto;
+      padding: 20px;
+    }
+    .image-box {
+      margin-bottom: 20px; /* Gap between images */
       background: white;
-      border: 2px solid #ccc;
-      display: inline-block;
+      padding: 10px;
       border-radius: 8px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
     }
     img {
       max-width: 100%;
       height: auto;
       border-radius: 4px;
+    }
+
+    /* Responsive adjustments */
+    @media (max-width: 768px) {
+      h1 {
+        font-size: 20px;
+      }
+      .image-box {
+        padding: 5px;
+      }
     }
   </style>
 </head>
@@ -35,13 +51,28 @@
   <h1>Grade 1 - Maths - Inside and Outside</h1>
 
   <div class="image-container">
-    <img src="Picture/Grade 1/Maths/Lesson 1 Shape Size and Place/1. In and Out/inside and outside1.jpg" 
-         alt="Inside and Outside Activity">
+    <div class="image-box">
+      <img src="Picture/Grade 1/Maths/Lesson 1 Shape Size and Place/1. In and Out/inside and outside1.jpg" alt="Inside and Outside 1">
+    </div>
+    <div class="image-box">
+      <img src="Picture/Grade 1/Maths/Lesson 1 Shape Size and Place/1. In and Out/inside and outside2.jpg" alt="Inside and Outside 2">
+    </div>
+    <div class="image-box">
+      <img src="Picture/Grade 1/Maths/Lesson 1 Shape Size and Place/1. In and Out/inside and outside3.jpg" alt="Inside and Outside 3">
+    </div>
+    <div class="image-box">
+      <img src="Picture/Grade 1/Maths/Lesson 1 Shape Size and Place/1. In and Out/inside and outside4.jpg" alt="Inside and Outside 4">
+    </div>
+    <div class="image-box">
+      <img src="Picture/Grade 1/Maths/Lesson 1 Shape Size and Place/1. In and Out/inside and outside5.jpg" alt="Inside and Outside 5">
+    </div>
+    <div class="image-box">
+      <img src="Picture/Grade 1/Maths/Lesson 1 Shape Size and Place/1. In and Out/inside and outside6.jpg" alt="Inside and Outside 6">
+    </div>
   </div>
 
   <script>
-    // Example JavaScript (optional)
-    console.log("Image loaded successfully.");
+    console.log("All Inside and Outside images loaded successfully.");
   </script>
 
 </body>
