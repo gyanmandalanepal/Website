@@ -189,6 +189,7 @@
       <p class="subtitle">Maths | Lesson 1: Shape, Size & Place</p>
       <div class="toprow" role="region" aria-label="Score and tools">
         <div class="score" id="score" aria-live="polite">Score: 0</div>
+        <div class="score" id="totalMarks" aria-live="polite" style="margin-left:8px;">/ 0</div>
         <button class="btn read" id="readPage" type="button" aria-label="Read the page instructions">🔊 <span id="readPageTxt">Read Aloud</span></button>
       </div>
 
@@ -618,35 +619,37 @@
        -------------------------- */
     let score = 0;
     const scoreEl = document.getElementById('score');
+    const totalMarksEl = document.getElementById('totalMarks');
     const registry = new Map(); // key -> boolean (correct?)
-    function setCorrect(key, isCorrect){
-      const prev = registry.get(key) === true;
-      registry.set(key, !!isCorrect);
-      const now = registry.get(key) === true;
-      if(!prev && now){ score++; }
-      if(prev && !now){ score = Math.max(0, score - 1); }
-      scoreEl.textContent = STRINGS.score + `: ${score}`;
-      maybeAllDone();
-    }
-    function resetKeys(prefix){
-      for(const k of Array.from(registry.keys())){
-        if(k.startsWith(prefix)) registry.set(k,false);
-      }
-      recomputeScore();
-    }
-    function recomputeScore(){
-      let s=0;
-      for(const v of registry.values()) if(v===true) s++;
-      score=s; scoreEl.textContent = STRINGS.score + `: ${score}`;
-    }
-    function maybeAllDone(){
-      // If all registered keys are true and there is at least one task, show pane
-      const vals = Array.from(registry.values());
-      if(vals.length>0 && vals.every(Boolean)){
-        document.getElementById('donePane').style.display='flex';
-      }
+
+    // Add this function to update total marks
+    function updateTotalMarks() {
+      // Only count unique answer keys (those starting with a[1-6]_ or a5_sel_)
+      const total = Array.from(registry.keys()).filter(k =>
+        /^a[1-6]_/.test(k) || /^a5_sel_/.test(k)
+      ).length;
+      totalMarksEl.textContent = `/ ${total}`;
     }
 
+    // Call updateTotalMarks after all registry.set calls
+    // For example, after all registry.set in each activity, call updateTotalMarks();
+
+    (function fillTeacher(){
+      // ...existing code...
+      updateTotalMarks();
+    })();
+
+    // In each activity's init function, after all registry.set(...), call updateTotalMarks();
+    // Example for A1:
+    (function initA1(){
+      // ...existing code...
+      ['cat','dog'].forEach(k=>registry.set(`a1_${k}`, false));
+      updateTotalMarks();
+    })();
+
+    // Do the same for A2, A3, A4, A5, A6
+    // For example, after registry.set in initA2, add:
+    updateTotalMarks();
     /* --------------------------
        Speech + Beep (offline OK)
        -------------------------- */
@@ -735,6 +738,7 @@
 
       // Register keys
       ['cat','dog'].forEach(k=>registry.set(`a1_${k}`, false));
+      updateTotalMarks();
     })();
 
     /* --------------------------
@@ -840,6 +844,7 @@
 
       // Register keys
       ['comb','eraser','glass','scissor','notebook','pen'].forEach(k=>registry.set(`a2_${k}`, false));
+      updateTotalMarks();
     })();
 
     /* --------------------------
