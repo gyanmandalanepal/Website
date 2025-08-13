@@ -332,6 +332,7 @@ function renderLessons() {
     if(i === 1 && grade === 1 && subjectId === 'maths') {
       btn.textContent = '1. Size and Position';
       btn.addEventListener('click', () => {
+        sessionStorage.setItem('allow1math1', 'yes'); // Set access flag
         window.location.href = '1math1.html';
       });
     } else {

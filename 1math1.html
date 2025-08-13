@@ -46,6 +46,15 @@
   </style>
 </head>
 <body>
+<script>
+  // Only allow access if navigated from the lessons button
+  if (sessionStorage.getItem('allow1math1') !== 'yes') {
+    window.location.href = 'index.html';
+  } else {
+    // Remove the flag so refresh/direct access is blocked again
+    sessionStorage.removeItem('allow1math1');
+  }
+</script>
 
   <h1>Grade 1 - Maths - Inside and Outside</h1>
 
