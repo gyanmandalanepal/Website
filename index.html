@@ -275,7 +275,7 @@ function populateGrades() {
 function updateSubjects(grade) {
   const sel = $('#subjectSelect');
   sel.innerHTML = '<option value="">Select Subject</option>';
-  if(!grade) return;
+  if(!grade || isNaN(grade)) return; // Fix: handle empty or invalid grade
   const list = grade <= 3 ? state.subjectsLow : state.subjectsHigh;
   list.forEach(s => {
     const opt = document.createElement('option');
@@ -322,10 +322,21 @@ function startLearning() {
 function renderLessons() {
   const grid = $('#lessonsGrid');
   grid.innerHTML = '';
+  // Get selected grade and subject
+  const grade = parseInt($('#gradeSelect').value);
+  const subjectId = $('#subjectSelect').value;
   for(let i=1; i<=20; i++) {
     const btn = document.createElement('div');
     btn.className = 'lesson-tile';
-    btn.textContent = `Lesson ${i}`;
+    // Special case for Grade 1 Maths, Lesson 1
+    if(i === 1 && grade === 1 && subjectId === 'maths') {
+      btn.textContent = '1. Size and Position';
+      btn.addEventListener('click', () => {
+        window.location.href = '1math1.html';
+      });
+    } else {
+      btn.textContent = `Lesson ${i}`;
+    }
     grid.appendChild(btn);
   }
 }
