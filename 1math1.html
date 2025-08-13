@@ -1,79 +1,1034 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>Inside and Outside - Grade 1 Maths</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"> <!-- Makes it responsive -->
+  <meta charset="UTF-8" />
+  <title>Inside & Outside | Maths  Lesson 1: Shape, Size & Place</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <style>
-    body {
-      font-family: Arial, sans-serif;
-      background-color: #f9f9f9;
-      text-align: center;
-      margin: 0;
-      padding: 0;
+    /* =========================
+       Base + Layout (one column)
+       ========================= */
+    :root{
+      --bg:#f7fafc;
+      --card:#ffffff;
+      --text:#1f2937;
+      --muted:#6b7280;
+      --primary:#2563eb;
+      --primary-weak:#dbeafe;
+      --green:#16a34a;
+      --green-weak:#dcfce7;
+      --red:#dc2626;
+      --red-weak:#fee2e2;
+      --amber:#f59e0b;
+      --ink:#111827;
+      --shadow:0 6px 20px rgba(0,0,0,.08);
+      --radius:16px;
+      --hit:44px; /* min touch target */
     }
-    h1 {
-      color: #333;
-      margin-top: 20px;
-      padding: 0 10px;
+    *{box-sizing:border-box}
+    html,body{margin:0;padding:0;background:var(--bg);color:var(--text);font-family:system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,"Apple Color Emoji","Segoe UI Emoji";}
+    header{
+      background:linear-gradient(180deg,#fff,rgba(255,255,255,.92));
+      position:sticky;top:0;z-index:10;
+      border-bottom:1px solid #e5e7eb;
+      backdrop-filter:saturate(140%) blur(6px);
     }
-    .image-container {
-      max-width: 900px;  /* Limit content width for big screens */
-      margin: 0 auto;
-      padding: 20px;
-    }
-    .image-box {
-      margin-bottom: 20px; /* Gap between images */
-      background: white;
-      padding: 10px;
-      border-radius: 8px;
-      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
-    }
-    img {
-      max-width: 100%;
-      height: auto;
-      border-radius: 4px;
+    .wrap{max-width:980px;margin:0 auto;padding:14px}
+    h1{margin:4px 0 0;font-size:clamp(22px,4vw,32px);text-align:center}
+    .subtitle{margin:4px 0 10px;text-align:center;color:var(--muted);font-size:clamp(14px,2.8vw,16px)}
+    .toprow{display:flex;gap:10px;justify-content:center;align-items:center;flex-wrap:wrap}
+    .score{font-weight:800;border:2px solid var(--primary);padding:8px 12px;border-radius:999px;background:var(--primary-weak);min-height:var(--hit);display:inline-flex;align-items:center}
+    .btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;padding:10px 14px;border-radius:999px;border:2px solid #e5e7eb;background:#fff;color:#111;font-weight:700;cursor:pointer;min-width:var(--hit);min-height:var(--hit);user-select:none}
+    .btn:focus{outline:none;box-shadow:0 0 0 4px var(--primary-weak)}
+    .btn-primary{background:var(--primary);border-color:var(--primary);color:#fff}
+    .btn-success{background:var(--green);border-color:var(--green);color:#fff}
+    .btn-danger{background:var(--red);border-color:var(--red);color:#fff}
+    .btn-ghost{background:transparent}
+
+    /* Collapsible teacher panel */
+    details.teacher{background:#fff;border:1px solid #e5e7eb;border-radius:12px;padding:10px 12px;box-shadow:var(--shadow);margin:10px auto 0;max-width:980px}
+    details.teacher summary{cursor:pointer;font-weight:800}
+    details.teacher .cols{display:grid;grid-template-columns:1fr;gap:10px;margin-top:10px}
+    @media(min-width:720px){details.teacher .cols{grid-template-columns:1.3fr 1fr}}
+    ul{margin:6px 0 0 18px}
+    li{margin:4px 0}
+
+    main{max-width:980px;margin:8px auto 48px;padding:8px}
+    section.activity{background:var(--card);border-radius:var(--radius);box-shadow:var(--shadow);padding:14px;margin:14px auto}
+    section.activity h2{margin:0 0 6px;font-size:clamp(18px,3.5vw,22px)}
+    .inst{color:var(--muted);margin:0 0 10px}
+    .read-inst{margin-left:6px}
+    figure{margin:8px 0;border:1px dashed #e5e7eb;border-radius:12px;overflow:hidden;background:#fafafa}
+    figure img{display:block;width:100%;height:auto}
+    figcaption{padding:8px 10px;background:#fafafa;color:#374151;font-size:14px}
+    .divider{border:0;height:1px;background:#e5e7eb;margin:12px 0}
+
+    /* Widgets */
+    .pairgrid{display:grid;grid-template-columns:1fr;gap:10px}
+    @media(min-width:640px){.pairgrid{grid-template-columns:1fr 1fr}}
+    .list{display:flex;flex-direction:column;gap:8px}
+    .token{padding:10px 12px;border-radius:10px;border:2px solid #d1d5db;background:#fff;cursor:pointer;min-height:var(--hit);display:flex;align-items:center;justify-content:center;font-weight:700}
+    .token.selected{border-color:var(--amber);box-shadow:0 0 0 4px rgba(245,158,11,.2)}
+    .target{padding:10px 12px;border-radius:10px;border:2px dashed #cbd5e1;background:#fff;min-height:var(--hit);display:flex;align-items:center;justify-content:center;font-weight:700}
+    .ok{color:var(--green)} .bad{color:var(--red)}
+    .success{border-color:var(--green)!important;background:var(--green-weak)!important}
+    .error{border-color:var(--red)!important;background:var(--red-weak)!important}
+
+    /* Drag & Drop */
+    .bank{display:flex;gap:8px;flex-wrap:wrap}
+    .chip{display:inline-flex;align-items:center;justify-content:center;padding:10px 14px;border-radius:999px;background:#fff;border:2px solid #e5e7eb;box-shadow:var(--shadow);cursor:grab;user-select:none;min-width:var(--hit);min-height:var(--hit)}
+    .chip[aria-grabbed="true"]{border-color:var(--amber)}
+    .buckets{display:grid;grid-template-columns:1fr;gap:10px}
+    @media(min-width:620px){.buckets{grid-template-columns:1fr 1fr}}
+    .bucket{background:#f3f4f6;border:2px dashed #cbd5e1;border-radius:12px;padding:10px;min-height:96px;display:flex;gap:8px;flex-wrap:wrap;align-items:flex-start}
+    .bucket-title{font-weight:800;margin:2px 0 6px}
+
+    /* Choice pictures / tick */
+    .choice-pics{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+    .pic{border:2px solid #e5e7eb;border-radius:12px;overflow:hidden;background:#fff}
+    .pic button{width:100%;border:0;background:#fff;cursor:pointer;display:block}
+    .tick{display:flex;gap:6px;align-items:center;justify-content:center;padding:8px;font-weight:800}
+    .tick .mark{width:18px;height:18px;border:2px solid #111;border-radius:4px;display:inline-flex;align-items:center;justify-content:center}
+    .tick.checked .mark{background:repeating-linear-gradient(45deg,#10b981 0 6px,#10b981 6px,#34d399 12px);color:#fff}
+    .tick .text{user-select:none}
+
+    /* Blanks (drag word) + keyboard drop */
+    .blank{display:inline-flex;min-width:120px;min-height:var(--hit);align-items:center;justify-content:center;border:2px dashed #cbd5e1;border-radius:10px;padding:6px;background:#fff;margin:0 6px}
+
+    /* Coloring prompt (simulated) */
+    .color-row{display:flex;gap:8px;flex-wrap:wrap}
+    .swatch{width:var(--hit);height:var(--hit);border:2px solid #111;border-radius:8px;cursor:pointer;display:inline-block}
+    .swatch[data-c="inside"]{background:
+      repeating-linear-gradient(45deg,#d1fae5 0 8px,#a7f3d0 8px 16px);}
+    .swatch[data-c="outside"]{background:
+      repeating-linear-gradient(45deg,#fee2e2 0 8px,#fecaca 8px 16px);}
+
+    /* Buttons row per activity */
+    .actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
+    .feedback{min-height:1.25em;font-weight:800;margin-top:6px}
+    .hint{color:var(--muted);font-size:13px}
+
+    /* Read Aloud small button */
+    .read{font-size:13px;padding:6px 10px;border-radius:999px}
+
+    /* Print styles */
+    @media print{
+      header{position:static;box-shadow:none}
+      .btn,.read,.actions button{display:none!important}
+      .token,.target,.chip,.bucket,.pic{box-shadow:none!important}
+      .wrap,main,section.activity{box-shadow:none!important;border:1px solid #e5e7eb}
     }
 
-    /* Responsive adjustments */
-    @media (max-width: 768px) {
-      h1 {
-        font-size: 20px;
-      }
-      .image-box {
-        padding: 5px;
-      }
+    /* Focus ring for custom droppables */
+    .focus-ring{box-shadow:0 0 0 4px var(--primary-weak)}
+    .visually-hidden{
+      position:absolute!important;height:1px;width:1px;overflow:hidden;clip:rect(1px,1px,1px,1px);white-space:nowrap
     }
+
+    /* Final modal */
+    .done{display:none;position:fixed;inset:0;background:rgba(0,0,0,.35);align-items:center;justify-content:center;z-index:50}
+    .done .panel{background:#fff;border-radius:16px;box-shadow:var(--shadow);padding:24px;max-width:520px;text-align:center}
   </style>
 </head>
 <body>
+  <!-- =======================
+       STRINGS (easy editing)
+       ======================= -->
+  <script>
+    const STRINGS = {
+      title: "Inside and Outside (भित्र र बाहिर)",
+      subtitle: " Lesson 1: Shape, Size & Place",
+      readAloud: "Read Aloud",
+      check: "Check Answers",
+      reset: "Reset",
+      score: "Score",
+      correct: "✓ Great job!",
+      incorrect: "✗ Try again.",
+      hint: "Look carefully. Use the picture.",
+      doneTitle: "You did it!",
+      doneMsg: "All answers are correct. Super work!",
+      teacherTitle: "Teacher Panel",
+      objectivesTitle: "Learning Objectives",
+      objectives: [
+        "Use the words inside and outside.",
+        "Match words to pictures and places.",
+        "Listen and choose the right answer.",
+        "Drag and drop labels to sort objects.",
+        "Fill in missing words with inside/outside."
+      ],
+      vocabTitle: "Key Words",
+      vocab: ["inside", "outside", "box", "house", "bus", "bat", "ball", "comb", "eraser", "glass", "scissor", "notebook", "pen", "cat", "dog", "girl", "boy"],
+      /* Listening prompts (used with Web Speech) */
+      say: {
+        a1_dog: "Where is the dog? Inside or outside?",
+        a1_cat: "Where is the cat? Inside or outside?",
+        a2_comb: "Where is the comb? Inside or outside the box?",
+        a2_eraser: "Where is the eraser? Inside or outside the box?",
+        a2_glass: "Where is the glass? Inside or outside the box?",
+        a2_scissor: "Where is the scissor? Inside or outside the box?",
+        a2_notebook: "Where is the notebook? Inside or outside the box?",
+        a2_pen: "Where is the pen? Inside or outside the box?",
+        a3_scissor: "Tick the picture that shows scissor inside the box.",
+        a3_combs: "Tick the picture that shows combs inside the box.",
+        a4_fill: "Drag the right word to each blank.",
+        a4_color: "Tap a pattern to color the word card.",
+        a5_boy: "Where is the boy? Inside or outside the bus?",
+        a5_girl: "Where is the girl? Inside or outside the box?",
+        a6_ball: "Where is the ball? Inside or outside?",
+        a6_bat: "Where is the bat? Inside or outside?",
+      }
+    };
+  </script>
 
-  <h1>Grade 1 - Maths - Inside and Outside</h1>
+  <!-- =======================
+       Header + Teacher Panel
+       ======================= -->
+  <header>
+    <div class="wrap">
+      <h1 aria-live="polite">Inside & Outside</h1>
+      <p class="subtitle">Maths | Lesson 1: Shape, Size & Place</p>
+      <div class="toprow" role="region" aria-label="Score and tools">
+        <div class="score" id="score" aria-live="polite">Score: 0</div>
+        <button class="btn read" id="readPage" type="button" aria-label="Read the page instructions">🔊 <span id="readPageTxt">Read Aloud</span></button>
+      </div>
 
-  <div class="image-container">
-    <div class="image-box">
-      <img src="Picture/Grade 1/Maths/Lesson 1 Shape Size and Place/1. In and Out/inside and outside1.jpg" alt="Inside and Outside 1">
+      <details class="teacher" id="teacherPanel">
+        <summary><strong>Teacher Panel</strong> ( learning goals & vocabulary)</summary>
+        <div class="cols">
+          <div>
+            <h3 style="margin:6px 0 4px;font-size:16px;">Learning Objectives</h3>
+            <ul id="objList"></ul>
+          </div>
+          <div>
+            <h3 style="margin:6px 0 4px;font-size:16px;">Vocabulary</h3>
+            <ul id="vocabList" style="columns:2;"></ul>
+          </div>
+        </div>
+      </details>
     </div>
-    <div class="image-box">
-      <img src="Picture/Grade 1/Maths/Lesson 1 Shape Size and Place/1. In and Out/inside and outside2.jpg" alt="Inside and Outside 2">
-    </div>
-    <div class="image-box">
-      <img src="Picture/Grade 1/Maths/Lesson 1 Shape Size and Place/1. In and Out/inside and outside3.jpg" alt="Inside and Outside 3">
-    </div>
-    <div class="image-box">
-      <img src="Picture/Grade 1/Maths/Lesson 1 Shape Size and Place/1. In and Out/inside and outside4.jpg" alt="Inside and Outside 4">
-    </div>
-    <div class="image-box">
-      <img src="Picture/Grade 1/Maths/Lesson 1 Shape Size and Place/1. In and Out/inside and outside5.jpg" alt="Inside and Outside 5">
-    </div>
-    <div class="image-box">
-      <img src="Picture/Grade 1/Maths/Lesson 1 Shape Size and Place/1. In and Out/inside and outside6.jpg" alt="Inside and Outside 6">
+  </header>
+
+  <main id="main">
+    <!-- ============= A1: Match the Following (Cat/Dog ↔ Inside/Outside) ============= -->
+    <section class="activity" id="a1" aria-labelledby="a1h">
+      <h2 id="a1h">Activity 1: Match the Following</h2>
+      <p class="inst">Match the word to the place. Tap a word, then a place.</p>
+      <button class="btn read read-inst" data-read="a1">🔊 Read Aloud</button>
+
+      <figure>
+        <img src="Picture/Grade 1/Maths/Lesson 1 Shape Size and Place/1. In and Out/inside and outside1.jpg"
+             alt="A house with a cat inside and a dog outside." />
+        <figcaption>Look at the cat and the dog.</figcaption>
+      </figure>
+
+      
+      <p>  <button class="btn" data-say="a1_dog">🔊 Play: Dog</button>
+        <button class="btn" data-say="a1_cat">🔊 Play: Cat</button></p>
+      </div>
+      <div class="pairgrid" role="group" aria-label="Match words to places">
+<!-- Randomized 2-row (left=source, right=target) layout -->
+<div id="match-container">
+  <!-- rows will be injected here -->
+</div>
+
+<script>
+  // ==== Randomize "Cat/Dog" (left) with "Inside/Outside" (right) ====
+  // Keeps your original data attributes & classes so existing logic still works.
+  (function renderRandomMatchRows(){
+    const container = document.getElementById('match-container');
+    if(!container) return;
+
+    // Data (do not change keys/vals—these hook into your existing matching logic)
+    const SOURCES = [
+      { label: 'Cat',  key: 'cat'  },
+      { label: 'Dog',  key: 'dog'  }
+    ];
+    const TARGETS = [
+      { label: 'Inside the house',  val: 'inside'  },
+      { label: 'Outside the house', val: 'outside' }
+    ];
+
+    // Choose 1 random source & 1 random target for Row 1; the rest go to Row 2
+    const s1i = Math.random() < 0.5 ? 0 : 1;        // source index for row 1
+    const t1i = Math.random() < 0.5 ? 0 : 1;        // target index for row 1
+    const s2i = 1 - s1i;                            // remaining source
+    const t2i = 1 - t1i;                            // remaining target
+
+    const rows = [
+      {source: SOURCES[s1i], target: TARGETS[t1i]},
+      {source: SOURCES[s2i], target: TARGETS[t2i]}
+    ];
+
+    // Helper to build a row with two cells (left=source button, right=target button)
+    function buildRow({source, target}) {
+      const row = document.createElement('div');
+      row.className = 'pair-row';
+      row.style.display = 'flex';
+      row.style.alignItems = 'center';
+      row.style.justifyContent = 'space-between';
+      row.style.gap = '10px';
+      row.style.margin = '6px 0';
+
+      const left = document.createElement('div');
+      left.className = 'cell-left';
+      left.style.flex = '1';
+      left.style.display = 'flex';
+      left.style.justifyContent = 'flex-start';
+
+      const right = document.createElement('div');
+      right.className = 'cell-right';
+      right.style.flex = '1';
+      right.style.display = 'flex';
+      right.style.justifyContent = 'flex-end';
+
+      // Source button (left). Keep class "token" & data-type="source" as in your snippet.
+      const srcBtn = document.createElement('button');
+      srcBtn.className = 'token';                  // keep same class
+      srcBtn.dataset.type = 'source';              // keep same attribute
+      srcBtn.dataset.key = source.key;             // cat | dog
+      srcBtn.textContent = source.label;
+
+      // Target button (right). Keep class "target" & data-type="target" as in your snippet.
+      const tgtBtn = document.createElement('button');
+      tgtBtn.className = 'target';                 // keep same class
+      tgtBtn.dataset.type = 'target';              // keep same attribute
+      tgtBtn.dataset.val = target.val;             // inside | outside
+      tgtBtn.textContent = target.label;
+
+      left.appendChild(srcBtn);
+      right.appendChild(tgtBtn);
+      row.append(left, right);
+      return row;
+    }
+
+    // Clear and render
+    container.innerHTML = '';
+    rows.forEach(r => container.appendChild(buildRow(r)));
+  })();
+</script>
+
+
+      <div class="feedback" id="a1fb" aria-live="polite"></div>
+   
+
+      <div class="actions">
+
+        
+      </div>
+      <hr class="divider" />
+      <!-- Mini listening (balanced mix, not only listening) -->
+
+    </section>
+
+    <!-- ============= A2: Drag & Drop — Sort into Inside/Outside Buckets ============= -->
+    <section class="activity" id="a2" aria-labelledby="a2h">
+      <h2 id="a2h">Activity 2: Drag & Drop</h2>
+      <p class="inst">Drag each label to the right bucket.</p>
+      <button class="btn read read-inst" data-read="a2">🔊 Read Aloud</button>
+
+      <figure>
+        <img src="Picture/Grade 1/Maths/Lesson 1 Shape Size and Place/1. In and Out/inside and outside2.jpg"
+             alt="A box with objects inside or outside: comb, eraser, glass, scissor, notebook, pen." />
+        <figcaption>Sort the objects.       Hint: Look at each object carefully.</figcaption>
+      </figure>
+              <button class="btn" data-say="a2_comb">🔊 Comb</button>
+        <button class="btn" data-say="a2_eraser">🔊 Eraser</button>
+        <button class="btn" data-say="a2_glass">🔊 Glass</button>
+        <button class="btn" data-say="a2_scissor">🔊 Scissor</button>
+        <button class="btn" data-say="a2_notebook">🔊 Notebook</button>
+        <button class="btn" data-say="a2_pen">🔊 Pen</button>
+
+      <div class="bank" id="a2bank" role="list">
+        <div class="chip" draggable="true" tabindex="0" role="button" aria-grabbed="false" data-id="comb" data-correct="inside">comb</div>
+        <div class="chip" draggable="true" tabindex="0" role="button" aria-grabbed="false" data-id="eraser" data-correct="outside">eraser</div>
+        <div class="chip" draggable="true" tabindex="0" role="button" aria-grabbed="false" data-id="glass" data-correct="outside">glass</div>
+        <div class="chip" draggable="true" tabindex="0" role="button" aria-grabbed="false" data-id="scissor" data-correct="inside">scissor</div>
+        <div class="chip" draggable="true" tabindex="0" role="button" aria-grabbed="false" data-id="notebook" data-correct="inside">notebook</div>
+        <div class="chip" draggable="true" tabindex="0" role="button" aria-grabbed="false" data-id="pen" data-correct="outside">pen</div>
+      </div>
+
+      <div class="buckets">
+        <div>
+          <div class="bucket-title">Inside the box</div>
+          <div class="bucket" data-bucket="inside" aria-label="Inside bucket" tabindex="0"></div>
+        </div>
+        <div>
+          <div class="bucket-title">Outside the box</div>
+          <div class="bucket" data-bucket="outside" aria-label="Outside bucket" tabindex="0"></div>
+        </div>
+      </div>
+
+      <div class="feedback" id="a2fb" aria-live="polite"></div>
+
+
+ 
+    </section>
+
+    <!-- ============= A3: Listening & Tick — Choose the Right Picture ============= -->
+    <section class="activity" id="a3" aria-labelledby="a3h">
+      <h2 id="a3h">Activity 3: Listening & Tick</h2>
+      <p class="inst">Play the sound. Tick the <strong>right picture</strong>.</p>
+      <button class="btn read read-inst" data-read="a3">🔊 Read Aloud</button>
+
+      <figure>
+        <img src="Picture/Grade 1/Maths/Lesson 1 Shape Size and Place/1. In and Out/inside and outside3.jpg"
+             alt="Objects near a box: scissor inside, glass and note outside, combs inside." />
+        <figcaption>Listen. Then tick the right one.
+          Hint: Think about where each thing is.</figcaption>
+        </figcaption>
+      </figure>
+      <div class="actions">
+        <button class="btn" data-say="a3_scissor">🔊 Play: Scissor</button>
+      </div>
+      <!-- Scissor: correct is Inside -->
+      <div class="choice-pics" data-key="a3_scissor" data-correct="inside">
+        <div class="pic">
+          <button type="button" class="tick" data-pick="inside" aria-label="Choose inside picture">
+            <span class="mark">✓</span><span class="text">Inside</span>
+          </button>
+        </div>
+        <div class="pic">
+          <button type="button" class="tick" data-pick="outside" aria-label="Choose outside picture">
+            <span class="mark">✓</span><span class="text">Outside</span>
+          </button>
+          
+        </div>
+      </div>
+      <div class="actions">
+        <button class="btn" data-say="a3_combs">🔊 Play: Combs</button>
+      </div>
+      </div>
+
+      <!-- Combs: correct is Inside -->
+      <div class="choice-pics" data-key="a3_combs" data-correct="inside" style="margin-top:10px">
+        <div class="pic">
+          <button type="button" class="tick" data-pick="inside" aria-label="Choose inside picture">
+            <span class="mark">✓</span><span class="text">Inside</span>
+          </button>
+        </div>
+        <div class="pic">
+          <button type="button" class="tick" data-pick="outside" aria-label="Choose outside picture">
+            <span class="mark">✓</span><span class="text">Outside</span>
+          </button>
+        </div>
+      </div>
+
+
+      <div class="feedback" id="a3fb" aria-live="polite"></div>
+ 
+      <div class="actions">
+
+      </div>
+    </section>
+
+    <!-- ============= A4: Missing Words (Drag the Word) + Coloring Prompt ============= -->
+    <section class="activity" id="a4" aria-labelledby="a4h">
+      <h2 id="a4h">Activity 4: Fill the Missing Word</h2>
+      <p class="inst">Drag a word into each blank. </p>
+      <button class="btn read read-inst" data-read="a4">🔊 Read Aloud</button>
+
+      <figure>
+        <img src="Picture/Grade 1/Maths/Lesson 1 Shape Size and Place/1. In and Out/inside and outside4.jpg"
+             alt="Mixed objects near a box: scissor and comb inside, pen and glass outside, eraser outside." />
+        <figcaption>Use the words: Inside, Outside.Hint: Say the sentence out loud.</figcaption>
+      </figure>
+        <button class="btn" data-say="a4_fill">🔊 Play: Directions</button>
+
+<p></p>      <div class="bank" id="a4bank" role="list" aria-label="Word bank">
+        <div class="chip" draggable="true" tabindex="0" role="button" aria-grabbed="false" data-word="Inside">Inside</div>
+        <div class="chip" draggable="true" tabindex="0" role="button" aria-grabbed="false" data-word="Inside">Inside</div>
+        <div class="chip" draggable="true" tabindex="0" role="button" aria-grabbed="false" data-word="Inside">Inside</div>
+        <div class="chip" draggable="true" tabindex="0" role="button" aria-grabbed="false" data-word="Outside">Outside</div>
+        <div class="chip" draggable="true" tabindex="0" role="button" aria-grabbed="false" data-word="Outside">Outside</div>
+        <div class="chip" draggable="true" tabindex="0" role="button" aria-grabbed="false" data-word="Outside">Outside</div>
+      </div>
+
+      <p>1. The scissor is <span class="blank" data-key="scissor" data-correct="Inside" tabindex="0" aria-label="Drop here: Inside or Outside"></span> the box.</p>
+      <p>2. The pen is <span class="blank" data-key="pen" data-correct="Outside" tabindex="0" aria-label="Drop here: Inside or Outside"></span> the box.</p>
+      <p>3. The eraser is <span class="blank" data-key="eraser" data-correct="Outside" tabindex="0" aria-label="Drop here: Inside or Outside"></span> the box.</p>
+
+      <div class="feedback" id="a4fb" aria-live="polite"></div>
+      <p class="hint"></p>
+
+      
+
+
+      </div>
+    </section>
+
+    <!-- ============= A5: Choose the Right Picture (Icons) + Short Select ============= -->
+    <section class="activity" id="a5" aria-labelledby="a5h">
+      <h2 id="a5h">Activity 5: Choose the Right Picture</h2>
+      <p class="inst">Pick the right picture for each sentence.</p>
+      <button class="btn read read-inst" data-read="a5">🔊 Read Aloud</button>
+
+      <figure>
+        <img src="Picture/Grade 1/Maths/Lesson 1 Shape Size and Place/1. In and Out/inside and outside5.jpg"
+             alt="A boy near a bus (outside), and a girl inside a box." />
+        <figcaption>Look at the boy and the girl.</figcaption>
+      </figure>
+
+      <!-- Use simple SVG icons as pictures to choose -->
+      <div class="pairgrid">
+        <div class="list">
+           <p></p>
+          <strong>Boy and bus</strong>
+                    <div class="actions">
+            <button class="btn" data-say="a5_boy">🔊 Play: Boy</button>
+          </div>
+          <div class="choice-pics" data-key="boy" data-correct="outside">
+            <div class="pic">
+              <button type="button" class="tick" data-pick="inside" aria-label="Choose inside picture">
+                <span class="mark">✓</span><span class="text">Inside</span>
+              </button>
+            </div>
+            <div class="pic">
+              <button type="button" class="tick" data-pick="outside" aria-label="Choose outside picture">
+                <span class="mark">✓</span><span class="text">Outside</span>
+              </button>
+            </div>
+          </div>Activity 5: Choose the Right PictureActivity 5: Choose the Right PictureActivity 5: Choose the Right PictureActivity 5: Choose the Right PictureActivity 5: Choose the Right Picture
+
+        </div>
+        <div class="list">
+           <p></p>
+          
+          <strong>Girl and bus</strong>
+                    <div class="actions">
+            <button class="btn" data-say="a5_girl">🔊 Play: Girl</button>
+          </div>
+          <div class="choice-pics" data-key="girl" data-correct="inside">
+            <div class="pic">
+              <button type="button" class="tick" data-pick="inside" aria-label="Choose inside picture">
+                <span class="mark">✓</span><span class="text">Inside</span>
+              </button>
+            </div>
+            <div class="pic">
+              <button type="button" class="tick" data-pick="outside" aria-label="Choose outside picture">
+                <span class="mark">✓</span><span class="text">Outside</span>
+              </button>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- Fun idea #2: Tiny fill-in using selects -->
+      <hr class="divider" />
+      <strong><p class="inst">Choose the right word.</p></strong>
+      <label>The boy is
+        <select data-sel="boy">
+          <option value="">— choose —</option>
+          <option value="inside">inside</option>
+          <option value="outside">outside</option>
+        </select> the bus.
+      </label>
+      <br /><br />
+      <label>The girl is
+        <select data-sel="girl">
+          <option value="">— choose —</option>
+          <option value="inside">inside</option>
+          <option value="outside">outside</option>
+        </select> the bus.
+      </label>
+
+      <div class="feedback" id="a5fb" aria-live="polite"></div>
+
+
+
+    </section>
+
+    <!-- ============= A6: Mixed — MCQ with Words + Listening Buttons ============= -->
+    <section class="activity" id="a6" aria-labelledby="a6h">
+      <h2 id="a6h">Activity 6: Choose & Listen</h2>
+      <p class="inst">Read the sentence. Choose the right word.</p>
+      <button class="btn read read-inst" data-read="a6">🔊 Read Aloud</button>
+
+      <figure>
+        <img src="Picture/Grade 1/Maths/Lesson 1 Shape Size and Place/1. In and Out/inside and outside6.jpg"
+             alt="A bat outside and a ball inside." />
+       <strong <figcaption>Ball and bat.</figcaption> </strong>
+      </figure>
+<p></p>
+<div class="actions">
+          <button class="btn" data-say="a6_ball">🔊 Play: Ball</button>
+        </div>
+      <div class="list">
+        <div class="token">The ball is …</div>
+        <div class="bank" data-mcq="ball" data-correct="inside">
+          <button class="btn" data-ans="inside">Inside</button>
+          <button class="btn" data-ans="outside">Outside</button>
+        </div>
+        <p></p>
+      </div>
+      <div class="actions">
+          <button class="btn" data-say="a6_bat">🔊 Play: Bat</button>
+        </div>
+      <div class="list" style="margin-top:10px;">
+        <div class="token">The bat is …</div>
+        <div class="bank" data-mcq="bat" data-correct="outside">
+          <button class="btn" data-ans="inside">Inside</button>
+          <button class="btn" data-ans="outside">Outside</button>
+        </div>
+        
+      </div>
+
+      <div class="feedback" id="a6fb" aria-live="polite"></div>
+      
+
+
+    </section>
+  </main>
+
+  <!-- =======================
+       Final “You did it!” pane
+       ======================= -->
+  <div class="done" id="donePane" role="dialog" aria-modal="true" aria-labelledby="doneTitle">
+    <div class="panel">
+      <h2 id="doneTitle">You did it!</h2>
+      <p id="doneText">All answers are correct. Super work!</p>
+      <div class="actions" style="justify-content:center;margin-top:10px;">
+        <button class="btn btn-success" onclick="document.getElementById('donePane').style.display='none'">Close</button>
+        <button class="btn" onclick="window.print()">Print</button>
+      </div>
     </div>
   </div>
 
+  <!-- =======================
+       Scripts (vanilla JS)
+       ======================= -->
   <script>
-    console.log("All Inside and Outside images loaded successfully.");
-  </script>
+    /* -------------
+       Populate panel
+       ------------- */
+    (function fillTeacher(){
+      document.getElementById('readPageTxt').textContent = STRINGS.readAloud;
+      const o = document.getElementById('objList');
+      STRINGS.objectives.forEach(t=>{const li=document.createElement('li');li.textContent=t;o.appendChild(li)});
+      const v = document.getElementById('vocabList');
+      STRINGS.vocab.forEach(t=>{const li=document.createElement('li');li.textContent=t;v.appendChild(li)});
+      document.querySelector('h1').textContent = STRINGS.title;
+      document.querySelector('.subtitle').textContent = STRINGS.subtitle;
+      document.getElementById('doneTitle').textContent = STRINGS.doneTitle;
+      document.getElementById('doneText').textContent = STRINGS.doneMsg;
+    })();
 
+    /* --------------------------
+       Scoring + completion check
+       -------------------------- */
+    let score = 0;
+    const scoreEl = document.getElementById('score');
+    const registry = new Map(); // key -> boolean (correct?)
+    function setCorrect(key, isCorrect){
+      const prev = registry.get(key) === true;
+      registry.set(key, !!isCorrect);
+      const now = registry.get(key) === true;
+      if(!prev && now){ score++; }
+      if(prev && !now){ score = Math.max(0, score - 1); }
+      scoreEl.textContent = STRINGS.score + `: ${score}`;
+      maybeAllDone();
+    }
+    function resetKeys(prefix){
+      for(const k of Array.from(registry.keys())){
+        if(k.startsWith(prefix)) registry.set(k,false);
+      }
+      recomputeScore();
+    }
+    function recomputeScore(){
+      let s=0;
+      for(const v of registry.values()) if(v===true) s++;
+      score=s; scoreEl.textContent = STRINGS.score + `: ${score}`;
+    }
+    function maybeAllDone(){
+      // If all registered keys are true and there is at least one task, show pane
+      const vals = Array.from(registry.values());
+      if(vals.length>0 && vals.every(Boolean)){
+        document.getElementById('donePane').style.display='flex';
+      }
+    }
+
+    /* --------------------------
+       Speech + Beep (offline OK)
+       -------------------------- */
+    // Tiny data URI beep (fallback)
+    const BEEP = "data:audio/wav;base64,UklGRmQAAABXQVZFZm10IBAAAAABAAEAESsAACJWAAACABYAAAAAACQAAACAgICA/////wAAAP///wAAAP///wAAAP///wAAAP///wAAAP///wAA";
+    function playBeep(){
+      const a = new Audio(BEEP);
+      a.play().catch(()=>{});
+    }
+    function speak(text){
+      try{
+        if('speechSynthesis' in window){
+          window.speechSynthesis.cancel();
+          const u = new SpeechSynthesisUtterance(text);
+          u.rate = 0.95; u.pitch = 1.0;
+          window.speechSynthesis.speak(u);
+          return;
+        }
+      }catch(e){}
+      playBeep(); // fallback
+    }
+    document.getElementById('readPage').addEventListener('click',()=>speak("Inside and outside. Read, match, drag, and choose. Do your best!"));
+
+    // Per-activity read aloud
+    document.querySelectorAll('.read-inst').forEach(btn=>{
+      btn.addEventListener('click',()=>{
+        const id = btn.getAttribute('data-read');
+        const text = {
+          a1:"Match the word to the place. Tap a word, then a place.",
+          a2:"Drag each label to the right bucket: inside or outside.",
+          a3:"Play the sound. Tick the right picture.",
+          a4:"Drag inside or outside to each blank. Then color the card.",
+          a5:"Pick the right picture for boy and girl. Then choose the right word.",
+          a6:"Read and choose inside or outside."
+        }[id] || "";
+        speak(text);
+      });
+    });
+
+    // Any button with data-say uses STRINGS.say key
+    document.querySelectorAll('[data-say]').forEach(btn=>{
+      btn.addEventListener('click',()=>{
+        const key = btn.getAttribute('data-say');
+        speak(STRINGS.say[key] || "Listen");
+      });
+    });
+
+    /* --------------------------
+       A11: Match (click-to-pair)
+       -------------------------- */
+    (function initA1(){
+      const area = document.getElementById('a1');
+      const fb = document.getElementById('a1fb');
+      const map = { cat:'inside', dog:'outside' };
+      let selected = null;
+
+      area.addEventListener('click', (e)=>{
+        const btn = e.target.closest('.token,.target,[data-check],[data-reset]');
+        if(!btn) return;
+
+        if(btn.matches('.token')){
+          area.querySelectorAll('.token').forEach(b=>b.classList.remove('selected'));
+          btn.classList.add('selected');
+          selected = btn.dataset.key;
+        }
+        if(btn.matches('.target')){
+          if(!selected) return;
+          const ok = (map[selected] === btn.dataset.val);
+          btn.classList.remove('success','error');
+          btn.classList.add(ok? 'success':'error');
+          fb.textContent = ok? STRINGS.correct : STRINGS.incorrect;
+          setCorrect(`a1_${selected}`, ok);
+          selected = null;
+          area.querySelectorAll('.token').forEach(b=>b.classList.remove('selected'));
+        }
+        if(btn.dataset.check==='a1'){
+          const all = ['cat','dog'].every(k=>registry.get(`a1_${k}`));
+          fb.textContent = all ? STRINGS.correct : STRINGS.incorrect + " " + STRINGS.hint;
+        }
+        if(btn.dataset.reset==='a1'){
+          ['cat','dog'].forEach(k=>setCorrect(`a1_${k}`, false));
+          area.querySelectorAll('.target').forEach(t=>t.classList.remove('success','error'));
+          fb.textContent = '';
+        }
+      });
+
+      // Register keys
+      ['cat','dog'].forEach(k=>registry.set(`a1_${k}`, false));
+    })();
+
+    /* --------------------------
+       Generic Drag & Drop helpers
+       (also keyboard support)
+       -------------------------- */
+    function makeDraggable(chip){
+      chip.addEventListener('dragstart',ev=>{
+        chip.setAttribute('aria-grabbed','true');
+        ev.dataTransfer.setData('text/plain', JSON.stringify({
+          id: chip.dataset.id || chip.dataset.word,
+          word: chip.dataset.word,
+          correct: chip.dataset.correct
+        }));
+      });
+      chip.addEventListener('dragend',()=> chip.setAttribute('aria-grabbed','false'));
+      // Keyboard support: Space/Enter selects, then Enter on a target drops
+      chip.addEventListener('keydown', (e)=>{
+        if(e.key === ' ' || e.key === 'Enter'){
+          e.preventDefault();
+          document.querySelectorAll('.bucket,.blank').forEach(b=>b.classList.add('focus-ring'));
+          chip.classList.add('selected');
+          window.__selectedChip = chip;
+        }
+      });
+    }
+    function makeDroppable(zone, onDrop){
+      zone.addEventListener('dragover', ev=>{ ev.preventDefault(); });
+      zone.addEventListener('drop', ev=>{
+        ev.preventDefault();
+        const raw = ev.dataTransfer.getData('text/plain');
+        if(!raw) return; const data = JSON.parse(raw);
+        onDrop(zone, data);
+      });
+      zone.addEventListener('keydown', (e)=>{
+        if((e.key==='Enter' || e.key===' ') && window.__selectedChip){
+          e.preventDefault();
+          const chip = window.__selectedChip;
+          onDrop(zone,{ id: chip.dataset.id || chip.dataset.word, word: chip.dataset.word, correct: chip.dataset.correct, fromKeyboard:true, chip });
+          chip.classList.remove('selected');
+          document.querySelectorAll('.bucket,.blank').forEach(b=>b.classList.remove('focus-ring'));
+          window.__selectedChip = null;
+        }
+      });
+    }
+
+    /* --------------------------
+       A2: Drag & Drop to buckets
+       -------------------------- */
+    (function initA2(){
+      const root = document.getElementById('a2');
+      const fb = document.getElementById('a2fb');
+      root.querySelectorAll('.chip').forEach(makeDraggable);
+      root.querySelectorAll('.bucket').forEach(b=>{
+        makeDroppable(b, (bucket, data)=>{
+          const correct = data.correct === bucket.dataset.bucket;
+          bucket.classList.remove('success','error');
+          bucket.classList.add(correct? 'success':'error');
+          fb.textContent = correct ? STRINGS.correct : STRINGS.incorrect;
+
+          if(correct){
+            // place a copy, remove original
+            const exists = Array.from(bucket.children).find(c=>c.dataset && c.dataset.id===data.id);
+            if(!exists){
+              const chip = document.createElement('div');
+              chip.className='chip'; chip.textContent=data.id; chip.dataset.id=data.id; chip.setAttribute('aria-grabbed','false');
+              bucket.appendChild(chip);
+              setCorrect(`a2_${data.id}`, true);
+              const orig = root.querySelector(`.chip[data-id="${data.id}"]`);
+              if(orig) orig.remove();
+            }
+          } else {
+            setCorrect(`a2_${data.id}`, false);
+          }
+        });
+      });
+
+      root.addEventListener('click', (e)=>{
+        const btn = e.target.closest('[data-check],[data-reset]');
+        if(!btn) return;
+        if(btn.dataset.check==='a2'){
+          const names = ['comb','eraser','glass','scissor','notebook','pen'];
+          const all = names.every(k=>registry.get(`a2_${k}`));
+          fb.textContent = all ? STRINGS.correct : STRINGS.incorrect + " " + STRINGS.hint;
+        }
+        if(btn.dataset.reset==='a2'){
+          ['comb','eraser','glass','scissor','notebook','pen'].forEach(k=>setCorrect(`a2_${k}`, false));
+          // restore bank
+          const bank = document.getElementById('a2bank');
+          bank.innerHTML = '';
+          [
+            ['comb','inside'],['eraser','outside'],['glass','outside'],
+            ['scissor','inside'],['notebook','inside'],['pen','outside']
+          ].forEach(([id,c])=>{
+            const d=document.createElement('div');d.className='chip';d.draggable=true;d.tabIndex=0;d.role='button';
+            d.textContent=id;d.dataset.id=id;d.dataset.correct=c;d.setAttribute('aria-grabbed','false');
+            bank.appendChild(d); makeDraggable(d);
+          });
+          root.querySelectorAll('.bucket').forEach(b=>{ b.innerHTML=''; b.classList.remove('success','error'); });
+          fb.textContent='';
+        }
+      });
+
+      // Register keys
+      ['comb','eraser','glass','scissor','notebook','pen'].forEach(k=>registry.set(`a2_${k}`, false));
+    })();
+
+    /* --------------------------
+       Tick helpers for A3 & A5
+       -------------------------- */
+    function initTicks(scopeId, keys){
+      const root = document.getElementById(scopeId);
+      const fb = document.getElementById(scopeId+'fb');
+      keys.forEach(({key,correct})=>{
+        registry.set(`${scopeId}_${key}`, false);
+        const wrap = root.querySelector(`.choice-pics[data-key="${key}"]`);
+        wrap.addEventListener('click',(e)=>{
+          const btn = e.target.closest('.tick'); if(!btn) return;
+          wrap.querySelectorAll('.tick').forEach(t=>t.classList.remove('checked'));
+          btn.classList.add('checked');
+          const pick = btn.getAttribute('data-pick');
+          const ok = (pick === correct);
+          fb.textContent = ok? STRINGS.correct : STRINGS.incorrect;
+          setCorrect(`${scopeId}_${key}`, ok);
+        });
+      });
+
+      root.addEventListener('click',(e)=>{
+        const c = e.target.closest('[data-check],[data-reset]');
+        if(!c) return;
+        if(c.dataset.check===scopeId){
+          const all = keys.every(({key})=>registry.get(`${scopeId}_${key}`));
+          fb.textContent = all ? STRINGS.correct : STRINGS.incorrect + " " + STRINGS.hint;
+        }
+        if(c.dataset.reset===scopeId){
+          keys.forEach(({key})=>setCorrect(`${scopeId}_${key}`, false));
+          root.querySelectorAll('.tick').forEach(t=>t.classList.remove('checked'));
+          fb.textContent='';
+        }
+      });
+    }
+
+    // A3: scissor (inside), combs (inside)
+    initTicks('a3', [
+      {key:'a3_scissor', correct:'inside'},
+      {key:'a3_combs', correct:'inside'}
+    ]);
+
+    /* --------------------------
+       A4: Drag words to blanks + Coloring
+       -------------------------- */
+    (function initA4(){
+      const root = document.getElementById('a4');
+      const fb = document.getElementById('a4fb');
+      root.querySelectorAll('.chip').forEach(makeDraggable);
+      root.querySelectorAll('.blank').forEach(b=>{
+        makeDroppable(b, (blank, data)=>{
+          const val = data.word;
+          blank.textContent = val; blank.dataset.value = val;
+          const ok = val === blank.dataset.correct;
+          blank.classList.remove('success','error');
+          blank.classList.add(ok? 'success':'error');
+          fb.textContent = ok? STRINGS.correct : STRINGS.incorrect;
+          setCorrect(`a4_${blank.dataset.key}`, ok);
+        });
+      });
+
+      // Coloring card
+      const card = document.getElementById('wordCard');
+      const colorRow = document.getElementById('a4color');
+      colorRow.addEventListener('click',(e)=>{
+        const sw = e.target.closest('.swatch'); if(!sw) return;
+        const which = sw.getAttribute('data-c');
+        if(which==='inside'){
+          card.style.background = 'repeating-linear-gradient(45deg,#d1fae5 0 8px,#a7f3d0 8px 16px)';
+        }else{
+          card.style.background = 'repeating-linear-gradient(45deg,#fee2e2 0 8px,#fecaca 8px 16px)';
+        }
+      });
+
+      // Buttons
+      root.addEventListener('click',(e)=>{
+        const b = e.target.closest('[data-check],[data-reset]');
+        if(!b) return;
+        if(b.dataset.check==='a4'){
+          const all = ['scissor','pen','eraser'].every(k=>registry.get(`a4_${k}`));
+          fb.textContent = all ? STRINGS.correct : STRINGS.incorrect + " " + STRINGS.hint;
+        }
+        if(b.dataset.reset==='a4'){
+          ['scissor','pen','eraser'].forEach(k=>setCorrect(`a4_${k}`, false));
+          root.querySelectorAll('.blank').forEach(bl=>{ bl.textContent=''; bl.dataset.value=''; bl.classList.remove('success','error'); });
+          fb.textContent='';
+          // restore bank
+          const bank = document.getElementById('a4bank');
+          bank.innerHTML = '';
+          ['Inside','Inside','Inside','Outside','Outside','Outside'].forEach(w=>{
+            const d=document.createElement('div'); d.className='chip'; d.draggable=true; d.tabIndex=0; d.role='button';
+            d.textContent=w; d.dataset.word=w; d.setAttribute('aria-grabbed','false'); bank.appendChild(d); makeDraggable(d);
+          });
+          // reset color
+          card.style.background = '#fff';
+        }
+      });
+
+      // Register
+      ['scissor','pen','eraser'].forEach(k=>registry.set(`a4_${k}`, false));
+    })();
+
+    /* --------------------------
+       A5: Ticks + tiny selects
+       -------------------------- */
+    initTicks('a5', [
+      {key:'boy', correct:'outside'},
+      {key:'girl', correct:'inside'}
+    ]);
+
+    (function initA5Selects(){
+      const root = document.getElementById('a5');
+      const fb = document.getElementById('a5fb');
+      const answers = {boy:'outside', girl:'inside'};
+      registry.set('a5_sel_boy', false);
+      registry.set('a5_sel_girl', false);
+
+      function grade(){
+        const boyOk = root.querySelector('select[data-sel="boy"]').value === answers.boy;
+        const girlOk = root.querySelector('select[data-sel="girl"]').value === answers.girl;
+        setCorrect('a5_sel_boy', boyOk);
+        setCorrect('a5_sel_girl', girlOk);
+        fb.textContent = (boyOk && girlOk) ? STRINGS.correct : STRINGS.incorrect + " " + STRINGS.hint;
+      }
+
+      root.addEventListener('click',(e)=>{
+        const b = e.target.closest('[data-check],[data-reset]');
+        if(!b) return;
+        if(b.dataset.check==='a5'){ grade(); }
+        if(b.dataset.reset==='a5'){
+          resetKeys('a5_');
+          root.querySelectorAll('select').forEach(s=>s.value='');
+          fb.textContent='';
+          // Also untick picture choices for a5
+          root.querySelectorAll('.tick').forEach(t=>t.classList.remove('checked'));
+        }
+      });
+    })();
+
+    /* --------------------------
+       A6: MCQ buttons (ball/bat)
+       -------------------------- */
+    (function initA6(){
+      const root = document.getElementById('a6');
+      const fb = document.getElementById('a6fb');
+      const pairs = [
+        {key:'ball', correct:'inside'},
+        {key:'bat', correct:'outside'}
+      ];
+      pairs.forEach(p=>registry.set(`a6_${p.key}`, false));
+
+      root.addEventListener('click',(e)=>{
+        const btn = e.target.closest('[data-ans],[data-check],[data-reset]');
+        if(!btn) return;
+
+        if(btn.hasAttribute('data-ans')){
+          const wrap = btn.closest('.bank');
+          const key = wrap.getAttribute('data-mcq');
+          const correct = wrap.getAttribute('data-correct');
+          wrap.querySelectorAll('[data-ans]').forEach(b=>b.classList.remove('success','error'));
+          const pick = btn.getAttribute('data-ans');
+          const ok = (pick===correct);
+          btn.classList.add(ok? 'success':'error');
+          fb.textContent = ok? STRINGS.correct : STRINGS.incorrect;
+          setCorrect(`a6_${key}`, ok);
+        }
+
+        if(btn.dataset.check==='a6'){
+          const all = pairs.every(p=>registry.get(`a6_${p.key}`));
+          fb.textContent = all ? STRINGS.correct : STRINGS.incorrect + " " + STRINGS.hint;
+        }
+        if(btn.dataset.reset==='a6'){
+          pairs.forEach(p=>setCorrect(`a6_${p.key}`, false));
+          root.querySelectorAll('[data-ans]').forEach(b=>b.classList.remove('success','error'));
+          fb.textContent='';
+        }
+      });
+    })();
+
+    /* --------------------------
+       Accessibility niceties
+       -------------------------- */
+    // Allow Enter/Space to trigger most buttons
+    document.addEventListener('keydown',(e)=>{
+      if((e.key==='Enter'||e.key===' ') && e.target.classList.contains('btn')){
+        e.preventDefault(); e.target.click();
+      }
+    });
+  </script>
 </body>
 </html>
