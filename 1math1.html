@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>In and Out - Grade 1 Maths</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      text-align: center;
+      background-color: #f8f8f8;
+    }
+    h1 {
+      color: #333;
+    }
+    .container {
+      position: relative;
+      width: 500px;
+      height: 500px;
+      margin: 20px auto;
+      background-color: #fff;
+      border: 2px solid #ccc;
+      border-radius: 50%;
+    }
+    .shape {
+      width: 50px;
+      height: 50px;
+      position: absolute;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-weight: bold;
+    }
+    .circle { background-color: #4CAF50; border-radius: 50%; }
+    .square { background-color: #2196F3; }
+    .triangle {
+      width: 0; height: 0;
+      border-left: 25px solid transparent;
+      border-right: 25px solid transparent;
+      border-bottom: 50px solid #f44336;
+      background: none;
+    }
+    .message {
+      margin-top: 20px;
+      font-size: 18px;
+      font-weight: bold;
+      color: #444;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>In and Out</h1>
+  <div class="container" id="mainCircle">
+    <div class="shape circle" style="top:150px; left:200px;" data-position="in">O</div>
+    <div class="shape square" style="top:250px; left:300px;" data-position="in"></div>
+    <div class="shape triangle" style="top:50px; left:50px;" data-position="out"></div>
+    <div class="shape circle" style="top:400px; left:450px;" data-position="out">O</div>
+  </div>
+
+  <div class="message" id="message">Click a shape to check if it's IN or OUT.</div>
+
+  <script>
+    document.querySelectorAll('.shape').forEach(shape => {
+      shape.addEventListener('click', () => {
+        const pos = shape.getAttribute('data-position');
+        document.getElementById('message').textContent = `This shape is ${pos.toUpperCase()}.`;
+      });
+    });
+  </script>
+
+</body>
+</html>
