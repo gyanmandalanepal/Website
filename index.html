@@ -322,10 +322,25 @@ function startLearning() {
 function renderLessons() {
   const grid = $('#lessonsGrid');
   grid.innerHTML = '';
+  const grade = parseInt($('#gradeSelect').value);
+  const subjectId = $('#subjectSelect').value;
+
   for(let i=1; i<=20; i++) {
     const btn = document.createElement('div');
     btn.className = 'lesson-tile';
-    btn.textContent = `Lesson ${i}`;
+
+    // Special case for Grade 1 Mathematics, first lesson
+    if(i === 1 && grade === 1 && subjectId === 'maths') {
+      btn.textContent = 'size and position';
+      btn.style.background = 'linear-gradient(90deg,#ffecd2,#fcb69f)';
+      btn.style.color = '#0B6FA4';
+      btn.style.fontWeight = 'bold';
+      btn.addEventListener('click', () => {
+        window.open('1math1.html', '_blank');
+      });
+    } else {
+      btn.textContent = `Lesson ${i}`;
+    }
     grid.appendChild(btn);
   }
 }
