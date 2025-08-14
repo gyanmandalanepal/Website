@@ -1,89 +1,1407 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>Inside and Outside - Grade 1 Maths</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <title>Subject: Mathematics  Lesson 1: Shape, Size & Place</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <style>
-    body {
-      font-family: Arial, sans-serif;
-      background-color: #f4f4f4;
-    } /* <-- Added missing closing bracket */
-    h1 {
-      color: #333;
-      margin-top: 20px;
-      padding: 0 10px;
+    /* =========================
+       Base + Layout (one column)
+       ========================= */
+    :root{
+      --bg:#f7fafc;
+      --card:#ffffff;
+      --text:#1f2937;
+      --muted:#6b7280;
+      --primary:#2563eb;
+      --primary-weak:#dbeafe;
+      --green:#16a34a;
+      --green-weak:#dcfce7;
+      --red:#dc2626;
+      --red-weak:#fee2e2;
+      --amber:#f59e0b;
+      --ink:#111827;
+      --shadow:0 6px 20px rgba(0,0,0,.08);
+      --radius:16px;
+      --hit:44px; /* min touch target */
     }
-    .image-container {
-      margin: 20px auto;
-      padding: 10px;
-      max-width: 900px;
-      margin: 0 auto;
-      padding: 20px;
+    *{box-sizing:border-box}
+    html,body{margin:0;padding:0;background:var(--bg);color:var(--text);font-family:system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,"Apple Color Emoji","Segoe UI Emoji";}
+    header{
+      background:linear-gradient(180deg,#fff,rgba(255,255,255,.92));
+      position:sticky;top:0;z-index:10;
+      border-bottom:1px solid #e5e7eb;
+      backdrop-filter:saturate(140%) blur(6px);
     }
-    .image-box {
-      margin-bottom: 20px;
-      background: white;
-      border: 2px solid #ccc;
-      display: inline-block;
-      padding: 10px;
-      border-radius: 8px;
-      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+    .wrap{max-width:980px;margin:0 auto;padding:14px}
+    h1{margin:4px 0 0;font-size:clamp(22px,4vw,32px);text-align:center}
+    .subtitle{margin:4px 0 10px;text-align:center;color:var(--muted);font-size:clamp(14px,2.8vw,16px)}
+    .toprow{display:flex;gap:10px;justify-content:center;align-items:center;flex-wrap:wrap}
+    .score{font-weight:800;border:2px solid var(--primary);padding:8px 12px;border-radius:999px;background:var(--primary-weak);min-height:var(--hit);display:inline-flex;align-items:center}
+    .btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;padding:10px 14px;border-radius:999px;border:2px solid #e5e7eb;background:#fff;color:#111;font-weight:700;cursor:pointer;min-width:var(--hit);min-height:var(--hit);user-select:none}
+    .btn:focus{outline:none;box-shadow:0 0 0 4px var(--primary-weak)}
+    .btn-primary{background:var(--primary);border-color:var(--primary);color:#fff}
+    .btn-success{background:var(--green);border-color:var(--green);color:#fff}
+    .btn-danger{background:var(--red);border-color:var(--red);color:#fff}
+    .btn-ghost{background:transparent}
+
+    /* Collapsible teacher panel */
+    details.teacher{background:#fff;border:1px solid #e5e7eb;border-radius:12px;padding:10px 12px;box-shadow:var(--shadow);margin:10px auto 0;max-width:980px}
+    details.teacher summary{cursor:pointer;font-weight:800}
+    details.teacher .cols{display:grid;grid-template-columns:1fr;gap:10px;margin-top:10px}
+    @media(min-width:720px){details.teacher .cols{grid-template-columns:1.3fr 1fr}}
+    ul{margin:6px 0 0 18px}
+    li{margin:4px 0}
+
+    main{max-width:980px;margin:8px auto 48px;padding:8px}
+    section.activity{background:var(--card);border-radius:var(--radius);box-shadow:var(--shadow);padding:14px;margin:14px auto}
+    section.activity h2{margin:0 0 6px;font-size:clamp(18px,3.5vw,22px)}
+    .inst{color:var(--muted);margin:0 0 10px}
+    .read-inst{margin-left:6px}
+    figure{margin:8px 0;border:1px dashed #e5e7eb;border-radius:12px;overflow:hidden;background:#fafafa}
+    figure img{display:block;width:100%;height:auto}
+    figcaption{padding:8px 10px;background:#fafafa;color:#374151;font-size:14px}
+    .divider{border:0;height:1px;background:#e5e7eb;margin:12px 0}
+
+    /* Widgets */
+    .pairgrid{display:grid;grid-template-columns:1fr;gap:10px}
+    @media(min-width:640px){.pairgrid{grid-template-columns:1fr 1fr}}
+    .list{display:flex;flex-direction:column;gap:8px}
+    .token{padding:10px 12px;border-radius:10px;border:2px solid #d1d5db;background:#fff;cursor:pointer;min-height:var(--hit);display:flex;align-items:center;justify-content:center;font-weight:700}
+    .token.selected{border-color:var(--amber);box-shadow:0 0 0 4px rgba(245,158,11,.2)}
+    .target{padding:10px 12px;border-radius:10px;border:2px dashed #cbd5e1;background:#fff;min-height:var(--hit);display:flex;align-items:center;justify-content:center;font-weight:700}
+    .ok{color:var(--green)} .bad{color:var(--red)}
+    .success{border-color:var(--green)!important;background:var(--green-weak)!important}
+    .error{border-color:var(--red)!important;background:var(--red-weak)!important}
+
+    /* Drag & Drop */
+    .bank{display:flex;gap:8px;flex-wrap:wrap}
+    .chip{display:inline-flex;align-items:center;justify-content:center;padding:10px 14px;border-radius:999px;background:#fff;border:2px solid #e5e7eb;box-shadow:var(--shadow);cursor:grab;user-select:none;min-width:var(--hit);min-height:var(--hit)}
+    .chip[aria-grabbed="true"]{border-color:var(--amber)}
+    .buckets{display:grid;grid-template-columns:1fr;gap:10px}
+    @media(min-width:620px){.buckets{grid-template-columns:1fr 1fr}}
+    .bucket{background:#f3f4f6;border:2px dashed #cbd5e1;border-radius:12px;padding:10px;min-height:96px;display:flex;gap:8px;flex-wrap:wrap;align-items:flex-start}
+    .bucket-title{font-weight:800;margin:2px 0 6px}
+
+    /* Choice pictures / tick */
+    .choice-pics{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+    .pic{border:2px solid #e5e7eb;border-radius:12px;overflow:hidden;background:#fff}
+    .pic button{width:100%;border:0;background:#fff;cursor:pointer;display:block}
+    .tick{display:flex;gap:6px;align-items:center;justify-content:center;padding:8px;font-weight:800}
+    .tick .mark{width:18px;height:18px;border:2px solid #111;border-radius:4px;display:inline-flex;align-items:center;justify-content:center}
+    .tick.checked .mark{background:repeating-linear-gradient(45deg,#10b981 0 6px,#10b981 6px,#34d399 12px);color:#fff}
+    .tick .text{user-select:none}
+
+    /* Blanks (drag word) + keyboard drop */
+    .blank{display:inline-flex;min-width:120px;min-height:var(--hit);align-items:center;justify-content:center;border:2px dashed #cbd5e1;border-radius:10px;padding:6px;background:#fff;margin:0 6px}
+
+    /* Coloring prompt (simulated) */
+    .color-row{display:flex;gap:8px;flex-wrap:wrap}
+    .swatch{width:var(--hit);height:var(--hit);border:2px solid #111;border-radius:8px;cursor:pointer;display:inline-block}
+    .swatch[data-c="inside"]{background:
+      repeating-linear-gradient(45deg,#d1fae5 0 8px,#a7f3d0 8px 16px);}
+    .swatch[data-c="outside"]{background:
+      repeating-linear-gradient(45deg,#fee2e2 0 8px,#fecaca 8px 16px);}
+
+    /* Buttons row per activity */
+    .actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
+    .feedback{min-height:1.25em;font-weight:800;margin-top:6px}
+    .hint{color:var(--muted);font-size:13px}
+
+    /* Read Aloud small button */
+    .read{font-size:13px;padding:6px 10px;border-radius:999px}
+
+    /* Print styles */
+    @media print{
+      header{position:static;box-shadow:none}
+      .btn,.read,.actions button{display:none!important}
+      .token,.target,.chip,.bucket,.pic{box-shadow:none!important}
+      .wrap,main,section.activity{box-shadow:none!important;border:1px solid #e5e7eb}
     }
-    img {
-      max-width: 100%;
-      height: auto;
-      border-radius: 4px;
+
+    /* Focus ring for custom droppables */
+    .focus-ring{box-shadow:0 0 0 4px var(--primary-weak)}
+    .visually-hidden{
+      position:absolute!important;height:1px;width:1px;overflow:hidden;clip:rect(1px,1px,1px,1px);white-space:nowrap
     }
-    @media (max-width: 768px) {
-      h1 {
-        font-size: 20px;
-      }
-      .image-box {
-        padding: 5px;
-      }
-    }
+
+    /* Final modal */
+    .done{display:none;position:fixed;inset:0;background:rgba(0,0,0,.35);align-items:center;justify-content:center;z-index:50}
+    .done .panel{background:#fff;border-radius:16px;box-shadow:var(--shadow);padding:24px;max-width:520px;text-align:center}
   </style>
 </head>
 <body>
-<script>
-  // Only allow access if navigated from the lessons button
-  if (sessionStorage.getItem('allow1math1') !== 'yes') {
-    window.location.href = 'index.html';
-  } else {
-    // Remove the flag so refresh/direct access is blocked again
-    sessionStorage.removeItem('allow1math1');
-  }
-</script>
+  <!-- Timer at the top -->
+  <div style="position:sticky;top:0;z-index:100;background:#fff;padding:8px 0;text-align:center;font-weight:700;font-size:18px;">
+    Time Left: <span id="timer">05:00</span>
+  </div>
 
-  <h1>Grade 1 - Maths - Inside and Outside</h1>
+  <!-- =======================
+       STRINGS (easy editing)
+       ======================= -->
+  <script>
+    const STRINGS = {
+      title: "Inside & Outside – Grade 1",
+      subtitle: "Maths | Lesson 1: Shape, Size & Place",
+      readAloud: "Read Aloud",
+      check: "Check Answers",
+      reset: "Reset",
+      score: "Score",
+      correct: "✓ Great job!",
+      incorrect: "✗ Try again.",
+      hint: "Look carefully. Use the picture.",
+      doneTitle: "You did it!",
+      doneMsg: "All answers are correct. Super work!",
+      teacherTitle: "Teacher Panel",
+      objectivesTitle: "Learning Objectives",
+      objectives: [
+        "Use the words inside and outside.",
+        "Match words to pictures and places.",
+        "Listen and choose the right answer.",
+        "Drag and drop labels to sort objects.",
+        "Fill in missing words with inside/outside."
+      ],
+      vocabTitle: "Key Words",
+      vocab: ["inside", "outside", "box", "house", "bus", "bat", "ball", "comb", "eraser", "glass", "scissor", "notebook", "pen", "cat", "dog", "girl", "boy"],
+      /* Listening prompts (used with Web Speech) */
+      say: {
+        a1_dog: "Where is the dog? Inside or outside?",
+        a1_cat: "Where is the cat? Inside or outside?",
+        a2_comb: "Where is the comb? Inside or outside the box?",
+        a2_eraser: "Where is the eraser? Inside or outside the box?",
+        a2_glass: "Where is the glass? Inside or outside the box?",
+        a2_scissor: "Where is the scissor? Inside or outside the box?",
+        a2_notebook: "Where is the notebook? Inside or outside the box?",
+        a2_pen: "Where is the pen? Inside or outside the box?",
+        a3_scissor: "Tick the picture that shows scissor inside the box.",
+        a3_combs: "Tick the picture that shows combs inside the box.",
+        a4_fill: "Drag the right word to each blank.",
+        a4_color: "Tap a pattern to color the word card.",
+        a5_boy: "Where is the boy? Inside or outside the bus?",
+        a5_girl: "Where is the girl? Inside or outside the box?",
+        a6_ball: "Where is the ball? Inside or outside?",
+        a6_bat: "Where is the bat? Inside or outside?",
+        a7_1: "The cat is inside the house.",
+        a7_2: "The dog is outside the house.",
+        a7_3: "The pen is inside the box.",
+        a7_4: "The bat is outside the box.",
+        a7_5: "The glass is inside the box.",
+        a7_6: "The eraser is outside the box."
+      }
+    };
+  </script>
 
-  <div class="image-container">
-    <div class="image-box">
-      <img src="Picture/Grade 1/Maths/Lesson 1 Shape Size and Place/1. In and Out/inside and outside1.jpg" alt="Inside and Outside 1">
+  <!-- =======================
+       Header + Teacher Panel
+       ======================= -->
+  <header>
+    <div class="wrap">
+      <h1 aria-live="polite">Inside & Outside</h1>
+      <strong><p class="subtitle"> Subject: Mathematics  Lesson 1: Shape, Size & Place</p></strong>
+      <div class="toprow" role="region" aria-label="Score and tools">
+        <div class="score" id="score" aria-live="polite">0/25</div>
+        <button class="btn read" id="readPage" type="button" aria-label="Read the page instructions">🔊 <span id="readPageTxt">Read Aloud</span></button>
+      </div>
+
+      <details class="teacher" id="teacherPanel">
+        <summary><strong>Teacher Panel</strong> (learning goals & vocabulary)</summary>
+        <div class="cols">
+          <div>
+            <h3 style="margin:6px 0 4px;font-size:16px;">Learning Objectives</h3>
+            <ul id="objList"></ul>
+          </div>
+          <div>
+            <h3 style="margin:6px 0 4px;font-size:16px;">Vocabulary</h3>
+            <ul id="vocabList" style="columns:2;"></ul>
+          </div>
+        </div>
+      </details>
     </div>
-    <div class="image-box">
-      <img src="Picture/Grade 1/Maths/Lesson 1 Shape Size and Place/1. In and Out/inside and outside2.jpg" alt="Inside and Outside 2">
+  </header>
+
+  <main id="main">
+    <!-- ============= A1: Match the Following (Cat/Dog ↔ Inside/Outside) ============= -->
+    <section class="activity" id="a1" aria-labelledby="a1h">
+      <h2 id="a1h">Activity 1: Match the following.</h2>
+      <button class="btn read read-inst" data-read="a1">🔊 Read Aloud</button>
+      <p class="inst">Match the word to the place. Tap a word, then a place.</p>
+
+      <figure>
+        <img src="Picture/Grade 1/Maths/Lesson 1 Shape, Size and Place/1. In and Out/inside and outside1.jpg"
+             alt="A house with a cat inside and a dog outside." />
+        <figcaption>Look at the cat and the dog.</figcaption>
+      </figure>
+
+      <div class="pairgrid" role="group" aria-label="Match words to places">
+        <div class="list" aria-label="Words">
+          <button class="token" data-type="source" data-key="cat">Cat</button>
+          <button class="token" data-type="source" data-key="dog">Dog</button>
+        </div>
+        <div class="list" aria-label="Places">
+          <button class="target" data-type="target" data-val="inside">Inside the house</button>
+          <button class="target" data-type="target" data-val="outside">Outside the house</button>
+        </div>
+      </div>
+
+      <div class="feedback" id="a1fb" aria-live="polite"></div>
+      <!-- Mini listening -->
+      <div class="list" style="gap:6px;">
+        <button class="btn" data-say="a1_dog">🔊 Play: Dog</button>
+        <button class="btn" data-say="a1_cat">🔊 Play: Cat</button>
+      </div>
+      <!-- Check at the end -->
+      <div class="actions">
+        <button class="btn btn-primary" data-check="a1">Check Answers</button>
+      </div>
+    </section>
+
+    <!-- ============= A2: Drag & Drop — Sort into Inside/Outside Buckets ============= -->
+    <section class="activity" id="a2" aria-labelledby="a2h">
+      <h2 id="a2h">Activity 2: Drag & Drop</h2>
+      <p class="inst">Drag each label to the right bucket.</p>
+      <button class="btn read read-inst" data-read="a2">🔊 Read Aloud</button>
+
+      <figure>
+        <img src="Picture/Grade 1/Maths/Lesson 1 Shape, Size and Place/1. In and Out/inside and outside2.jpg"
+             alt="A box with objects inside or outside: comb, eraser, glass, scissor, notebook, pen." />
+        <figcaption>Sort the objects.</figcaption>
+      </figure>
+
+      <div class="bank" id="a2bank" role="list">
+        <div class="chip" draggable="true" tabindex="0" role="button" aria-grabbed="false" data-id="comb" data-correct="inside">comb</div>
+        <div class="chip" draggable="true" tabindex="0" role="button" aria-grabbed="false" data-id="eraser" data-correct="outside">eraser</div>
+        <div class="chip" draggable="true" tabindex="0" role="button" aria-grabbed="false" data-id="glass" data-correct="outside">glass</div>
+        <div class="chip" draggable="true" tabindex="0" role="button" aria-grabbed="false" data-id="scissor" data-correct="inside">scissor</div>
+        <div class="chip" draggable="true" tabindex="0" role="button" aria-grabbed="false" data-id="notebook" data-correct="inside">notebook</div>
+        <div class="chip" draggable="true" tabindex="0" role="button" aria-grabbed="false" data-id="pen" data-correct="outside">pen</div>
+      </div>
+
+      <div class="buckets">
+        <div>
+          <div class="bucket-title">Inside the box</div>
+          <div class="bucket" data-bucket="inside" aria-label="Inside bucket" tabindex="0"></div>
+        </div>
+        <div>
+          <div class="bucket-title">Outside the box</div>
+          <div class="bucket" data-bucket="outside" aria-label="Outside bucket" tabindex="0"></div>
+        </div>
+      </div>
+
+      <div class="feedback" id="a2fb" aria-live="polite"></div>
+
+      <div class="actions">
+        <button class="btn btn-primary" data-check="a2">Check Answers</button>
+        <button class="btn" data-say="a2_comb">🔊 Comb</button>
+        <button class="btn" data-say="a2_eraser">🔊 Eraser</button>
+        <button class="btn" data-say="a2_glass">🔊 Glass</button>
+        <button class="btn" data-say="a2_scissor">🔊 Scissor</button>
+        <button class="btn" data-say="a2_notebook">🔊 Notebook</button>
+        <button class="btn" data-say="a2_pen">🔊 Pen</button>
+      </div>
+    </section>
+
+    <!-- ============= A3: Listening & Tick — Choose the Right Picture ============= -->
+    <section class="activity" id="a3" aria-labelledby="a3h">
+      <h2 id="a3h">Activity 3: Listening & Tick</h2>
+      <p class="inst">Play the sound. Tick the <strong>right picture</strong>.</p>
+      <button class="btn read read-inst" data-read="a3">🔊 Read Aloud</button>
+
+      <figure>
+        <img src="Picture/Grade 1/Maths/Lesson 1 Shape, Size and Place/1. In and Out/inside and outside3.jpg"
+             alt="Objects near a box: scissor inside, glass and note outside, combs inside." />
+        <figcaption>Listen. Then tick the right one.</figcaption>
+      </figure>
+
+      <!-- Scissor: correct is Inside -->
+      <div class="choice-pics" data-key="a3_scissor" data-correct="inside">
+        <div class="pic">
+          <button type="button" class="tick" data-pick="inside" aria-label="Choose inside picture">
+            <span class="mark">✓</span><span class="text">Inside</span>
+          </button>
+        </div>
+        <div class="pic">
+          <button type="button" class="tick" data-pick="outside" aria-label="Choose outside picture">
+            <span class="mark">✓</span><span class="text">Outside</span>
+          </button>
+        </div>
+      </div>
+      <div class="actions">
+        <button class="btn" data-say="a3_scissor">🔊 Play: Scissor</button>
+      </div>
+
+      <!-- Combs: correct is Inside -->
+      <div class="choice-pics" data-key="a3_combs" data-correct="inside" style="margin-top:10px">
+        <div class="pic">
+          <button type="button" class="tick" data-pick="inside" aria-label="Choose inside picture">
+            <span class="mark">✓</span><span class="text">Inside</span>
+          </button>
+        </div>
+        <div class="pic">
+          <button type="button" class="tick" data-pick="outside" aria-label="Choose outside picture">
+            <span class="mark">✓</span><span class="text">Outside</span>
+          </button>
+        </div>
+      </div>
+      <div class="actions">
+        <button class="btn" data-say="a3_combs">🔊 Play: Combs</button>
+      </div>
+
+      <div class="feedback" id="a3fb" aria-live="polite"></div>
+      <div class="actions">
+        <button class="btn btn-primary" data-check="a3">Check Answers</button>
+      </div>
+    </section>
+
+    <!-- ============= A4: Missing Words (Drag the Word) + Coloring Prompt ============= -->
+    <section class="activity" id="a4" aria-labelledby="a4h">
+      <h2 id="a4h">Activity 4: Fill the Missing Word</h2>
+      <p class="inst">Drag a word into each blank.</p>
+      <button class="btn read read-inst" data-read="a4">🔊 Read Aloud</button>
+
+      <figure>
+        <img src="Picture/Grade 1/Maths/Lesson 1 Shape, Size and Place/1. In and Out/inside and outside4.jpg"
+             alt="Mixed objects near a box: scissor and comb inside, pen and glass outside, eraser outside." />
+        <figcaption>Use the words: Inside, Outside.</figcaption>
+      </figure>
+
+      <div class="bank" id="a4bank" role="list" aria-label="Word bank">
+        <div class="chip" draggable="true" tabindex="0" role="button" aria-grabbed="false" data-word="Inside">Inside</div>
+        <div class="chip" draggable="true" tabindex="0" role="button" aria-grabbed="false" data-word="Inside">Inside</div>
+        <div class="chip" draggable="true" tabindex="0" role="button" aria-grabbed="false" data-word="Inside">Inside</div>
+        <div class="chip" draggable="true" tabindex="0" role="button" aria-grabbed="false" data-word="Outside">Outside</div>
+        <div class="chip" draggable="true" tabindex="0" role="button" aria-grabbed="false" data-word="Outside">Outside</div>
+        <div class="chip" draggable="true" tabindex="0" role="button" aria-grabbed="false" data-word="Outside">Outside</div>
+      </div>
+
+      <p>1. The scissor is <span class="blank" data-key="scissor" data-correct="Inside" tabindex="0" aria-label="Drop here: Inside or Outside"></span> the box.</p>
+      <p>2. The pen is <span class="blank" data-key="pen" data-correct="Outside" tabindex="0" aria-label="Drop here: Inside or Outside"></span> the box.</p>
+      <p>3. The eraser is <span class="blank" data-key="eraser" data-correct="Outside" tabindex="0" aria-label="Drop here: Inside or Outside"></span> the box.</p>
+
+      <div class="feedback" id="a4fb" aria-live="polite"></div>
+
+      <!-- Fun idea #1: Coloring prompt (patterned swatches, not color-only) -->
+      <hr class="divider" />
+      <h2 style="margin-top:0">Bonus: Color the Word Card</h2>
+      <p class="inst">Tap a pattern to color the card. (Inside = green stripes, Outside = red stripes.)</p>
+      <div class="color-row" id="a4color">
+        <div class="swatch" data-c="inside" role="button" tabindex="0" aria-label="Color: Inside pattern"></div>
+        <div class="swatch" data-c="outside" role="button" tabindex="0" aria-label="Color: Outside pattern"></div>
+        <div class="token" id="wordCard" style="min-width:120px">Word Card</div>
+      </div>
+
+      <div class="actions">
+        <button class="btn btn-primary" data-check="a4">Check Answers</button>
+        <button class="btn" data-say="a4_fill">🔊 Play: Directions</button>
+        <button class="btn" data-say="a4_color">🔊 Play: Coloring</button>
+      </div>
+    </section>
+
+    <!-- ============= A5: Choose the Right Picture (Icons) + Short Select ============= -->
+    <section class="activity" id="a5" aria-labelledby="a5h">
+      <h2 id="a5h">Activity 5: Choose the Right Picture</h2>
+      <p class="inst">Pick the right picture for each sentence.</p>
+      <button class="btn read read-inst" data-read="a5">🔊 Read Aloud</button>
+
+      <figure>
+        <img src="Picture/Grade 1/Maths/Lesson 1 Shape, Size and Place/1. In and Out/inside and outside5.jpg"
+             alt="A boy near a bus (outside), and a girl inside a box." />
+        <figcaption>Look at the boy and the girl.</figcaption>
+      </figure>
+
+      <!-- Use simple SVG icons as pictures to choose -->
+      <div class="pairgrid">
+        <div class="list">
+          <strong>Boy and bus</strong>
+          <div class="choice-pics" data-key="boy" data-correct="outside">
+            <div class="pic">
+              <button type="button" class="tick" data-pick="inside" aria-label="Choose inside picture">
+                <span class="mark">✓</span><span class="text">Inside</span>
+              </button>
+            </div>
+            <div class="pic">
+              <button type="button" class="tick" data-pick="outside" aria-label="Choose outside picture">
+                <span class="mark">✓</span><span class="text">Outside</span>
+              </button>
+            </div>
+          </div>
+          <div class="actions">
+            <button class="btn" data-say="a5_boy">🔊 Play: Boy</button>
+          </div>
+        </div>
+        <div class="list">
+          <strong>Girl and box</strong>
+          <div class="choice-pics" data-key="girl" data-correct="inside">
+            <div class="pic">
+              <button type="button" class="tick" data-pick="inside" aria-label="Choose inside picture">
+                <span class="mark">✓</span><span class="text">Inside</span>
+              </button>
+            </div>
+            <div class="pic">
+              <button type="button" class="tick" data-pick="outside" aria-label="Choose outside picture">
+                <span class="mark">✓</span><span class="text">Outside</span>
+              </button>
+            </div>
+          </div>
+          <div class="actions">
+            <button class="btn" data-say="a5_girl">🔊 Play: Girl</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Fun idea #2: Tiny fill-in using selects -->
+      <hr class="divider" />
+      <h2 style="margin-top:0">Quick Fill</h2>
+      <p class="inst">Choose the right word.</p>
+      <label>The boy is
+        <select data-sel="boy">
+          <option value="">— choose —</option>
+          <option value="inside">inside</option>
+          <option value="outside">outside</option>
+        </select> the bus.
+      </label>
+      <br /><br />
+      <label>The girl is
+        <select data-sel="girl">
+          <option value="">— choose —</option>
+          <option value="inside">inside</option>
+          <option value="outside">outside</option>
+        </select> the box.
+      </label>
+
+      <div class="feedback" id="a5fb" aria-live="polite"></div>
+
+      <div class="actions">
+        <button class="btn btn-primary" data-check="a5">Check Answers</button>
+      </div>
+    </section>
+
+    <!-- ============= A6: Mixed — MCQ with Words + Listening Buttons ============= -->
+    <section class="activity" id="a6" aria-labelledby="a6h">
+      <h2 id="a6h">Activity 6: Choose & Listen</h2>
+      <p class="inst">Read the sentence. Choose the right word.</p>
+      <button class="btn read read-inst" data-read="a6">🔊 Read Aloud</button>
+
+      <figure>
+        <img src="Picture/Grade 1/Maths/Lesson 1 Shape, Size and Place/1. In and Out/inside and outside6.jpg"
+             alt="A bat outside and a ball inside." />
+        <figcaption>Ball and bat.</figcaption>
+      </figure>
+
+      <div class="list">
+        <div class="token">The ball is …</div>
+        <div class="bank" data-mcq="ball" data-correct="inside">
+          <button class="btn" data-ans="inside">Inside</button>
+          <button class="btn" data-ans="outside">Outside</button>
+        </div>
+        <div class="actions">
+          <button class="btn" data-say="a6_ball">🔊 Play: Ball</button>
+        </div>
+      </div>
+      <div class="list" style="margin-top:10px;">
+        <div class="token">The bat is …</div>
+        <div class="bank" data-mcq="bat" data-correct="outside">
+          <button class="btn" data-ans="inside">Inside</button>
+          <button class="btn" data-ans="outside">Outside</button>
+        </div>
+        <div class="actions">
+          <button class="btn" data-say="a6_bat">🔊 Play: Bat</button>
+        </div>
+      </div>
+
+      <div class="feedback" id="a6fb" aria-live="polite"></div>
+
+      <div class="actions">
+        <button class="btn btn-primary" data-check="a6">Check Answers</button>
+      </div>
+    </section>
+
+    <!-- ============= A7: Listen and Type ============= -->
+    <section class="activity" id="a7" aria-labelledby="a7h">
+      <h2 id="a7h">Activity 7: Listen and Type</h2>
+      <p class="inst">Listen to the voice and type <strong>inside</strong> or <strong>outside</strong> in each box.</p>
+      <div class="list" style="gap:10px;">
+        <div style="display:flex;align-items:center;gap:10px;">
+          <button class="btn" data-say="a7_1">🔊 1</button>
+          <input type="text" class="joy-input" id="a7q1" placeholder="Type here..." autocomplete="off" style="font-size:18px;padding:8px 12px;border-radius:8px;border:2px solid #e5e7eb;min-width:120px;">
+        </div>
+        <div style="display:flex;align-items:center;gap:10px;">
+          <button class="btn" data-say="a7_2">🔊 2</button>
+          <input type="text" class="joy-input" id="a7q2" placeholder="Type here..." autocomplete="off" style="font-size:18px;padding:8px 12px;border-radius:8px;border:2px solid #e5e7eb;min-width:120px;">
+        </div>
+        <div style="display:flex;align-items:center;gap:10px;">
+          <button class="btn" data-say="a7_3">🔊 3</button>
+          <input type="text" class="joy-input" id="a7q3" placeholder="Type here..." autocomplete="off" style="font-size:18px;padding:8px 12px;border-radius:8px;border:2px solid #e5e7eb;min-width:120px;">
+        </div>
+        <div style="display:flex;align-items:center;gap:10px;">
+          <button class="btn" data-say="a7_4">🔊 4</button>
+          <input type="text" class="joy-input" id="a7q4" placeholder="Type here..." autocomplete="off" style="font-size:18px;padding:8px 12px;border-radius:8px;border:2px solid #e5e7eb;min-width:120px;">
+        </div>
+        <div style="display:flex;align-items:center;gap:10px;">
+          <button class="btn" data-say="a7_5">🔊 5</button>
+          <input type="text" class="joy-input" id="a7q5" placeholder="Type here..." autocomplete="off" style="font-size:18px;padding:8px 12px;border-radius:8px;border:2px solid #e5e7eb;min-width:120px;">
+        </div>
+      </div>
+      <div class="feedback" id="a7fb" aria-live="polite"></div>
+      <div class="actions">
+        <button class="btn btn-primary" id="a7check">Check Answers</button>
+      </div>
+    </section>
+
+    <!-- ============= A8: Click Inside or Outside (One Big Circle, One Shape Inside, One Outside) ============= -->
+    <section class="activity" id="a8" aria-labelledby="a8h">
+      <h2 id="a8h">Activity 8: Click Inside or Outside</h2>
+      <p class="inst">
+        Look at the red circle. One shape is inside, one is outside.<br>
+        <b>Click the correct object as per the bold word:</b>
+        <span id="a8TargetWord" style="font-size:1.2em;color:#dc2626;margin-left:10px;font-weight:bold;"></span>
+      </p>
+      <div id="a8circlewrap" style="display:flex;justify-content:center;align-items:center;height:340px;position:relative;">
+        <!-- SVG will be injected here -->
+      </div>
+      <div style="text-align:center;margin-top:10px;">
+        <span id="a8progress" style="font-weight:600;">1 / 5</span>
+      </div>
+      <div class="feedback" id="a8fb" aria-live="polite"></div>
+      <div class="actions">
+        <button class="btn btn-primary" id="a8check" disabled>Check Answers</button>
+      </div>
+    </section>
+
+    <!-- Results & Reset/Repeat/Back -->
+    <div id="finalResult" style="text-align:center;margin:32px 0 0 0;display:none;">
+      <div id="finalMsg" style="font-size:1.2em;font-weight:700;margin-bottom:12px;"></div>
+      <button class="btn" id="backHomeBtn" style="display:none;">Back to Home Page</button>
+      <button class="btn" id="goBigSmallBtn" style="display:none;background:#22c55e;border-color:#22c55e;">Go to Big and Small</button>
+      <div id="repeatMsg" style="color:var(--red);font-weight:600;display:none;">Please reset and try again to improve your score!</div>
     </div>
-    <div class="image-box">
-      <img src="Picture/Grade 1/Maths/Lesson 1 Shape Size and Place/1. In and Out/inside and outside3.jpg" alt="Inside and Outside 3">
+    <div class="actions" style="justify-content:center;margin:32px 0;">
+      <button class="btn" id="resetAllBtn">Reset</button>
     </div>
-    <div class="image-box">
-      <img src="Picture/Grade 1/Maths/Lesson 1 Shape Size and Place/1. In and Out/inside and outside4.jpg" alt="Inside and Outside 4">
-    </div>
-    <div class="image-box">
-      <img src="Picture/Grade 1/Maths/Lesson 1 Shape Size and Place/1. In and Out/inside and outside5.jpg" alt="Inside and Outside 5">
-    </div>
-    <div class="image-box">
-      <img src="Picture/Grade 1/Maths/Lesson 1 Shape Size and Place/1. In and Out/inside and outside6.jpg" alt="Inside and Outside 6">
+  </main>
+
+  <!-- =======================
+       Final “You did it!” pane
+       ======================= -->
+  <div class="done" id="donePane" role="dialog" aria-modal="true" aria-labelledby="doneTitle">
+    <div class="panel">
+      <h2 id="doneTitle">You did it!</h2>
+      <p id="doneText">All answers are correct. Super work!</p>
+      <div class="actions" style="justify-content:center;margin-top:10px;">
+        <button class="btn btn-success" onclick="document.getElementById('donePane').style.display='none'">Close</button>
+        <button class="btn" onclick="window.print()">Print</button>
+      </div>
     </div>
   </div>
 
+  <!-- =======================
+       Scripts (vanilla JS)
+       ======================= -->
   <script>
-    // Example JavaScript (optional)
-    console.log("Image loaded successfully.");
-    console.log("All Inside and Outside images loaded successfully.");
-  </script>
+    /* -------------
+       Populate panel
+       ------------- */
+    (function fillTeacher(){
+      document.getElementById('readPageTxt').textContent = STRINGS.readAloud;
+      const o = document.getElementById('objList');
+      STRINGS.objectives.forEach(t=>{const li=document.createElement('li');li.textContent=t;o.appendChild(li)});
+      const v = document.getElementById('vocabList');
+      STRINGS.vocab.forEach(t=>{const li=document.createElement('li');li.textContent=t;v.appendChild(li)});
+      document.querySelector('h1').textContent = STRINGS.title;
+      document.querySelector('.subtitle').textContent = STRINGS.subtitle;
+      document.getElementById('doneTitle').textContent = STRINGS.doneTitle;
+      document.getElementById('doneText').textContent = STRINGS.doneMsg;
+    })();
 
+    /* --------------------------
+       Scoring + completion check
+       -------------------------- */
+    let score = 0;
+    const scoreEl = document.getElementById('score');
+    const registry = new Map(); // key -> boolean (correct?)
+    function setCorrect(key, isCorrect){
+      const prev = registry.get(key) === true;
+      registry.set(key, !!isCorrect);
+      const now = registry.get(key) === true;
+      if(!prev && now){ score++; }
+      if(prev && !now){ score = Math.max(0, score - 1); }
+      scoreEl.textContent = `${score}/24`;
+      maybeAllDone();
+    }
+    function resetKeys(prefix){
+      for(const k of Array.from(registry.keys())){
+        if(k.startsWith(prefix)) registry.set(k,false);
+      }
+      recomputeScore();
+    }
+    function recomputeScore(){
+      let s=0;
+      for(const v of registry.values()) if(v===true) s++;
+      score=s; scoreEl.textContent = `${score}/24`;
+    }
+    function maybeAllDone(){
+      // If all registered keys are true and there is at least one task, show pane
+      const vals = Array.from(registry.values());
+      if(vals.length>0 && vals.every(Boolean)){
+        document.getElementById('donePane').style.display='flex';
+      }
+    }
+
+    /* --------------------------
+       Speech + Beep (offline OK)
+       -------------------------- */
+    // Tiny data URI beep (fallback)
+    const BEEP = "data:audio/wav;base64,UklGRmQAAABXQVZFZm10IBAAAAABAAEAESsAACJWAAACABYAAAAAACQAAACAgICA/////wAAAP///wAAAP///wAAAP///wAAAP///wAAAP///wAA";
+    function playBeep(){
+      const a = new Audio(BEEP);
+      a.play().catch(()=>{});
+    }
+    function speak(text){
+      try{
+        if('speechSynthesis' in window){
+          window.speechSynthesis.cancel();
+          const u = new SpeechSynthesisUtterance(text);
+          u.rate = 0.95; u.pitch = 1.0;
+          window.speechSynthesis.speak(u);
+          return;
+        }
+      }catch(e){}
+      playBeep(); // fallback
+    }
+    document.getElementById('readPage').addEventListener('click',()=>speak("Inside and outside. Read, match, drag, and choose. Do your best!"));
+
+    // Per-activity read aloud
+    document.querySelectorAll('.read-inst').forEach(btn=>{
+      btn.addEventListener('click',()=>{
+        const id = btn.getAttribute('data-read');
+        const text = {
+          a1:"Match the word to the place. Tap a word, then a place.",
+          a2:"Drag each label to the right bucket: inside or outside.",
+          a3:"Play the sound. Tick the right picture.",
+          a4:"Drag inside or outside to each blank. Then color the card.",
+          a5:"Pick the right picture for boy and girl. Then choose the right word.",
+          a6:"Read and choose inside or outside.",
+          a7:"Listen to the voice and type inside or outside in each box."
+        }[id] || "";
+        speak(text);
+      });
+    });
+
+    // Any button with data-say uses STRINGS.say key
+    document.querySelectorAll('[data-say]').forEach(btn=>{
+      btn.addEventListener('click',()=>{
+        const key = btn.getAttribute('data-say');
+        speak(STRINGS.say[key] || "Listen");
+      });
+    });
+
+    /* --------------------------
+       A11: Match (click-to-pair)
+       -------------------------- */
+    (function initA1(){
+      const area = document.getElementById('a1');
+      const fb = document.getElementById('a1fb');
+      const map = { cat:'inside', dog:'outside' };
+      let selected = null;
+      let locked = false; // <-- Add this
+
+      area.addEventListener('click', (e)=>{
+        const btn = e.target.closest('.token,.target,[data-check],[data-reset]');
+        if(!btn) return;
+
+        if(locked && !btn.dataset.reset) return; // <-- Prevent changes if locked
+
+        if(btn.matches('.token')){
+          area.querySelectorAll('.token').forEach(b=>b.classList.remove('selected'));
+          btn.classList.add('selected');
+          selected = btn.dataset.key;
+        }
+        if(btn.matches('.target')){
+          if(!selected) return;
+          const ok = (map[selected] === btn.dataset.val);
+          btn.classList.remove('success','error');
+          btn.classList.add(ok? 'success':'error');
+          fb.textContent = ok? STRINGS.correct : STRINGS.incorrect;
+          setCorrect(`a1_${selected}`, ok);
+          selected = null;
+          area.querySelectorAll('.token').forEach(b=>b.classList.remove('selected'));
+        }
+        if(btn.dataset.check==='a1'){
+          const all = ['cat','dog'].every(k=>registry.get(`a1_${k}`));
+          fb.textContent = all ? STRINGS.correct : STRINGS.incorrect + " " + STRINGS.hint;
+          locked = true; // <-- Lock after checking
+        }
+        if(btn.dataset.reset==='a1'){
+          ['cat','dog'].forEach(k=>setCorrect(`a1_${k}`, false));
+          area.querySelectorAll('.target').forEach(t=>t.classList.remove('success','error'));
+          fb.textContent = '';
+          locked = false; // <-- Unlock on reset
+        }
+      });
+
+      // Register keys
+      ['cat','dog'].forEach(k=>registry.set(`a1_${k}`, false));
+    })();
+
+    /* --------------------------
+       Generic Drag & Drop helpers
+       (also keyboard support)
+       -------------------------- */
+    function makeDraggable(chip){
+      chip.addEventListener('dragstart',ev=>{
+        chip.setAttribute('aria-grabbed','true');
+        ev.dataTransfer.setData('text/plain', JSON.stringify({
+          id: chip.dataset.id || chip.dataset.word,
+          word: chip.dataset.word,
+          correct: chip.dataset.correct
+        }));
+      });
+      chip.addEventListener('dragend',()=> chip.setAttribute('aria-grabbed','false'));
+      // Keyboard support: Space/Enter selects, then Enter on a target drops
+      chip.addEventListener('keydown', (e)=>{
+        if(e.key === ' ' || e.key === 'Enter'){
+          e.preventDefault();
+          document.querySelectorAll('.bucket,.blank').forEach(b=>b.classList.add('focus-ring'));
+          chip.classList.add('selected');
+          window.__selectedChip = chip;
+        }
+      });
+    }
+    function makeDroppable(zone, onDrop){
+      zone.addEventListener('dragover', ev=>{ ev.preventDefault(); });
+      zone.addEventListener('drop', ev=>{
+        ev.preventDefault();
+        const raw = ev.dataTransfer.getData('text/plain');
+        if(!raw) return; const data = JSON.parse(raw);
+        onDrop(zone, data);
+      });
+      zone.addEventListener('keydown', (e)=>{
+        if((e.key==='Enter' || e.key===' ') && window.__selectedChip){
+          e.preventDefault();
+          const chip = window.__selectedChip;
+          onDrop(zone,{ id: chip.dataset.id || chip.dataset.word, word: chip.dataset.word, correct: chip.dataset.correct, fromKeyboard:true, chip });
+          chip.classList.remove('selected');
+          document.querySelectorAll('.bucket,.blank').forEach(b=>b.classList.remove('focus-ring'));
+          window.__selectedChip = null;
+        }
+      });
+    }
+
+    /* --------------------------
+       A2: Drag & Drop to buckets
+       -------------------------- */
+    (function initA2(){
+      const root = document.getElementById('a2');
+      const fb = document.getElementById('a2fb');
+      root.querySelectorAll('.chip').forEach(makeDraggable);
+      root.querySelectorAll('.bucket').forEach(b=>{
+        makeDroppable(b, (bucket, data)=>{
+          const correct = data.correct === bucket.dataset.bucket;
+          bucket.classList.remove('success','error');
+          bucket.classList.add(correct? 'success':'error');
+          fb.textContent = correct ? STRINGS.correct : STRINGS.incorrect;
+
+          if(correct){
+            // place a copy, remove original
+            const exists = Array.from(bucket.children).find(c=>c.dataset && c.dataset.id===data.id);
+            if(!exists){
+              const chip = document.createElement('div');
+              chip.className='chip'; chip.textContent=data.id; chip.dataset.id=data.id; chip.setAttribute('aria-grabbed','false');
+              bucket.appendChild(chip);
+              setCorrect(`a2_${data.id}`, true);
+              const orig = root.querySelector(`.chip[data-id="${data.id}"]`);
+              if(orig) orig.remove();
+            }
+          } else {
+            setCorrect(`a2_${data.id}`, false);
+          }
+        });
+      });
+
+      root.addEventListener('click', (e)=>{
+        const btn = e.target.closest('[data-check],[data-reset]');
+        if(!btn) return;
+        if(btn.dataset.check==='a2'){
+          const names = ['comb','eraser','glass','scissor','notebook','pen'];
+          const all = names.every(k=>registry.get(`a2_${k}`));
+          fb.textContent = all ? STRINGS.correct : STRINGS.incorrect + " " + STRINGS.hint;
+        }
+        if(btn.dataset.reset==='a2'){
+          ['comb','eraser','glass','scissor','notebook','pen'].forEach(k=>setCorrect(`a2_${k}`, false));
+          // restore bank
+          const bank = document.getElementById('a2bank');
+          bank.innerHTML = '';
+          [
+            ['comb','inside'],['eraser','outside'],['glass','outside'],
+            ['scissor','inside'],['notebook','inside'],['pen','outside']
+          ].forEach(([id,c])=>{
+            const d=document.createElement('div');d.className='chip';d.draggable=true;d.tabIndex=0;d.role='button';
+            d.textContent=id;d.dataset.id=id;d.dataset.correct=c;d.setAttribute('aria-grabbed','false');
+            bank.appendChild(d); makeDraggable(d);
+          });
+          root.querySelectorAll('.bucket').forEach(b=>{ b.innerHTML=''; b.classList.remove('success','error'); });
+          fb.textContent='';
+        }
+      });
+
+      // Register keys
+      ['comb','eraser','glass','scissor','notebook','pen'].forEach(k=>registry.set(`a2_${k}`, false));
+    })();
+
+    /* --------------------------
+       Tick helpers for A3 & A5
+       -------------------------- */
+    function initTicks(scopeId, keys){
+      const root = document.getElementById(scopeId);
+      const fb = document.getElementById(scopeId+'fb');
+      keys.forEach(({key,correct})=>{
+        registry.set(`${scopeId}_${key}`, false);
+        const wrap = root.querySelector(`.choice-pics[data-key="${key}"]`);
+        wrap.addEventListener('click',(e)=>{
+          const btn = e.target.closest('.tick'); if(!btn) return;
+          wrap.querySelectorAll('.tick').forEach(t=>t.classList.remove('checked'));
+          btn.classList.add('checked');
+          const pick = btn.getAttribute('data-pick');
+          const ok = (pick === correct);
+          fb.textContent = ok? STRINGS.correct : STRINGS.incorrect;
+          setCorrect(`${scopeId}_${key}`, ok);
+        });
+      });
+
+      root.addEventListener('click',(e)=>{
+        const c = e.target.closest('[data-check],[data-reset]');
+        if(!c) return;
+        if(c.dataset.check===scopeId){
+          const all = keys.every(({key})=>registry.get(`${scopeId}_${key}`));
+          fb.textContent = all ? STRINGS.correct : STRINGS.incorrect + " " + STRINGS.hint;
+        }
+        if(c.dataset.reset===scopeId){
+          keys.forEach(({key})=>setCorrect(`${scopeId}_${key}`, false));
+          root.querySelectorAll('.tick').forEach(t=>t.classList.remove('checked'));
+          fb.textContent='';
+        }
+      });
+    }
+
+    // A3: scissor (inside), combs (inside)
+    initTicks('a3', [
+      {key:'a3_scissor', correct:'inside'},
+      {key:'a3_combs', correct:'inside'}
+    ]);
+
+    /* --------------------------
+       A4: Drag words to blanks + Coloring
+       -------------------------- */
+    (function initA4(){
+      const root = document.getElementById('a4');
+      const fb = document.getElementById('a4fb');
+      root.querySelectorAll('.chip').forEach(makeDraggable);
+      root.querySelectorAll('.blank').forEach(b=>{
+        makeDroppable(b, (blank, data)=>{
+          const val = data.word;
+          blank.textContent = val; blank.dataset.value = val;
+          const ok = val === blank.dataset.correct;
+          blank.classList.remove('success','error');
+          blank.classList.add(ok? 'success':'error');
+          fb.textContent = ok? STRINGS.correct : STRINGS.incorrect;
+          setCorrect(`a4_${blank.dataset.key}`, ok);
+        });
+      });
+
+      // Coloring card
+      const card = document.getElementById('wordCard');
+      const colorRow = document.getElementById('a4color');
+      colorRow.addEventListener('click',(e)=>{
+        const sw = e.target.closest('.swatch'); if(!sw) return;
+        const which = sw.getAttribute('data-c');
+        if(which==='inside'){
+          card.style.background = 'repeating-linear-gradient(45deg,#d1fae5 0 8px,#a7f3d0 8px 16px)';
+        }else{
+          card.style.background = 'repeating-linear-gradient(45deg,#fee2e2 0 8px,#fecaca 8px 16px)';
+        }
+      });
+
+      // Buttons
+      root.addEventListener('click',(e)=>{
+        const b = e.target.closest('[data-check],[data-reset]');
+        if(!b) return;
+        if(b.dataset.check==='a4'){
+          const all = ['scissor','pen','eraser'].every(k=>registry.get(`a4_${k}`));
+          fb.textContent = all ? STRINGS.correct : STRINGS.incorrect + " " + STRINGS.hint;
+        }
+        if(b.dataset.reset==='a4'){
+          ['scissor','pen','eraser'].forEach(k=>setCorrect(`a4_${k}`, false));
+          root.querySelectorAll('.blank').forEach(bl=>{ bl.textContent=''; bl.dataset.value=''; bl.classList.remove('success','error'); });
+          fb.textContent='';
+          // restore bank
+          const bank = document.getElementById('a4bank');
+          bank.innerHTML = '';
+          ['Inside','Inside','Inside','Outside','Outside','Outside'].forEach(w=>{
+            const d=document.createElement('div'); d.className='chip'; d.draggable=true; d.tabIndex=0; d.role='button';
+            d.textContent=w; d.dataset.word=w; d.setAttribute('aria-grabbed','false'); bank.appendChild(d); makeDraggable(d);
+          });
+          // reset color
+          card.style.background = '#fff';
+        }
+      });
+
+      // Register
+      ['scissor','pen','eraser'].forEach(k=>registry.set(`a4_${k}`, false));
+    })();
+
+    /* --------------------------
+       A5: Ticks + tiny selects
+       -------------------------- */
+    initTicks('a5', [
+      {key:'boy', correct:'outside'},
+      {key:'girl', correct:'inside'}
+    ]);
+
+    (function initA5Selects(){
+      const root = document.getElementById('a5');
+      const fb = document.getElementById('a5fb');
+      const answers = {boy:'outside', girl:'inside'};
+      registry.set('a5_sel_boy', false);
+      registry.set('a5_sel_girl', false);
+
+      function grade(){
+        const boyOk = root.querySelector('select[data-sel="boy"]').value === answers.boy;
+        const girlOk = root.querySelector('select[data-sel="girl"]').value === answers.girl;
+        setCorrect('a5_sel_boy', boyOk);
+        setCorrect('a5_sel_girl', girlOk);
+        fb.textContent = (boyOk && girlOk) ? STRINGS.correct : STRINGS.incorrect + " " + STRINGS.hint;
+      }
+
+      root.addEventListener('click',(e)=>{
+        const b = e.target.closest('[data-check],[data-reset]');
+        if(!b) return;
+        if(b.dataset.check==='a5'){ grade(); }
+        if(b.dataset.reset==='a5'){
+          resetKeys('a5_');
+          root.querySelectorAll('select').forEach(s=>s.value='');
+          fb.textContent='';
+          // Also untick picture choices for a5
+          root.querySelectorAll('.tick').forEach(t=>t.classList.remove('checked'));
+        }
+      });
+    })();
+
+    /* --------------------------
+       A6: MCQ buttons (ball/bat)
+       -------------------------- */
+    (function initA6(){
+      const root = document.getElementById('a6');
+      const fb = document.getElementById('a6fb');
+      const pairs = [
+        {key:'ball', correct:'inside'},
+        {key:'bat', correct:'outside'}
+      ];
+      pairs.forEach(p=>registry.set(`a6_${p.key}`, false));
+
+      root.addEventListener('click',(e)=>{
+        const btn = e.target.closest('[data-ans],[data-check],[data-reset]');
+        if(!btn) return;
+
+        if(btn.hasAttribute('data-ans')){
+          const wrap = btn.closest('.bank');
+          const key = wrap.getAttribute('data-mcq');
+          const correct = wrap.getAttribute('data-correct');
+          wrap.querySelectorAll('[data-ans]').forEach(b=>b.classList.remove('success','error'));
+          const pick = btn.getAttribute('data-ans');
+          const ok = (pick===correct);
+          btn.classList.add(ok? 'success':'error');
+          fb.textContent = ok? STRINGS.correct : STRINGS.incorrect;
+          setCorrect(`a6_${key}`, ok);
+        }
+
+        if(btn.dataset.check==='a6'){
+          const all = pairs.every(p=>registry.get(`a6_${p.key}`));
+          fb.textContent = all ? STRINGS.correct : STRINGS.incorrect + " " + STRINGS.hint;
+        }
+        if(btn.dataset.reset==='a6'){
+          pairs.forEach(p=>setCorrect(`a6_${p.key}`, false));
+          root.querySelectorAll('[data-ans]').forEach(b=>b.classList.remove('success','error'));
+          fb.textContent='';
+        }
+      });
+    })();
+
+    /* --------------------------
+       Accessibility niceties
+       -------------------------- */
+    // Allow Enter/Space to trigger most buttons
+    document.addEventListener('keydown',(e)=>{
+      if((e.key==='Enter'||e.key===' ') && e.target.classList.contains('btn')){
+        e.preventDefault(); e.target.click();
+      }
+    });
+
+    // Countdown timer (5 minutes)
+    (function(){
+      let time = 5*60; // 5 minutes in seconds
+      const timerEl = document.getElementById('timer');
+      function update(){
+        const m = String(Math.floor(time/60)).padStart(2,'0');
+        const s = String(time%60).padStart(2,'0');
+        timerEl.textContent = `${m}:${s}`;
+        if(time > 0) time--;
+        else clearInterval(intv);
+      }
+      update();
+      const intv = setInterval(update,1000);
+    })();
+
+    // Remove all per-activity reset buttons (already done above).
+    // Add a global reset handler:
+    document.getElementById('resetAllBtn').addEventListener('click', function() {
+      // Reset A1
+      (function(){
+        const area = document.getElementById('a1');
+        ['cat','dog'].forEach(k=>setCorrect(`a1_${k}`, false));
+        area.querySelectorAll('.target').forEach(t=>t.classList.remove('success','error'));
+        area.querySelectorAll('.token').forEach(b=>b.classList.remove('selected'));
+        document.getElementById('a1fb').textContent = '';
+        // Unlock if locked
+        if(typeof area.locked !== "undefined") area.locked = false;
+      })();
+
+      // Reset A2
+      (function(){
+        const root = document.getElementById('a2');
+        ['comb','eraser','glass','scissor','notebook','pen'].forEach(k=>setCorrect(`a2_${k}`, false));
+        // restore bank
+        const bank = document.getElementById('a2bank');
+        bank.innerHTML = '';
+        [
+          ['comb','inside'],['eraser','outside'],['glass','outside'],
+          ['scissor','inside'],['notebook','inside'],['pen','outside']
+        ].forEach(([id,c])=>{
+          const d=document.createElement('div');d.className='chip';d.draggable=true;d.tabIndex=0;d.role='button';
+          d.textContent=id;d.dataset.id=id;d.dataset.correct=c;d.setAttribute('aria-grabbed','false');
+          bank.appendChild(d); makeDraggable(d);
+        });
+        root.querySelectorAll('.bucket').forEach(b=>{ b.innerHTML=''; b.classList.remove('success','error'); });
+        document.getElementById('a2fb').textContent='';
+      })();
+
+      // Reset A3
+      (function(){
+        const root = document.getElementById('a3');
+        ['a3_scissor','a3_combs'].forEach(k=>setCorrect(`a3_${k}`, false));
+        root.querySelectorAll('.tick').forEach(t=>t.classList.remove('checked'));
+        document.getElementById('a3fb').textContent='';
+      })();
+
+      // Reset A4
+      (function(){
+        const root = document.getElementById('a4');
+        ['scissor','pen','eraser'].forEach(k=>setCorrect(`a4_${k}`, false));
+        root.querySelectorAll('.blank').forEach(bl=>{ bl.textContent=''; bl.dataset.value=''; bl.classList.remove('success','error'); });
+        document.getElementById('a4fb').textContent='';
+        // restore bank
+        const bank = document.getElementById('a4bank');
+        bank.innerHTML = '';
+        ['Inside','Inside','Inside','Outside','Outside','Outside'].forEach(w=>{
+          const d=document.createElement('div'); d.className='chip'; d.draggable=true; d.tabIndex=0; d.role='button';
+          d.textContent=w; d.dataset.word=w; d.setAttribute('aria-grabbed','false'); bank.appendChild(d); makeDraggable(d);
+        });
+        // reset color
+        document.getElementById('wordCard').style.background = '#fff';
+      })();
+
+      // Reset A5
+      (function(){
+        const root = document.getElementById('a5');
+        ['boy','girl'].forEach(k=>setCorrect(`a5_${k}`, false));
+        setCorrect('a5_sel_boy', false);
+        setCorrect('a5_sel_girl', false);
+        root.querySelectorAll('.tick').forEach(t=>t.classList.remove('checked'));
+        root.querySelectorAll('select').forEach(s=>s.value='');
+        document.getElementById('a5fb').textContent='';
+      })();
+
+      // Reset A6
+      (function(){
+        const root = document.getElementById('a6');
+        ['ball','bat'].forEach(k=>setCorrect(`a6_${k}`, false));
+        root.querySelectorAll('[data-ans]').forEach(b=>b.classList.remove('success','error'));
+        document.getElementById('a6fb').textContent='';
+      })();
+
+      // Reset A7
+      (function(){
+        for(let i=1; i<=5; i++) {
+          registry.set('a7_'+i, false);
+          const input = document.getElementById('a7q'+i);
+          if(input) {
+            input.value = '';
+            input.style.background = '#fff';
+          }
+        }
+        document.getElementById('a7fb').textContent = '';
+        document.getElementById('finalResult').style.display = 'none';
+      })();
+
+      // Reset A8
+      (function(){
+        for(let i=1; i<=5; i++) {
+          registry.set(`a8_${i}`, false);
+          const wrap = document.querySelector(`.a8prob[data-n="${i}"]`);
+          if(wrap) {
+            wrap.removeAttribute('data-selected');
+            document.querySelectorAll(`.a8click[data-n="${i}"]`).forEach(e=>{
+              e.style.boxShadow = 'none';
+              e.style.background = '';
+            });
+          }
+        }
+        document.getElementById('a8fb').textContent = '';
+      })();
+
+      // Reset score
+      recomputeScore();
+      // Hide done pane if open
+      document.getElementById('donePane').style.display='none';
+    });
+
+    // Activity 7: Listen and Type (Check Answers button logic)
+    // Update STRINGS.say for only 5 questions
+    STRINGS.say.a7_1 = "The cat is inside the house.";
+    STRINGS.say.a7_2 = "The dog is outside the house.";
+    STRINGS.say.a7_3 = "The pen is inside the box.";
+    STRINGS.say.a7_4 = "The bat is outside the box.";
+    STRINGS.say.a7_5 = "The glass is inside the box.";
+
+    // Register keys for Activity 7 (5 questions)
+    for(let i=1;i<=5;i++) registry.set(`a7_${i}`, false);
+
+    document.getElementById('a7check').addEventListener('click', function() {
+      const answers = ['inside', 'outside', 'inside', 'outside', 'inside'];
+      let correct = 0;
+      for(let i=1; i<=5; i++) {
+        const input = document.getElementById('a7q'+i);
+        const val = input.value.trim().toLowerCase();
+        const ok = val === answers[i-1];
+        registry.set('a7_'+i, ok);
+        if(ok) correct++;
+        input.style.background = ok ? '#dcfce7' : '#fee2e2';
+      }
+      document.getElementById('a7fb').textContent = correct === 5
+        ? STRINGS.correct
+        : STRINGS.incorrect + " " + STRINGS.hint;
+      recomputeScore();
+      showFinalResult();
+    });
+
+    // Reset for Activity 7 (5 questions)
+    document.getElementById('resetAllBtn').addEventListener('click', function() {
+      // Reset Activity 7
+      for(let i=1; i<=5; i++) {
+        registry.set('a7_'+i, false);
+        const input = document.getElementById('a7q'+i);
+        if(input) {
+          input.value = '';
+          input.style.background = '#fff';
+        }
+      }
+      document.getElementById('a7fb').textContent = '';
+      document.getElementById('finalResult').style.display = 'none';
+      // Reset Activity 8
+      a8Current = 0;
+      a8Answers = Array(5).fill(null);
+      renderA8Problem(a8Current);
+      a8fb.textContent = '';
+      a8checkBtn.disabled = true;
+      a8progress.textContent = `1 / 5`;
+      a8TargetWord.textContent = a8Problems[0].target.toUpperCase();
+      recomputeScore();
+    });
+
+    // --- Fix: Activity 8 registry and reset for 5 questions ---
+    for(let i=1;i<=5;i++) registry.set(`a8_${i}`, false);
+
+    // --- Fix: Activity 8 logic for 5 questions ---
+    const a8Problems = [
+      { inside: "cat", insideLabel: "Cat", outside: "dog", outsideLabel: "Dog", target: "inside" },
+      { inside: "ball", insideLabel: "Ball", outside: "bat", outsideLabel: "Bat", target: "outside" },
+      { inside: "pen", insideLabel: "Pen", outside: "notebook", outsideLabel: "Notebook", target: "inside" },
+      { inside: "glass", insideLabel: "Glass", outside: "eraser", outsideLabel: "Eraser", target: "outside" },
+      { inside: "comb", insideLabel: "Comb", outside: "scissor", outsideLabel: "Scissor", target: "inside" }
+    ];
+    let a8Current = 0;
+    let a8Answers = Array(5).fill(null);
+
+    function renderA8Problem(idx) {
+      const prob = a8Problems[idx];
+      a8TargetWord.textContent = prob.target.toUpperCase();
+      a8TargetWord.style.fontWeight = "bold";
+      a8TargetWord.style.color = "#dc2626";
+      a8circlewrap.innerHTML = `
+        <svg id="a8svg" width="340" height="320" style="display:block;overflow:visible;">
+          <circle cx="170" cy="160" r="110" fill="#fff" stroke="#dc2626" stroke-width="8"/>
+          <!-- INSIDE clickable group -->
+          <g id="a8insideg" style="cursor:pointer;">
+            <rect x="122" y="122" width="96" height="96" fill="transparent" pointer-events="all"/>
+            <g transform="translate(170,170)">
+              <g transform="translate(-48,-48)">
+                ${getShapeSVG(prob.inside,96)}
+              </g>
+            </g>
+            <text x="170" y="270" text-anchor="middle" font-size="18" fill="#222" style="pointer-events:none">${prob.insideLabel}</text>
+          </g>
+          <!-- OUTSIDE clickable group -->
+          <g id="a8outsideg" style="cursor:pointer;">
+            <rect x="260" y="30" width="60" height="60" fill="transparent" pointer-events="all"/>
+            <g transform="translate(290,60)">
+              <g transform="translate(-30,-30)">
+                ${getShapeSVG(prob.outside,60)}
+              </g>
+            </g>
+            <text x="290" y="135" text-anchor="middle" font-size="18" fill="#222" style="pointer-events:none">${prob.outsideLabel}</text>
+          </g>
+        </svg>
+      `;
+      a8progress.textContent = `${idx+1} / 5`;
+      a8fb.textContent = '';
+      a8checkBtn.disabled = true;
+
+      let answered = false;
+      const svg = document.getElementById('a8svg');
+      svg.getElementById('a8insideg').addEventListener('click', function(e) {
+        if (answered) return;
+        answered = true;
+        a8Answers[idx] = "inside";
+        highlightA8("inside");
+        setTimeout(()=>{
+          if(idx < 4){
+            a8Current++;
+            renderA8Problem(a8Current);
+          }else{
+            a8circlewrap.innerHTML = '';
+            a8progress.textContent = `5 / 5`;
+            a8fb.textContent = 'Now click "Check Answers" to see your result!';
+            a8checkBtn.disabled = false;
+          }
+        }, 400);
+      });
+      svg.getElementById('a8outsideg').addEventListener('click', function(e) {
+        if (answered) return;
+        answered = true;
+        a8Answers[idx] = "outside";
+        highlightA8("outside");
+        setTimeout(()=>{
+          if(idx < 4){
+            a8Current++;
+            renderA8Problem(a8Current);
+          }else{
+            a8circlewrap.innerHTML = '';
+            a8progress.textContent = `5 / 5`;
+            a8fb.textContent = 'Now click "Check Answers" to see your result!';
+            a8checkBtn.disabled = false;
+          }
+        }, 400);
+      });
+    }
+
+    // Highlight feedback for click
+    function highlightA8(which) {
+      const svg = document.getElementById('a8svg');
+      if(!svg) return;
+      if(which==="inside") {
+        svg.getElementById('a8insideg').style.opacity = "1";
+        svg.getElementById('a8outsideg').style.opacity = "0.4";
+      } else {
+        svg.getElementById('a8outsideg').style.opacity = "1";
+        svg.getElementById('a8insideg').style.opacity = "0.4";
+      }
+    }
+
+    // SVG icon for each shape, size param
+    function getShapeSVG(shape, size=96) {
+      switch(shape) {
+        case "cat": return `<svg width="${size}" height="${size}" viewBox="0 0 96 96"><circle cx="48" cy="48" r="40" fill="#fbbf24"/><ellipse cx="32" cy="32" rx="16" ry="22" fill="#fbbf24"/><ellipse cx="64" cy="32" rx="16" ry="22" fill="#fbbf24"/><circle cx="48" cy="60" r="18" fill="#fff"/><circle cx="40" cy="56" r="4" fill="#111"/><circle cx="56" cy="56" r="4" fill="#111"/></svg>`;
+        case "dog": return `<svg width="${size}" height="${size}" viewBox="0 0 96 96"><ellipse cx="48" cy="64" rx="36" ry="28" fill="#a3e635"/><ellipse cx="28" cy="32" rx="16" ry="22" fill="#a3e635"/><ellipse cx="68" cy="32" rx="16" ry="22" fill="#a3e635"/><circle cx="48" cy="60" r="18" fill="#fff"/><circle cx="40" cy="56" r="4" fill="#111"/><circle cx="56" cy="56" r="4" fill="#111"/></svg>`;
+
+        case "ball": return `<svg width="${size}" height="${size}" viewBox="0 0 96 96"><circle cx="48" cy="48" r="40" fill="#60a5fa"/><path d="M48 8 A40 40 0 0 1 88 48" stroke="#fff" stroke-width="8" fill="none"/></svg>`;
+        case "bat": return `<svg width="${size}" height="${size}" viewBox="0 0 96 96"><rect x="32" y="16" width="32" height="64" rx="16" fill="#f87171"/><rect x="40" y="80" width="16" height="12" rx="8" fill="#92400e"/></svg>`;
+        case "pen": return `<svg width="${size}" height="${size}" viewBox="0 0 96 96"><rect x="44" y="16" width="8" height="56" rx="4" fill="#6366f1"/><polygon points="48,72 60,92 36,92" fill="#fbbf24"/></svg>`;
+        case "notebook": return `<svg width="${size}" height="${size}" viewBox="0 0 96 96"><rect x="16" y="16" width="64" height="64" rx="12" fill="#f3f4f6"/><line x1="24" y1="28" x2="72" y2="28" stroke="#a3a3a3" stroke-width="4"/><line x1="24" y1="44" x2="72" y2="44" stroke="#a3a3a3" stroke-width="4"/></svg>`;
+        case "glass": return `<svg width="${size}" height="${size}" viewBox="0 0 96 96"><ellipse cx="48" cy="64" rx="32" ry="28" fill="#bae6fd"/><rect x="32" y="16" width="32" height="48" rx="16" fill="#7dd3fc"/></svg>`;
+        case "eraser": return `<svg width="${size}" height="${size}" viewBox="0 0 96 96"><rect x="24" y="40" width="48" height="16" rx="6" fill="#fca5a5"/><rect x="24" y="56" width="48" height="8" rx="4" fill="#f87171"/></svg>`;
+        case "comb": return `<svg width="${size}" height="${size}" viewBox="0 0 96 96"><rect x="24" y="40" width="48" height="16" rx="6" fill="#fbbf24"/><rect x="24" y="56" width="4" height="16" fill="#f59e42"/><rect x="32" y="56" width="4" height="16" fill="#f59e42"/><rect x="40" y="56" width="4" height="16" fill="#f59e42"/><rect x="48" y="56" width="4" height="16" fill="#f59e42"/><rect x="56" y="56" width="4" height="16" fill="#f59e42"/><rect x="64" y="56" width="4" height="16" fill="#f59e42"/></svg>`;
+        case "scissor": return `<svg width="${size}" height="${size}" viewBox="0 0 96 96"><ellipse cx="32" cy="72" rx="14" ry="20" fill="#fbbf24"/><ellipse cx="64" cy="72" rx="14" ry="20" fill="#fbbf24"/><rect x="44" y="16" width="8" height="40" rx="4" fill="#a3a3a3"/></svg>`;
+        default: return `<svg width="${size}" height="${size}" viewBox="0 0 96 96"><circle cx="48" cy="48" r="40" fill="#ddd"/></svg>`;
+      }
+    }
+
+    // Start Activity 8
+    a8Current = 0;
+    a8Answers = Array(5).fill(null);
+    renderA8Problem(a8Current);
+
+    // Check Answers button
+    a8checkBtn.addEventListener('click', function() {
+      let correct = 0;
+      for(let i=0;i<5;i++) {
+        const user = a8Answers[i];
+        const ok = user === a8Problems[i].target;
+        registry.set(`a8_${i+1}`, ok);
+        if(ok) correct++;
+      }
+      a8fb.textContent = correct === 5 ? STRINGS.correct : STRINGS.incorrect + " " + STRINGS.hint;
+      recomputeScore();
+      showFinalResult();
+    });
+
+    // --- Fix: Score logic for 30 marks ---
+    function setCorrect(key, isCorrect){
+      const prev = registry.get(key) === true;
+      registry.set(key, !!isCorrect);
+      const now = registry.get(key) === true;
+      if(!prev && now){ score++; }
+      if(prev && !now){ score = Math.max(0, score - 1); }
+      scoreEl.textContent = `${score}/24`;
+      maybeAllDone();
+    }
+    function recomputeScore(){
+      let s=0;
+      for(const v of registry.values()) if(v===true) s++;
+      score=s; scoreEl.textContent = `${score}/24`;
+    }
+
+    // --- Fix: Show final result and Go to Big and Small button logic ---
+    function showFinalResult() {
+      const total = 24;
+      const correct = Array.from(registry.values()).filter(Boolean).length;
+      const percent = correct / total;
+      const finalResult = document.getElementById('finalResult');
+      const finalMsg = document.getElementById('finalMsg');
+      const backHomeBtn = document.getElementById('backHomeBtn');
+      const repeatMsg = document.getElementById('repeatMsg');
+      const goBigSmallBtn = document.getElementById('goBigSmallBtn');
+      if (correct === total) {
+        finalMsg.textContent = "🎉 Excellent! You got all correct!";
+        backHomeBtn.style.display = "inline-block";
+        repeatMsg.style.display = "none";
+        finalResult.style.display = "block";
+        goBigSmallBtn.style.display = "inline-block";
+      } else if (correct > 25) {
+        finalMsg.textContent = `👏 Well done! You scored ${correct} out of ${total}.`;
+        backHomeBtn.style.display = "inline-block";
+        repeatMsg.style.display = "none";
+        finalResult.style.display = "block";
+        goBigSmallBtn.style.display = "inline-block";
+      } else {
+        finalMsg.textContent = `You scored ${correct} out of ${total}.`;
+        backHomeBtn.style.display = "none";
+        repeatMsg.style.display = "block";
+        finalResult.style.display = "block";
+        goBigSmallBtn.style.display = "none";
+      }
+    }
+
+    document.getElementById('goBigSmallBtn').addEventListener('click', function() {
+      window.location.href = "1math2.html";
+    });
+  </script>
 </body>
 </html>
