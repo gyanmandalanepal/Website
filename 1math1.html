@@ -8,6 +8,17 @@
     /* =========================
        Base + Layout (one column)
        ========================= */
+
+    .timer-bar {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: #fff;
+      padding: 8px 0;
+      text-align: center;
+      font-weight: 700;
+      font-size: 18px;
+    }
     :root{
       --bg:#f7fafc;
       --card:#ffffff;
@@ -31,7 +42,12 @@
       background:linear-gradient(180deg,#fff,rgba(255,255,255,.92));
       position:sticky;top:0;z-index:10;
       border-bottom:1px solid #e5e7eb;
+      -webkit-backdrop-filter:saturate(140%) blur(6px);
       backdrop-filter:saturate(140%) blur(6px);
+    }
+    header .wrap {
+      max-height: 60vh; /* Adjust as needed */
+      overflow-y: auto;
     }
     .wrap{max-width:980px;margin:0 auto;padding:14px}
     h1{margin:4px 0 0;font-size:clamp(22px,4vw,32px);text-align:center}
@@ -73,6 +89,8 @@
     .ok{color:var(--green)} .bad{color:var(--red)}
     .success{border-color:var(--green)!important;background:var(--green-weak)!important}
     .error{border-color:var(--red)!important;background:var(--red-weak)!important}
+    /* Custom gap utility for list */
+    .list-gap-6 { gap: 6px; }
 
     /* Drag & Drop */
     .bank{display:flex;gap:8px;flex-wrap:wrap}
@@ -90,7 +108,7 @@
     .tick{display:flex;gap:6px;align-items:center;justify-content:center;padding:8px;font-weight:800}
     .tick .mark{width:18px;height:18px;border:2px solid #111;border-radius:4px;display:inline-flex;align-items:center;justify-content:center}
     .tick.checked .mark{background:repeating-linear-gradient(45deg,#10b981 0 6px,#10b981 6px,#34d399 12px);color:#fff}
-    .tick .text{user-select:none}
+    .tick .text{-webkit-user-select:none;user-select:none}
 
     /* Blanks (drag word) + keyboard drop */
     .blank{display:inline-flex;min-width:120px;min-height:var(--hit);align-items:center;justify-content:center;border:2px dashed #cbd5e1;border-radius:10px;padding:6px;background:#fff;margin:0 6px}
@@ -108,6 +126,8 @@
     .feedback{min-height:1.25em;font-weight:800;margin-top:6px}
     .hint{color:var(--muted);font-size:13px}
 
+    .list-margin-top-10 { margin-top: 10px; }
+
     /* Read Aloud small button */
     .read{font-size:13px;padding:6px 10px;border-radius:999px}
 
@@ -121,12 +141,12 @@
 
     /* Focus ring for custom droppables */
     .focus-ring{box-shadow:0 0 0 4px var(--primary-weak)}
-    .visually-hidden{
-      position:absolute!important;height:1px;width:1px;overflow:hidden;clip:rect(1px,1px,1px,1px);white-space:nowrap
-    }
+    <div class="timer-bar">
+    Time Left: <span id="timer">05:00</span>
+  </div>
 
     /* Final modal */
-    .done{display:none;position:fixed;inset:0;background:rgba(0,0,0,.35);align-items:center;justify-content:center;z-index:50}
+    .done{display:none;position:fixed;inset:0 ;background:rgba(0, 0,0,.35);align-items:center;justify-content:center;z-index:50}
     .done .panel{background:#fff;border-radius:16px;box-shadow:var(--shadow);padding:24px;max-width:520px;text-align:center}
   </style>
 </head>
@@ -227,7 +247,7 @@
       <p class="inst">Match the word to the place. Tap a word, then a place.</p>
 
       <figure>
-        <img src="Picture/Grade 1/Maths/Lesson 1 Shape, Size and Place/1. In and Out/inside and outside1.jpg"
+        <img src="Picture/Grade 1/Maths/Lesson 1 Shape Size and Place/1. In and Out/inside and outside1.jpg"
              alt="A house with a cat inside and a dog outside." />
         <figcaption>Look at the cat and the dog.</figcaption>
       </figure>
@@ -243,10 +263,10 @@
         </div>
       </div>
 
-      <div class="feedback" id="a1fb" aria-live="polite"></div>
-      <!-- Mini listening -->
-      <div class="list" style="gap:6px;">
+      <div class="list list-gap-6">
         <button class="btn" data-say="a1_dog">🔊 Play: Dog</button>
+        <button class="btn" data-say="a1_cat">🔊 Play: Cat</button>
+      </div>
         <button class="btn" data-say="a1_cat">🔊 Play: Cat</button>
       </div>
       <!-- Check at the end -->
@@ -262,18 +282,18 @@
       <button class="btn read read-inst" data-read="a2">🔊 Read Aloud</button>
 
       <figure>
-        <img src="Picture/Grade 1/Maths/Lesson 1 Shape, Size and Place/1. In and Out/inside and outside2.jpg"
+        <img src="Picture/Grade 1/Maths/Lesson 1 Shape Size and Place/1. In and Out/inside and outside2.jpg"
              alt="A box with objects inside or outside: comb, eraser, glass, scissor, notebook, pen." />
         <figcaption>Sort the objects.</figcaption>
       </figure>
 
       <div class="bank" id="a2bank" role="list">
-        <div class="chip" draggable="true" tabindex="0" role="button" aria-grabbed="false" data-id="comb" data-correct="inside">comb</div>
-        <div class="chip" draggable="true" tabindex="0" role="button" aria-grabbed="false" data-id="eraser" data-correct="outside">eraser</div>
-        <div class="chip" draggable="true" tabindex="0" role="button" aria-grabbed="false" data-id="glass" data-correct="outside">glass</div>
-        <div class="chip" draggable="true" tabindex="0" role="button" aria-grabbed="false" data-id="scissor" data-correct="inside">scissor</div>
-        <div class="chip" draggable="true" tabindex="0" role="button" aria-grabbed="false" data-id="notebook" data-correct="inside">notebook</div>
-        <div class="chip" draggable="true" tabindex="0" role="button" aria-grabbed="false" data-id="pen" data-correct="outside">pen</div>
+        <div role="listitem"><div class="chip" draggable="true" tabindex="0" aria-grabbed="false" data-id="comb" data-correct="inside">comb</div></div>
+        <div role="listitem"><div class="chip" draggable="true" tabindex="0" aria-grabbed="false" data-id="eraser" data-correct="outside">eraser</div></div>
+        <div role="listitem"><div class="chip" draggable="true" tabindex="0" aria-grabbed="false" data-id="glass" data-correct="outside">glass</div></div>
+        <div role="listitem"><div class="chip" draggable="true" tabindex="0" aria-grabbed="false" data-id="scissor" data-correct="inside">scissor</div></div>
+        <div role="listitem"><div class="chip" draggable="true" tabindex="0" aria-grabbed="false" data-id="notebook" data-correct="inside">notebook</div></div>
+        <div role="listitem"><div class="chip" draggable="true" tabindex="0" aria-grabbed="false" data-id="pen" data-correct="outside">pen</div></div>
       </div>
 
       <div class="buckets">
@@ -307,7 +327,7 @@
       <button class="btn read read-inst" data-read="a3">🔊 Read Aloud</button>
 
       <figure>
-        <img src="Picture/Grade 1/Maths/Lesson 1 Shape, Size and Place/1. In and Out/inside and outside3.jpg"
+        <img src="Picture/Grade 1/Maths/Lesson 1 Shape Size and Place/1. In and Out/inside and outside3.jpg"
              alt="Objects near a box: scissor inside, glass and note outside, combs inside." />
         <figcaption>Listen. Then tick the right one.</figcaption>
       </figure>
@@ -359,18 +379,18 @@
       <button class="btn read read-inst" data-read="a4">🔊 Read Aloud</button>
 
       <figure>
-        <img src="Picture/Grade 1/Maths/Lesson 1 Shape, Size and Place/1. In and Out/inside and outside4.jpg"
+        <img src="Picture/Grade 1/Maths/Lesson 1 Shape Size and Place/1. In and Out/inside and outside4.jpg"
              alt="Mixed objects near a box: scissor and comb inside, pen and glass outside, eraser outside." />
         <figcaption>Use the words: Inside, Outside.</figcaption>
       </figure>
 
-      <div class="bank" id="a4bank" role="list" aria-label="Word bank">
-        <div class="chip" draggable="true" tabindex="0" role="button" aria-grabbed="false" data-word="Inside">Inside</div>
-        <div class="chip" draggable="true" tabindex="0" role="button" aria-grabbed="false" data-word="Inside">Inside</div>
-        <div class="chip" draggable="true" tabindex="0" role="button" aria-grabbed="false" data-word="Inside">Inside</div>
-        <div class="chip" draggable="true" tabindex="0" role="button" aria-grabbed="false" data-word="Outside">Outside</div>
-        <div class="chip" draggable="true" tabindex="0" role="button" aria-grabbed="false" data-word="Outside">Outside</div>
-        <div class="chip" draggable="true" tabindex="0" role="button" aria-grabbed="false" data-word="Outside">Outside</div>
+      <div class="bank" id="a4bank" aria-label="Word bank">
+        <div class="chip" draggable="true" tabindex="0" aria-grabbed="false" data-word="Inside">Inside</div>
+        <div class="chip" draggable="true" tabindex="0" aria-grabbed="false" data-word="Inside">Inside</div>
+        <div class="chip" draggable="true" tabindex="0" aria-grabbed="false" data-word="Inside">Inside</div>
+        <div class="chip" draggable="true" tabindex="0" aria-grabbed="false" data-word="Outside">Outside</div>
+        <div class="chip" draggable="true" tabindex="0" aria-grabbed="false" data-word="Outside">Outside</div>
+        <div class="chip" draggable="true" tabindex="0" aria-grabbed="false" data-word="Outside">Outside</div>
       </div>
 
       <p>1. The scissor is <span class="blank" data-key="scissor" data-correct="Inside" tabindex="0" aria-label="Drop here: Inside or Outside"></span> the box.</p>
@@ -403,7 +423,7 @@
       <button class="btn read read-inst" data-read="a5">🔊 Read Aloud</button>
 
       <figure>
-        <img src="Picture/Grade 1/Maths/Lesson 1 Shape, Size and Place/1. In and Out/inside and outside5.jpg"
+        <img src="Picture/Grade 1/Maths/Lesson 1 Shape Size and Place/1. In and Out/inside and outside5.jpg"
              alt="A boy near a bus (outside), and a girl inside a box." />
         <figcaption>Look at the boy and the girl.</figcaption>
       </figure>
@@ -482,7 +502,7 @@
       <button class="btn read read-inst" data-read="a6">🔊 Read Aloud</button>
 
       <figure>
-        <img src="Picture/Grade 1/Maths/Lesson 1 Shape, Size and Place/1. In and Out/inside and outside6.jpg"
+        <img src="Picture/Grade 1/Maths/Lesson 1 Shape Size and Place/1. In and Out/inside and outside6.jpg"
              alt="A bat outside and a ball inside." />
         <figcaption>Ball and bat.</figcaption>
       </figure>
@@ -495,7 +515,7 @@
         </div>
         <div class="actions">
           <button class="btn" data-say="a6_ball">🔊 Play: Ball</button>
-        </div>
+      <div class="list list-margin-top-10">
       </div>
       <div class="list" style="margin-top:10px;">
         <div class="token">The bat is …</div>
@@ -544,26 +564,6 @@
       <div class="feedback" id="a7fb" aria-live="polite"></div>
       <div class="actions">
         <button class="btn btn-primary" id="a7check">Check Answers</button>
-      </div>
-    </section>
-
-    <!-- ============= A8: Click Inside or Outside (One Big Circle, One Shape Inside, One Outside) ============= -->
-    <section class="activity" id="a8" aria-labelledby="a8h">
-      <h2 id="a8h">Activity 8: Click Inside or Outside</h2>
-      <p class="inst">
-        Look at the red circle. One shape is inside, one is outside.<br>
-        <b>Click the correct object as per the bold word:</b>
-        <span id="a8TargetWord" style="font-size:1.2em;color:#dc2626;margin-left:10px;font-weight:bold;"></span>
-      </p>
-      <div id="a8circlewrap" style="display:flex;justify-content:center;align-items:center;height:340px;position:relative;">
-        <!-- SVG will be injected here -->
-      </div>
-      <div style="text-align:center;margin-top:10px;">
-        <span id="a8progress" style="font-weight:600;">1 / 5</span>
-      </div>
-      <div class="feedback" id="a8fb" aria-live="polite"></div>
-      <div class="actions">
-        <button class="btn btn-primary" id="a8check" disabled>Check Answers</button>
       </div>
     </section>
 
@@ -1141,22 +1141,6 @@
         document.getElementById('finalResult').style.display = 'none';
       })();
 
-      // Reset A8
-      (function(){
-        for(let i=1; i<=5; i++) {
-          registry.set(`a8_${i}`, false);
-          const wrap = document.querySelector(`.a8prob[data-n="${i}"]`);
-          if(wrap) {
-            wrap.removeAttribute('data-selected');
-            document.querySelectorAll(`.a8click[data-n="${i}"]`).forEach(e=>{
-              e.style.boxShadow = 'none';
-              e.style.background = '';
-            });
-          }
-        }
-        document.getElementById('a8fb').textContent = '';
-      })();
-
       // Reset score
       recomputeScore();
       // Hide done pane if open
@@ -1214,193 +1198,6 @@
       a8progress.textContent = `1 / 5`;
       a8TargetWord.textContent = a8Problems[0].target.toUpperCase();
       recomputeScore();
-    });
-
-    // --- Fix: Activity 8 registry and reset for 5 questions ---
-    for(let i=1;i<=5;i++) registry.set(`a8_${i}`, false);
-
-    // --- Fix: Activity 8 logic for 5 questions ---
-    const a8Problems = [
-      { inside: "cat", insideLabel: "Cat", outside: "dog", outsideLabel: "Dog", target: "inside" },
-      { inside: "ball", insideLabel: "Ball", outside: "bat", outsideLabel: "Bat", target: "outside" },
-      { inside: "pen", insideLabel: "Pen", outside: "notebook", outsideLabel: "Notebook", target: "inside" },
-      { inside: "glass", insideLabel: "Glass", outside: "eraser", outsideLabel: "Eraser", target: "outside" },
-      { inside: "comb", insideLabel: "Comb", outside: "scissor", outsideLabel: "Scissor", target: "inside" }
-    ];
-    let a8Current = 0;
-    let a8Answers = Array(5).fill(null);
-
-    function renderA8Problem(idx) {
-      const prob = a8Problems[idx];
-      a8TargetWord.textContent = prob.target.toUpperCase();
-      a8TargetWord.style.fontWeight = "bold";
-      a8TargetWord.style.color = "#dc2626";
-      a8circlewrap.innerHTML = `
-        <svg id="a8svg" width="340" height="320" style="display:block;overflow:visible;">
-          <circle cx="170" cy="160" r="110" fill="#fff" stroke="#dc2626" stroke-width="8"/>
-          <!-- INSIDE clickable group -->
-          <g id="a8insideg" style="cursor:pointer;">
-            <rect x="122" y="122" width="96" height="96" fill="transparent" pointer-events="all"/>
-            <g transform="translate(170,170)">
-              <g transform="translate(-48,-48)">
-                ${getShapeSVG(prob.inside,96)}
-              </g>
-            </g>
-            <text x="170" y="270" text-anchor="middle" font-size="18" fill="#222" style="pointer-events:none">${prob.insideLabel}</text>
-          </g>
-          <!-- OUTSIDE clickable group -->
-          <g id="a8outsideg" style="cursor:pointer;">
-            <rect x="260" y="30" width="60" height="60" fill="transparent" pointer-events="all"/>
-            <g transform="translate(290,60)">
-              <g transform="translate(-30,-30)">
-                ${getShapeSVG(prob.outside,60)}
-              </g>
-            </g>
-            <text x="290" y="135" text-anchor="middle" font-size="18" fill="#222" style="pointer-events:none">${prob.outsideLabel}</text>
-          </g>
-        </svg>
-      `;
-      a8progress.textContent = `${idx+1} / 5`;
-      a8fb.textContent = '';
-      a8checkBtn.disabled = true;
-
-      let answered = false;
-      const svg = document.getElementById('a8svg');
-      svg.getElementById('a8insideg').addEventListener('click', function(e) {
-        if (answered) return;
-        answered = true;
-        a8Answers[idx] = "inside";
-        highlightA8("inside");
-        setTimeout(()=>{
-          if(idx < 4){
-            a8Current++;
-            renderA8Problem(a8Current);
-          }else{
-            a8circlewrap.innerHTML = '';
-            a8progress.textContent = `5 / 5`;
-            a8fb.textContent = 'Now click "Check Answers" to see your result!';
-            a8checkBtn.disabled = false;
-          }
-        }, 400);
-      });
-      svg.getElementById('a8outsideg').addEventListener('click', function(e) {
-        if (answered) return;
-        answered = true;
-        a8Answers[idx] = "outside";
-        highlightA8("outside");
-        setTimeout(()=>{
-          if(idx < 4){
-            a8Current++;
-            renderA8Problem(a8Current);
-          }else{
-            a8circlewrap.innerHTML = '';
-            a8progress.textContent = `5 / 5`;
-            a8fb.textContent = 'Now click "Check Answers" to see your result!';
-            a8checkBtn.disabled = false;
-          }
-        }, 400);
-      });
-    }
-
-    // Highlight feedback for click
-    function highlightA8(which) {
-      const svg = document.getElementById('a8svg');
-      if(!svg) return;
-      if(which==="inside") {
-        svg.getElementById('a8insideg').style.opacity = "1";
-        svg.getElementById('a8outsideg').style.opacity = "0.4";
-      } else {
-        svg.getElementById('a8outsideg').style.opacity = "1";
-        svg.getElementById('a8insideg').style.opacity = "0.4";
-      }
-    }
-
-    // SVG icon for each shape, size param
-    function getShapeSVG(shape, size=96) {
-      switch(shape) {
-        case "cat": return `<svg width="${size}" height="${size}" viewBox="0 0 96 96"><circle cx="48" cy="48" r="40" fill="#fbbf24"/><ellipse cx="32" cy="32" rx="16" ry="22" fill="#fbbf24"/><ellipse cx="64" cy="32" rx="16" ry="22" fill="#fbbf24"/><circle cx="48" cy="60" r="18" fill="#fff"/><circle cx="40" cy="56" r="4" fill="#111"/><circle cx="56" cy="56" r="4" fill="#111"/></svg>`;
-        case "dog": return `<svg width="${size}" height="${size}" viewBox="0 0 96 96"><ellipse cx="48" cy="64" rx="36" ry="28" fill="#a3e635"/><ellipse cx="28" cy="32" rx="16" ry="22" fill="#a3e635"/><ellipse cx="68" cy="32" rx="16" ry="22" fill="#a3e635"/><circle cx="48" cy="60" r="18" fill="#fff"/><circle cx="40" cy="56" r="4" fill="#111"/><circle cx="56" cy="56" r="4" fill="#111"/></svg>`;
-
-        case "ball": return `<svg width="${size}" height="${size}" viewBox="0 0 96 96"><circle cx="48" cy="48" r="40" fill="#60a5fa"/><path d="M48 8 A40 40 0 0 1 88 48" stroke="#fff" stroke-width="8" fill="none"/></svg>`;
-        case "bat": return `<svg width="${size}" height="${size}" viewBox="0 0 96 96"><rect x="32" y="16" width="32" height="64" rx="16" fill="#f87171"/><rect x="40" y="80" width="16" height="12" rx="8" fill="#92400e"/></svg>`;
-        case "pen": return `<svg width="${size}" height="${size}" viewBox="0 0 96 96"><rect x="44" y="16" width="8" height="56" rx="4" fill="#6366f1"/><polygon points="48,72 60,92 36,92" fill="#fbbf24"/></svg>`;
-        case "notebook": return `<svg width="${size}" height="${size}" viewBox="0 0 96 96"><rect x="16" y="16" width="64" height="64" rx="12" fill="#f3f4f6"/><line x1="24" y1="28" x2="72" y2="28" stroke="#a3a3a3" stroke-width="4"/><line x1="24" y1="44" x2="72" y2="44" stroke="#a3a3a3" stroke-width="4"/></svg>`;
-        case "glass": return `<svg width="${size}" height="${size}" viewBox="0 0 96 96"><ellipse cx="48" cy="64" rx="32" ry="28" fill="#bae6fd"/><rect x="32" y="16" width="32" height="48" rx="16" fill="#7dd3fc"/></svg>`;
-        case "eraser": return `<svg width="${size}" height="${size}" viewBox="0 0 96 96"><rect x="24" y="40" width="48" height="16" rx="6" fill="#fca5a5"/><rect x="24" y="56" width="48" height="8" rx="4" fill="#f87171"/></svg>`;
-        case "comb": return `<svg width="${size}" height="${size}" viewBox="0 0 96 96"><rect x="24" y="40" width="48" height="16" rx="6" fill="#fbbf24"/><rect x="24" y="56" width="4" height="16" fill="#f59e42"/><rect x="32" y="56" width="4" height="16" fill="#f59e42"/><rect x="40" y="56" width="4" height="16" fill="#f59e42"/><rect x="48" y="56" width="4" height="16" fill="#f59e42"/><rect x="56" y="56" width="4" height="16" fill="#f59e42"/><rect x="64" y="56" width="4" height="16" fill="#f59e42"/></svg>`;
-        case "scissor": return `<svg width="${size}" height="${size}" viewBox="0 0 96 96"><ellipse cx="32" cy="72" rx="14" ry="20" fill="#fbbf24"/><ellipse cx="64" cy="72" rx="14" ry="20" fill="#fbbf24"/><rect x="44" y="16" width="8" height="40" rx="4" fill="#a3a3a3"/></svg>`;
-        default: return `<svg width="${size}" height="${size}" viewBox="0 0 96 96"><circle cx="48" cy="48" r="40" fill="#ddd"/></svg>`;
-      }
-    }
-
-    // Start Activity 8
-    a8Current = 0;
-    a8Answers = Array(5).fill(null);
-    renderA8Problem(a8Current);
-
-    // Check Answers button
-    a8checkBtn.addEventListener('click', function() {
-      let correct = 0;
-      for(let i=0;i<5;i++) {
-        const user = a8Answers[i];
-        const ok = user === a8Problems[i].target;
-        registry.set(`a8_${i+1}`, ok);
-        if(ok) correct++;
-      }
-      a8fb.textContent = correct === 5 ? STRINGS.correct : STRINGS.incorrect + " " + STRINGS.hint;
-      recomputeScore();
-      showFinalResult();
-    });
-
-    // --- Fix: Score logic for 30 marks ---
-    function setCorrect(key, isCorrect){
-      const prev = registry.get(key) === true;
-      registry.set(key, !!isCorrect);
-      const now = registry.get(key) === true;
-      if(!prev && now){ score++; }
-      if(prev && !now){ score = Math.max(0, score - 1); }
-      scoreEl.textContent = `${score}/24`;
-      maybeAllDone();
-    }
-    function recomputeScore(){
-      let s=0;
-      for(const v of registry.values()) if(v===true) s++;
-      score=s; scoreEl.textContent = `${score}/24`;
-    }
-
-    // --- Fix: Show final result and Go to Big and Small button logic ---
-    function showFinalResult() {
-      const total = 24;
-      const correct = Array.from(registry.values()).filter(Boolean).length;
-      const percent = correct / total;
-      const finalResult = document.getElementById('finalResult');
-      const finalMsg = document.getElementById('finalMsg');
-      const backHomeBtn = document.getElementById('backHomeBtn');
-      const repeatMsg = document.getElementById('repeatMsg');
-      const goBigSmallBtn = document.getElementById('goBigSmallBtn');
-      if (correct === total) {
-        finalMsg.textContent = "🎉 Excellent! You got all correct!";
-        backHomeBtn.style.display = "inline-block";
-        repeatMsg.style.display = "none";
-        finalResult.style.display = "block";
-        goBigSmallBtn.style.display = "inline-block";
-      } else if (correct > 25) {
-        finalMsg.textContent = `👏 Well done! You scored ${correct} out of ${total}.`;
-        backHomeBtn.style.display = "inline-block";
-        repeatMsg.style.display = "none";
-        finalResult.style.display = "block";
-        goBigSmallBtn.style.display = "inline-block";
-      } else {
-        finalMsg.textContent = `You scored ${correct} out of ${total}.`;
-        backHomeBtn.style.display = "none";
-        repeatMsg.style.display = "block";
-        finalResult.style.display = "block";
-        goBigSmallBtn.style.display = "none";
-      }
-    }
-
-    document.getElementById('goBigSmallBtn').addEventListener('click', function() {
-      window.location.href = "1math2.html";
     });
   </script>
 </body>
