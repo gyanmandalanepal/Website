@@ -1,1204 +1,509 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <title>Subject: Mathematics  Lesson 1: Shape, Size & Place</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <style>
-    /* =========================
-       Base + Layout (one column)
-       ========================= */
-
-    .timer-bar {
-      position: sticky;
-      top: 0;
-      z-index: 100;
-      background: #fff;
-      padding: 8px 0;
-      text-align: center;
-      font-weight: 700;
-      font-size: 18px;
-    }
-    :root{
-      --bg:#f7fafc;
-      --card:#ffffff;
-      --text:#1f2937;
-      --muted:#6b7280;
-      --primary:#2563eb;
-      --primary-weak:#dbeafe;
-      --green:#16a34a;
-      --green-weak:#dcfce7;
-      --red:#dc2626;
-      --red-weak:#fee2e2;
-      --amber:#f59e0b;
-      --ink:#111827;
-      --shadow:0 6px 20px rgba(0,0,0,.08);
-      --radius:16px;
-      --hit:44px; /* min touch target */
-    }
-    *{box-sizing:border-box}
-    html,body{margin:0;padding:0;background:var(--bg);color:var(--text);font-family:system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,"Apple Color Emoji","Segoe UI Emoji";}
-    header{
-      background:linear-gradient(180deg,#fff,rgba(255,255,255,.92));
-      position:sticky;top:0;z-index:10;
-      border-bottom:1px solid #e5e7eb;
-      -webkit-backdrop-filter:saturate(140%) blur(6px);
-      backdrop-filter:saturate(140%) blur(6px);
-    }
-    header .wrap {
-      max-height: 60vh; /* Adjust as needed */
-      overflow-y: auto;
-    }
-    .wrap{max-width:980px;margin:0 auto;padding:14px}
-    h1{margin:4px 0 0;font-size:clamp(22px,4vw,32px);text-align:center}
-    .subtitle{margin:4px 0 10px;text-align:center;color:var(--muted);font-size:clamp(14px,2.8vw,16px)}
-    .toprow{display:flex;gap:10px;justify-content:center;align-items:center;flex-wrap:wrap}
-    .score{font-weight:800;border:2px solid var(--primary);padding:8px 12px;border-radius:999px;background:var(--primary-weak);min-height:var(--hit);display:inline-flex;align-items:center}
-    .btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;padding:10px 14px;border-radius:999px;border:2px solid #e5e7eb;background:#fff;color:#111;font-weight:700;cursor:pointer;min-width:var(--hit);min-height:var(--hit);user-select:none}
-    .btn:focus{outline:none;box-shadow:0 0 0 4px var(--primary-weak)}
-    .btn-primary{background:var(--primary);border-color:var(--primary);color:#fff}
-    .btn-success{background:var(--green);border-color:var(--green);color:#fff}
-    .btn-danger{background:var(--red);border-color:var(--red);color:#fff}
-    .btn-ghost{background:transparent}
-
-    /* Collapsible teacher panel */
-    details.teacher{background:#fff;border:1px solid #e5e7eb;border-radius:12px;padding:10px 12px;box-shadow:var(--shadow);margin:10px auto 0;max-width:980px}
-    details.teacher summary{cursor:pointer;font-weight:800}
-    details.teacher .cols{display:grid;grid-template-columns:1fr;gap:10px;margin-top:10px}
-    @media(min-width:720px){details.teacher .cols{grid-template-columns:1.3fr 1fr}}
-    ul{margin:6px 0 0 18px}
-    li{margin:4px 0}
-
-    main{max-width:980px;margin:8px auto 48px;padding:8px}
-    section.activity{background:var(--card);border-radius:var(--radius);box-shadow:var(--shadow);padding:14px;margin:14px auto}
-    section.activity h2{margin:0 0 6px;font-size:clamp(18px,3.5vw,22px)}
-    .inst{color:var(--muted);margin:0 0 10px}
-    .read-inst{margin-left:6px}
-    figure{margin:8px 0;border:1px dashed #e5e7eb;border-radius:12px;overflow:hidden;background:#fafafa}
-    figure img{display:block;width:100%;height:auto}
-    figcaption{padding:8px 10px;background:#fafafa;color:#374151;font-size:14px}
-    .divider{border:0;height:1px;background:#e5e7eb;margin:12px 0}
-
-    /* Widgets */
-    .pairgrid{display:grid;grid-template-columns:1fr;gap:10px}
-    @media(min-width:640px){.pairgrid{grid-template-columns:1fr 1fr}}
-    .list{display:flex;flex-direction:column;gap:8px}
-    .token{padding:10px 12px;border-radius:10px;border:2px solid #d1d5db;background:#fff;cursor:pointer;min-height:var(--hit);display:flex;align-items:center;justify-content:center;font-weight:700}
-    .token.selected{border-color:var(--amber);box-shadow:0 0 0 4px rgba(245,158,11,.2)}
-    .target{padding:10px 12px;border-radius:10px;border:2px dashed #cbd5e1;background:#fff;min-height:var(--hit);display:flex;align-items:center;justify-content:center;font-weight:700}
-    .ok{color:var(--green)} .bad{color:var(--red)}
-    .success{border-color:var(--green)!important;background:var(--green-weak)!important}
-    .error{border-color:var(--red)!important;background:var(--red-weak)!important}
-    /* Custom gap utility for list */
-    .list-gap-6 { gap: 6px; }
-
-    /* Drag & Drop */
-    .bank{display:flex;gap:8px;flex-wrap:wrap}
-    .chip{display:inline-flex;align-items:center;justify-content:center;padding:10px 14px;border-radius:999px;background:#fff;border:2px solid #e5e7eb;box-shadow:var(--shadow);cursor:grab;user-select:none;min-width:var(--hit);min-height:var(--hit)}
-    .chip[aria-grabbed="true"]{border-color:var(--amber)}
-    .buckets{display:grid;grid-template-columns:1fr;gap:10px}
-    @media(min-width:620px){.buckets{grid-template-columns:1fr 1fr}}
-    .bucket{background:#f3f4f6;border:2px dashed #cbd5e1;border-radius:12px;padding:10px;min-height:96px;display:flex;gap:8px;flex-wrap:wrap;align-items:flex-start}
-    .bucket-title{font-weight:800;margin:2px 0 6px}
-
-    /* Choice pictures / tick */
-    .choice-pics{display:grid;grid-template-columns:1fr 1fr;gap:10px}
-    .pic{border:2px solid #e5e7eb;border-radius:12px;overflow:hidden;background:#fff}
-    .pic button{width:100%;border:0;background:#fff;cursor:pointer;display:block}
-    .tick{display:flex;gap:6px;align-items:center;justify-content:center;padding:8px;font-weight:800}
-    .tick .mark{width:18px;height:18px;border:2px solid #111;border-radius:4px;display:inline-flex;align-items:center;justify-content:center}
-    .tick.checked .mark{background:repeating-linear-gradient(45deg,#10b981 0 6px,#10b981 6px,#34d399 12px);color:#fff}
-    .tick .text{-webkit-user-select:none;user-select:none}
-
-    /* Blanks (drag word) + keyboard drop */
-    .blank{display:inline-flex;min-width:120px;min-height:var(--hit);align-items:center;justify-content:center;border:2px dashed #cbd5e1;border-radius:10px;padding:6px;background:#fff;margin:0 6px}
-
-    /* Coloring prompt (simulated) */
-    .color-row{display:flex;gap:8px;flex-wrap:wrap}
-    .swatch{width:var(--hit);height:var(--hit);border:2px solid #111;border-radius:8px;cursor:pointer;display:inline-block}
-    .swatch[data-c="inside"]{background:
-      repeating-linear-gradient(45deg,#d1fae5 0 8px,#a7f3d0 8px 16px);}
-    .swatch[data-c="outside"]{background:
-      repeating-linear-gradient(45deg,#fee2e2 0 8px,#fecaca 8px 16px);}
-
-    /* Buttons row per activity */
-    .actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
-    .feedback{min-height:1.25em;font-weight:800;margin-top:6px}
-    .hint{color:var(--muted);font-size:13px}
-
-    .list-margin-top-10 { margin-top: 10px; }
-
-    /* Read Aloud small button */
-    .read{font-size:13px;padding:6px 10px;border-radius:999px}
-
-    /* Print styles */
-    @media print{
-      header{position:static;box-shadow:none}
-      .btn,.read,.actions button{display:none!important}
-      .token,.target,.chip,.bucket,.pic{box-shadow:none!important}
-      .wrap,main,section.activity{box-shadow:none!important;border:1px solid #e5e7eb}
-    }
-
-    /* Focus ring for custom droppables */
-    .focus-ring{box-shadow:0 0 0 4px var(--primary-weak)}
-    <div class="timer-bar">
-    Time Left: <span id="timer">05:00</span>
-  </div>
-
-    /* Final modal */
-    .done{display:none;position:fixed;inset:0 ;background:rgba(0, 0,0,.35);align-items:center;justify-content:center;z-index:50}
-    .done .panel{background:#fff;border-radius:16px;box-shadow:var(--shadow);padding:24px;max-width:520px;text-align:center}
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GMN Portal</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Poppins', sans-serif; }
+        .gradient-bg { background: linear-gradient(135deg, #1E3A8A 0%, #3B82F6 50%, #FFFFFF 100%); }
+        .card-shadow { box-shadow: 0 10px 25px rgba(0,0,0,0.1); }
+        .btn-primary { background: linear-gradient(135deg, #1E3A8A, #3B82F6); }
+        .btn-primary:hover { background: linear-gradient(135deg, #1E40AF, #2563EB); }
+        .btn-golden { background: linear-gradient(135deg, #FBBF24, #F59E0B); }
+        .btn-golden:hover { background: linear-gradient(135deg, #F59E0B, #D97706); }
+        .floating-shapes {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            z-index: 0;
+        }
+        .shape {
+            position: absolute;
+            opacity: 0.1;
+            animation: float 6s ease-in-out infinite;
+        }
+        .shape:nth-child(1) { top: 20%; left: 10%; animation-delay: 0s; }
+        .shape:nth-child(2) { top: 60%; right: 10%; animation-delay: 2s; }
+        .shape:nth-child(3) { bottom: 20%; left: 20%; animation-delay: 4s; }
+        @keyframes float {
+            0%, 100% { transform: translateY(0px) rotate(0deg); }
+            50% { transform: translateY(-20px) rotate(180deg); }
+        }
+        .page { display: none; }
+        .page.active { display: block; }
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: #10B981;
+            color: white;
+            padding: 16px 24px;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            transform: translateX(400px);
+            transition: transform 0.3s ease;
+            z-index: 1000;
+        }
+        .notification.show {
+            transform: translateX(0);
+        }
+    </style>
 </head>
-<body>
-  <!-- Timer at the top -->
-  <div style="position:sticky;top:0;z-index:100;background:#fff;padding:8px 0;text-align:center;font-weight:700;font-size:18px;">
-    Time Left: <span id="timer">05:00</span>
-  </div>
-
-  <!-- =======================
-       STRINGS (easy editing)
-       ======================= -->
-  <script>
-    const STRINGS = {
-      title: "Inside & Outside – Grade 1",
-      subtitle: "Maths | Lesson 1: Shape, Size & Place",
-      readAloud: "Read Aloud",
-      check: "Check Answers",
-      reset: "Reset",
-      score: "Score",
-      correct: "✓ Great job!",
-      incorrect: "✗ Try again.",
-      hint: "Look carefully. Use the picture.",
-      doneTitle: "You did it!",
-      doneMsg: "All answers are correct. Super work!",
-      teacherTitle: "Teacher Panel",
-      objectivesTitle: "Learning Objectives",
-      objectives: [
-        "Use the words inside and outside.",
-        "Match words to pictures and places.",
-        "Listen and choose the right answer.",
-        "Drag and drop labels to sort objects.",
-        "Fill in missing words with inside/outside."
-      ],
-      vocabTitle: "Key Words",
-      vocab: ["inside", "outside", "box", "house", "bus", "bat", "ball", "comb", "eraser", "glass", "scissor", "notebook", "pen", "cat", "dog", "girl", "boy"],
-      /* Listening prompts (used with Web Speech) */
-      say: {
-        a1_dog: "Where is the dog? Inside or outside?",
-        a1_cat: "Where is the cat? Inside or outside?",
-        a2_comb: "Where is the comb? Inside or outside the box?",
-        a2_eraser: "Where is the eraser? Inside or outside the box?",
-        a2_glass: "Where is the glass? Inside or outside the box?",
-        a2_scissor: "Where is the scissor? Inside or outside the box?",
-        a2_notebook: "Where is the notebook? Inside or outside the box?",
-        a2_pen: "Where is the pen? Inside or outside the box?",
-        a3_scissor: "Tick the picture that shows scissor inside the box.",
-        a3_combs: "Tick the picture that shows combs inside the box.",
-        a4_fill: "Drag the right word to each blank.",
-        a4_color: "Tap a pattern to color the word card.",
-        a5_boy: "Where is the boy? Inside or outside the bus?",
-        a5_girl: "Where is the girl? Inside or outside the box?",
-        a6_ball: "Where is the ball? Inside or outside?",
-        a6_bat: "Where is the bat? Inside or outside?",
-        a7_1: "The cat is inside the house.",
-        a7_2: "The dog is outside the house.",
-        a7_3: "The pen is inside the box.",
-        a7_4: "The bat is outside the box.",
-        a7_5: "The glass is inside the box.",
-        a7_6: "The eraser is outside the box."
-      }
-    };
-  </script>
-
-  <!-- =======================
-       Header + Teacher Panel
-       ======================= -->
-  <header>
-    <div class="wrap">
-      <h1 aria-live="polite">Inside & Outside</h1>
-      <strong><p class="subtitle"> Subject: Mathematics  Lesson 1: Shape, Size & Place</p></strong>
-      <div class="toprow" role="region" aria-label="Score and tools">
-        <div class="score" id="score" aria-live="polite">0/25</div>
-        <button class="btn read" id="readPage" type="button" aria-label="Read the page instructions">🔊 <span id="readPageTxt">Read Aloud</span></button>
-      </div>
-
-      <details class="teacher" id="teacherPanel">
-        <summary><strong>Teacher Panel</strong> (learning goals & vocabulary)</summary>
-        <div class="cols">
-          <div>
-            <h3 style="margin:6px 0 4px;font-size:16px;">Learning Objectives</h3>
-            <ul id="objList"></ul>
-          </div>
-          <div>
-            <h3 style="margin:6px 0 4px;font-size:16px;">Vocabulary</h3>
-            <ul id="vocabList" style="columns:2;"></ul>
-          </div>
-        </div>
-      </details>
+<body class="min-h-screen gradient-bg relative">
+    <!-- Floating Background Shapes -->
+    <div class="floating-shapes">
+        <div class="shape w-32 h-32 bg-blue-200 rounded-full"></div>
+        <div class="shape w-24 h-24 bg-yellow-200 rounded-lg"></div>
+        <div class="shape w-40 h-40 bg-blue-100 rounded-full"></div>
     </div>
-  </header>
 
-  <main id="main">
-    <!-- ============= A1: Match the Following (Cat/Dog ↔ Inside/Outside) ============= -->
-    <section class="activity" id="a1" aria-labelledby="a1h">
-      <h2 id="a1h">Activity 1: Match the following.</h2>
-      <button class="btn read read-inst" data-read="a1">🔊 Read Aloud</button>
-      <p class="inst">Match the word to the place. Tap a word, then a place.</p>
-
-      <figure>
-        <img src="Picture/Grade 1/Maths/Lesson 1 Shape Size and Place/1. In and Out/inside and outside1.jpg"
-             alt="A house with a cat inside and a dog outside." />
-        <figcaption>Look at the cat and the dog.</figcaption>
-      </figure>
-
-      <div class="pairgrid" role="group" aria-label="Match words to places">
-        <div class="list" aria-label="Words">
-          <button class="token" data-type="source" data-key="cat">Cat</button>
-          <button class="token" data-type="source" data-key="dog">Dog</button>
-        </div>
-        <div class="list" aria-label="Places">
-          <button class="target" data-type="target" data-val="inside">Inside the house</button>
-          <button class="target" data-type="target" data-val="outside">Outside the house</button>
-        </div>
-      </div>
-
-      <div class="list list-gap-6">
-        <button class="btn" data-say="a1_dog">🔊 Play: Dog</button>
-        <button class="btn" data-say="a1_cat">🔊 Play: Cat</button>
-      </div>
-        <button class="btn" data-say="a1_cat">🔊 Play: Cat</button>
-      </div>
-      <!-- Check at the end -->
-      <div class="actions">
-        <button class="btn btn-primary" data-check="a1">Check Answers</button>
-      </div>
-    </section>
-
-    <!-- ============= A2: Drag & Drop — Sort into Inside/Outside Buckets ============= -->
-    <section class="activity" id="a2" aria-labelledby="a2h">
-      <h2 id="a2h">Activity 2: Drag & Drop</h2>
-      <p class="inst">Drag each label to the right bucket.</p>
-      <button class="btn read read-inst" data-read="a2">🔊 Read Aloud</button>
-
-      <figure>
-        <img src="Picture/Grade 1/Maths/Lesson 1 Shape Size and Place/1. In and Out/inside and outside2.jpg"
-             alt="A box with objects inside or outside: comb, eraser, glass, scissor, notebook, pen." />
-        <figcaption>Sort the objects.</figcaption>
-      </figure>
-
-      <div class="bank" id="a2bank" role="list">
-        <div role="listitem"><div class="chip" draggable="true" tabindex="0" aria-grabbed="false" data-id="comb" data-correct="inside">comb</div></div>
-        <div role="listitem"><div class="chip" draggable="true" tabindex="0" aria-grabbed="false" data-id="eraser" data-correct="outside">eraser</div></div>
-        <div role="listitem"><div class="chip" draggable="true" tabindex="0" aria-grabbed="false" data-id="glass" data-correct="outside">glass</div></div>
-        <div role="listitem"><div class="chip" draggable="true" tabindex="0" aria-grabbed="false" data-id="scissor" data-correct="inside">scissor</div></div>
-        <div role="listitem"><div class="chip" draggable="true" tabindex="0" aria-grabbed="false" data-id="notebook" data-correct="inside">notebook</div></div>
-        <div role="listitem"><div class="chip" draggable="true" tabindex="0" aria-grabbed="false" data-id="pen" data-correct="outside">pen</div></div>
-      </div>
-
-      <div class="buckets">
-        <div>
-          <div class="bucket-title">Inside the box</div>
-          <div class="bucket" data-bucket="inside" aria-label="Inside bucket" tabindex="0"></div>
-        </div>
-        <div>
-          <div class="bucket-title">Outside the box</div>
-          <div class="bucket" data-bucket="outside" aria-label="Outside bucket" tabindex="0"></div>
-        </div>
-      </div>
-
-      <div class="feedback" id="a2fb" aria-live="polite"></div>
-
-      <div class="actions">
-        <button class="btn btn-primary" data-check="a2">Check Answers</button>
-        <button class="btn" data-say="a2_comb">🔊 Comb</button>
-        <button class="btn" data-say="a2_eraser">🔊 Eraser</button>
-        <button class="btn" data-say="a2_glass">🔊 Glass</button>
-        <button class="btn" data-say="a2_scissor">🔊 Scissor</button>
-        <button class="btn" data-say="a2_notebook">🔊 Notebook</button>
-        <button class="btn" data-say="a2_pen">🔊 Pen</button>
-      </div>
-    </section>
-
-    <!-- ============= A3: Listening & Tick — Choose the Right Picture ============= -->
-    <section class="activity" id="a3" aria-labelledby="a3h">
-      <h2 id="a3h">Activity 3: Listening & Tick</h2>
-      <p class="inst">Play the sound. Tick the <strong>right picture</strong>.</p>
-      <button class="btn read read-inst" data-read="a3">🔊 Read Aloud</button>
-
-      <figure>
-        <img src="Picture/Grade 1/Maths/Lesson 1 Shape Size and Place/1. In and Out/inside and outside3.jpg"
-             alt="Objects near a box: scissor inside, glass and note outside, combs inside." />
-        <figcaption>Listen. Then tick the right one.</figcaption>
-      </figure>
-
-      <!-- Scissor: correct is Inside -->
-      <div class="choice-pics" data-key="a3_scissor" data-correct="inside">
-        <div class="pic">
-          <button type="button" class="tick" data-pick="inside" aria-label="Choose inside picture">
-            <span class="mark">✓</span><span class="text">Inside</span>
-          </button>
-        </div>
-        <div class="pic">
-          <button type="button" class="tick" data-pick="outside" aria-label="Choose outside picture">
-            <span class="mark">✓</span><span class="text">Outside</span>
-          </button>
-        </div>
-      </div>
-      <div class="actions">
-        <button class="btn" data-say="a3_scissor">🔊 Play: Scissor</button>
-      </div>
-
-      <!-- Combs: correct is Inside -->
-      <div class="choice-pics" data-key="a3_combs" data-correct="inside" style="margin-top:10px">
-        <div class="pic">
-          <button type="button" class="tick" data-pick="inside" aria-label="Choose inside picture">
-            <span class="mark">✓</span><span class="text">Inside</span>
-          </button>
-        </div>
-        <div class="pic">
-          <button type="button" class="tick" data-pick="outside" aria-label="Choose outside picture">
-            <span class="mark">✓</span><span class="text">Outside</span>
-          </button>
-        </div>
-      </div>
-      <div class="actions">
-        <button class="btn" data-say="a3_combs">🔊 Play: Combs</button>
-      </div>
-
-      <div class="feedback" id="a3fb" aria-live="polite"></div>
-      <div class="actions">
-        <button class="btn btn-primary" data-check="a3">Check Answers</button>
-      </div>
-    </section>
-
-    <!-- ============= A4: Missing Words (Drag the Word) + Coloring Prompt ============= -->
-    <section class="activity" id="a4" aria-labelledby="a4h">
-      <h2 id="a4h">Activity 4: Fill the Missing Word</h2>
-      <p class="inst">Drag a word into each blank.</p>
-      <button class="btn read read-inst" data-read="a4">🔊 Read Aloud</button>
-
-      <figure>
-        <img src="Picture/Grade 1/Maths/Lesson 1 Shape Size and Place/1. In and Out/inside and outside4.jpg"
-             alt="Mixed objects near a box: scissor and comb inside, pen and glass outside, eraser outside." />
-        <figcaption>Use the words: Inside, Outside.</figcaption>
-      </figure>
-
-      <div class="bank" id="a4bank" aria-label="Word bank">
-        <div class="chip" draggable="true" tabindex="0" aria-grabbed="false" data-word="Inside">Inside</div>
-        <div class="chip" draggable="true" tabindex="0" aria-grabbed="false" data-word="Inside">Inside</div>
-        <div class="chip" draggable="true" tabindex="0" aria-grabbed="false" data-word="Inside">Inside</div>
-        <div class="chip" draggable="true" tabindex="0" aria-grabbed="false" data-word="Outside">Outside</div>
-        <div class="chip" draggable="true" tabindex="0" aria-grabbed="false" data-word="Outside">Outside</div>
-        <div class="chip" draggable="true" tabindex="0" aria-grabbed="false" data-word="Outside">Outside</div>
-      </div>
-
-      <p>1. The scissor is <span class="blank" data-key="scissor" data-correct="Inside" tabindex="0" aria-label="Drop here: Inside or Outside"></span> the box.</p>
-      <p>2. The pen is <span class="blank" data-key="pen" data-correct="Outside" tabindex="0" aria-label="Drop here: Inside or Outside"></span> the box.</p>
-      <p>3. The eraser is <span class="blank" data-key="eraser" data-correct="Outside" tabindex="0" aria-label="Drop here: Inside or Outside"></span> the box.</p>
-
-      <div class="feedback" id="a4fb" aria-live="polite"></div>
-
-      <!-- Fun idea #1: Coloring prompt (patterned swatches, not color-only) -->
-      <hr class="divider" />
-      <h2 style="margin-top:0">Bonus: Color the Word Card</h2>
-      <p class="inst">Tap a pattern to color the card. (Inside = green stripes, Outside = red stripes.)</p>
-      <div class="color-row" id="a4color">
-        <div class="swatch" data-c="inside" role="button" tabindex="0" aria-label="Color: Inside pattern"></div>
-        <div class="swatch" data-c="outside" role="button" tabindex="0" aria-label="Color: Outside pattern"></div>
-        <div class="token" id="wordCard" style="min-width:120px">Word Card</div>
-      </div>
-
-      <div class="actions">
-        <button class="btn btn-primary" data-check="a4">Check Answers</button>
-        <button class="btn" data-say="a4_fill">🔊 Play: Directions</button>
-        <button class="btn" data-say="a4_color">🔊 Play: Coloring</button>
-      </div>
-    </section>
-
-    <!-- ============= A5: Choose the Right Picture (Icons) + Short Select ============= -->
-    <section class="activity" id="a5" aria-labelledby="a5h">
-      <h2 id="a5h">Activity 5: Choose the Right Picture</h2>
-      <p class="inst">Pick the right picture for each sentence.</p>
-      <button class="btn read read-inst" data-read="a5">🔊 Read Aloud</button>
-
-      <figure>
-        <img src="Picture/Grade 1/Maths/Lesson 1 Shape Size and Place/1. In and Out/inside and outside5.jpg"
-             alt="A boy near a bus (outside), and a girl inside a box." />
-        <figcaption>Look at the boy and the girl.</figcaption>
-      </figure>
-
-      <!-- Use simple SVG icons as pictures to choose -->
-      <div class="pairgrid">
-        <div class="list">
-          <strong>Boy and bus</strong>
-          <div class="choice-pics" data-key="boy" data-correct="outside">
-            <div class="pic">
-              <button type="button" class="tick" data-pick="inside" aria-label="Choose inside picture">
-                <span class="mark">✓</span><span class="text">Inside</span>
-              </button>
-            </div>
-            <div class="pic">
-              <button type="button" class="tick" data-pick="outside" aria-label="Choose outside picture">
-                <span class="mark">✓</span><span class="text">Outside</span>
-              </button>
-            </div>
-          </div>
-          <div class="actions">
-            <button class="btn" data-say="a5_boy">🔊 Play: Boy</button>
-          </div>
-        </div>
-        <div class="list">
-          <strong>Girl and box</strong>
-          <div class="choice-pics" data-key="girl" data-correct="inside">
-            <div class="pic">
-              <button type="button" class="tick" data-pick="inside" aria-label="Choose inside picture">
-                <span class="mark">✓</span><span class="text">Inside</span>
-              </button>
-            </div>
-            <div class="pic">
-              <button type="button" class="tick" data-pick="outside" aria-label="Choose outside picture">
-                <span class="mark">✓</span><span class="text">Outside</span>
-              </button>
-            </div>
-          </div>
-          <div class="actions">
-            <button class="btn" data-say="a5_girl">🔊 Play: Girl</button>
-          </div>
-        </div>
-      </div>
-
-      <!-- Fun idea #2: Tiny fill-in using selects -->
-      <hr class="divider" />
-      <h2 style="margin-top:0">Quick Fill</h2>
-      <p class="inst">Choose the right word.</p>
-      <label>The boy is
-        <select data-sel="boy">
-          <option value="">— choose —</option>
-          <option value="inside">inside</option>
-          <option value="outside">outside</option>
-        </select> the bus.
-      </label>
-      <br /><br />
-      <label>The girl is
-        <select data-sel="girl">
-          <option value="">— choose —</option>
-          <option value="inside">inside</option>
-          <option value="outside">outside</option>
-        </select> the box.
-      </label>
-
-      <div class="feedback" id="a5fb" aria-live="polite"></div>
-
-      <div class="actions">
-        <button class="btn btn-primary" data-check="a5">Check Answers</button>
-      </div>
-    </section>
-
-    <!-- ============= A6: Mixed — MCQ with Words + Listening Buttons ============= -->
-    <section class="activity" id="a6" aria-labelledby="a6h">
-      <h2 id="a6h">Activity 6: Choose & Listen</h2>
-      <p class="inst">Read the sentence. Choose the right word.</p>
-      <button class="btn read read-inst" data-read="a6">🔊 Read Aloud</button>
-
-      <figure>
-        <img src="Picture/Grade 1/Maths/Lesson 1 Shape Size and Place/1. In and Out/inside and outside6.jpg"
-             alt="A bat outside and a ball inside." />
-        <figcaption>Ball and bat.</figcaption>
-      </figure>
-
-      <div class="list">
-        <div class="token">The ball is …</div>
-        <div class="bank" data-mcq="ball" data-correct="inside">
-          <button class="btn" data-ans="inside">Inside</button>
-          <button class="btn" data-ans="outside">Outside</button>
-        </div>
-        <div class="actions">
-          <button class="btn" data-say="a6_ball">🔊 Play: Ball</button>
-      <div class="list list-margin-top-10">
-      </div>
-      <div class="list" style="margin-top:10px;">
-        <div class="token">The bat is …</div>
-        <div class="bank" data-mcq="bat" data-correct="outside">
-          <button class="btn" data-ans="inside">Inside</button>
-          <button class="btn" data-ans="outside">Outside</button>
-        </div>
-        <div class="actions">
-          <button class="btn" data-say="a6_bat">🔊 Play: Bat</button>
-        </div>
-      </div>
-
-      <div class="feedback" id="a6fb" aria-live="polite"></div>
-
-      <div class="actions">
-        <button class="btn btn-primary" data-check="a6">Check Answers</button>
-      </div>
-    </section>
-
-    <!-- ============= A7: Listen and Type ============= -->
-    <section class="activity" id="a7" aria-labelledby="a7h">
-      <h2 id="a7h">Activity 7: Listen and Type</h2>
-      <p class="inst">Listen to the voice and type <strong>inside</strong> or <strong>outside</strong> in each box.</p>
-      <div class="list" style="gap:10px;">
-        <div style="display:flex;align-items:center;gap:10px;">
-          <button class="btn" data-say="a7_1">🔊 1</button>
-          <input type="text" class="joy-input" id="a7q1" placeholder="Type here..." autocomplete="off" style="font-size:18px;padding:8px 12px;border-radius:8px;border:2px solid #e5e7eb;min-width:120px;">
-        </div>
-        <div style="display:flex;align-items:center;gap:10px;">
-          <button class="btn" data-say="a7_2">🔊 2</button>
-          <input type="text" class="joy-input" id="a7q2" placeholder="Type here..." autocomplete="off" style="font-size:18px;padding:8px 12px;border-radius:8px;border:2px solid #e5e7eb;min-width:120px;">
-        </div>
-        <div style="display:flex;align-items:center;gap:10px;">
-          <button class="btn" data-say="a7_3">🔊 3</button>
-          <input type="text" class="joy-input" id="a7q3" placeholder="Type here..." autocomplete="off" style="font-size:18px;padding:8px 12px;border-radius:8px;border:2px solid #e5e7eb;min-width:120px;">
-        </div>
-        <div style="display:flex;align-items:center;gap:10px;">
-          <button class="btn" data-say="a7_4">🔊 4</button>
-          <input type="text" class="joy-input" id="a7q4" placeholder="Type here..." autocomplete="off" style="font-size:18px;padding:8px 12px;border-radius:8px;border:2px solid #e5e7eb;min-width:120px;">
-        </div>
-        <div style="display:flex;align-items:center;gap:10px;">
-          <button class="btn" data-say="a7_5">🔊 5</button>
-          <input type="text" class="joy-input" id="a7q5" placeholder="Type here..." autocomplete="off" style="font-size:18px;padding:8px 12px;border-radius:8px;border:2px solid #e5e7eb;min-width:120px;">
-        </div>
-      </div>
-      <div class="feedback" id="a7fb" aria-live="polite"></div>
-      <div class="actions">
-        <button class="btn btn-primary" id="a7check">Check Answers</button>
-      </div>
-    </section>
-
-    <!-- Results & Reset/Repeat/Back -->
-    <div id="finalResult" style="text-align:center;margin:32px 0 0 0;display:none;">
-      <div id="finalMsg" style="font-size:1.2em;font-weight:700;margin-bottom:12px;"></div>
-      <button class="btn" id="backHomeBtn" style="display:none;">Back to Home Page</button>
-      <button class="btn" id="goBigSmallBtn" style="display:none;background:#22c55e;border-color:#22c55e;">Go to Big and Small</button>
-      <div id="repeatMsg" style="color:var(--red);font-weight:600;display:none;">Please reset and try again to improve your score!</div>
+    <!-- Notification -->
+    <div id="notification" class="notification">
+        <span id="notificationText">User approved successfully!</span>
     </div>
-    <div class="actions" style="justify-content:center;margin:32px 0;">
-      <button class="btn" id="resetAllBtn">Reset</button>
+
+    <!-- Homepage -->
+    <div id="homepage" class="page active">
+        <div class="relative z-10 min-h-screen flex flex-col items-center justify-center px-4">
+            <!-- Logo -->
+            <div class="text-center mb-12">
+                <div class="w-24 h-24 mx-auto mb-6 bg-white rounded-full flex items-center justify-center card-shadow">
+                    <span class="text-3xl font-bold text-blue-800">GMN</span>
+                </div>
+                <h1 class="text-5xl font-bold text-white mb-4">GMN Portal</h1>
+                <p class="text-xl text-blue-100">Gyan Mandala Nepal - Gateway to Learning</p>
+            </div>
+
+            <!-- Role Selection -->
+            <div class="bg-white rounded-2xl p-8 card-shadow max-w-md w-full">
+                <h2 class="text-2xl font-semibold text-gray-800 mb-6 text-center">Choose Your Role</h2>
+                <div class="space-y-4">
+                    <button onclick="showPage('adminLogin')" class="w-full btn-primary text-white py-4 px-6 rounded-xl font-semibold text-lg transition-all duration-300 hover:scale-105 flex items-center justify-center">
+                        <span class="mr-3">🛡️</span>
+                        Admin Login
+                    </button>
+                    <button onclick="showPage('userRegister')" class="w-full btn-golden text-white py-4 px-6 rounded-xl font-semibold text-lg transition-all duration-300 hover:scale-105 flex items-center justify-center">
+                        <span class="mr-3">👤</span>
+                        User Registration
+                    </button>
+                </div>
+            </div>
+        </div>
     </div>
-  </main>
 
-  <!-- =======================
-       Final “You did it!” pane
-       ======================= -->
-  <div class="done" id="donePane" role="dialog" aria-modal="true" aria-labelledby="doneTitle">
-    <div class="panel">
-      <h2 id="doneTitle">You did it!</h2>
-      <p id="doneText">All answers are correct. Super work!</p>
-      <div class="actions" style="justify-content:center;margin-top:10px;">
-        <button class="btn btn-success" onclick="document.getElementById('donePane').style.display='none'">Close</button>
-        <button class="btn" onclick="window.print()">Print</button>
-      </div>
+    <!-- Admin Login Page -->
+    <div id="adminLogin" class="page">
+        <div class="relative z-10 min-h-screen flex items-center justify-center px-4">
+            <div class="bg-white rounded-2xl p-8 card-shadow max-w-md w-full">
+                <div class="text-center mb-8">
+                    <div class="w-16 h-16 mx-auto mb-4 bg-blue-100 rounded-full flex items-center justify-center">
+                        <span class="text-2xl">🔐</span>
+                    </div>
+                    <h2 class="text-3xl font-bold text-gray-800">Admin Login</h2>
+                    <p class="text-gray-600 mt-2">Access the admin dashboard</p>
+                </div>
+                
+                <form class="space-y-6">
+                    <div>
+                        <label class="block text-sm font-semibold text-gray-700 mb-2">Username</label>
+                        <input type="text" id="adminUsername" value="Gyan Mandala Nepal" class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-semibold text-gray-700 mb-2">Password</label>
+                        <input type="password" id="adminPassword" value="GyanMandala2025" class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                    </div>
+                    <button type="button" onclick="adminLogin()" class="w-full btn-primary text-white py-3 px-6 rounded-xl font-semibold text-lg transition-all duration-300 hover:scale-105">
+                        Login to Dashboard
+                    </button>
+                </form>
+                
+                <button onclick="showPage('homepage')" class="w-full mt-4 text-gray-600 hover:text-gray-800 py-2">
+                    ← Back to Home
+                </button>
+            </div>
+        </div>
     </div>
-  </div>
 
-  <!-- =======================
-       Scripts (vanilla JS)
-       ======================= -->
-  <script>
-    /* -------------
-       Populate panel
-       ------------- */
-    (function fillTeacher(){
-      document.getElementById('readPageTxt').textContent = STRINGS.readAloud;
-      const o = document.getElementById('objList');
-      STRINGS.objectives.forEach(t=>{const li=document.createElement('li');li.textContent=t;o.appendChild(li)});
-      const v = document.getElementById('vocabList');
-      STRINGS.vocab.forEach(t=>{const li=document.createElement('li');li.textContent=t;v.appendChild(li)});
-      document.querySelector('h1').textContent = STRINGS.title;
-      document.querySelector('.subtitle').textContent = STRINGS.subtitle;
-      document.getElementById('doneTitle').textContent = STRINGS.doneTitle;
-      document.getElementById('doneText').textContent = STRINGS.doneMsg;
-    })();
+    <!-- Admin Dashboard -->
+    <div id="adminDashboard" class="page">
+        <div class="relative z-10 min-h-screen p-6">
+            <div class="max-w-6xl mx-auto">
+                <!-- Header -->
+                <div class="bg-white rounded-2xl p-6 card-shadow mb-8">
+                    <div class="flex justify-between items-center">
+                        <div>
+                            <h1 class="text-3xl font-bold text-gray-800">Welcome, Admin – Gyan Mandala Nepal</h1>
+                            <p class="text-gray-600 mt-2">Manage user registrations and approvals</p>
+                        </div>
+                        <button onclick="showPage('homepage')" class="btn-golden text-white px-6 py-3 rounded-xl font-semibold hover:scale-105 transition-all duration-300">
+                            Logout
+                        </button>
+                    </div>
+                </div>
 
-    /* --------------------------
-       Scoring + completion check
-       -------------------------- */
-    let score = 0;
-    const scoreEl = document.getElementById('score');
-    const registry = new Map(); // key -> boolean (correct?)
-    function setCorrect(key, isCorrect){
-      const prev = registry.get(key) === true;
-      registry.set(key, !!isCorrect);
-      const now = registry.get(key) === true;
-      if(!prev && now){ score++; }
-      if(prev && !now){ score = Math.max(0, score - 1); }
-      scoreEl.textContent = `${score}/24`;
-      maybeAllDone();
-    }
-    function resetKeys(prefix){
-      for(const k of Array.from(registry.keys())){
-        if(k.startsWith(prefix)) registry.set(k,false);
-      }
-      recomputeScore();
-    }
-    function recomputeScore(){
-      let s=0;
-      for(const v of registry.values()) if(v===true) s++;
-      score=s; scoreEl.textContent = `${score}/24`;
-    }
-    function maybeAllDone(){
-      // If all registered keys are true and there is at least one task, show pane
-      const vals = Array.from(registry.values());
-      if(vals.length>0 && vals.every(Boolean)){
-        document.getElementById('donePane').style.display='flex';
-      }
-    }
+                <!-- Pending Requests -->
+                <div class="bg-white rounded-2xl p-6 card-shadow">
+                    <h2 class="text-2xl font-semibold text-gray-800 mb-6 flex items-center">
+                        <span class="mr-3">📋</span>
+                        Pending User Requests
+                    </h2>
+                    
+                    <div class="grid gap-4">
+                        <!-- User Request 1 -->
+                        <div class="border border-gray-200 rounded-xl p-4 hover:shadow-md transition-all duration-300" id="user1">
+                            <div class="flex justify-between items-center">
+                                <div>
+                                    <h3 class="font-semibold text-lg text-gray-800">Rajesh Kumar Sharma</h3>
+                                    <p class="text-gray-600">Username: rajesh_kumar</p>
+                                    <p class="text-gray-600">School: Kathmandu Model School</p>
+                                    <p class="text-gray-600">Grade: 10</p>
+                                </div>
+                                <div class="flex space-x-3">
+                                    <button onclick="approveUser('user1', 'Rajesh Kumar Sharma')" class="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-lg font-semibold transition-all duration-300 flex items-center">
+                                        <span class="mr-2">✅</span>
+                                        Approve
+                                    </button>
+                                    <button onclick="rejectUser('user1')" class="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-lg font-semibold transition-all duration-300 flex items-center">
+                                        <span class="mr-2">❌</span>
+                                        Reject
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
 
-    /* --------------------------
-       Speech + Beep (offline OK)
-       -------------------------- */
-    // Tiny data URI beep (fallback)
-    const BEEP = "data:audio/wav;base64,UklGRmQAAABXQVZFZm10IBAAAAABAAEAESsAACJWAAACABYAAAAAACQAAACAgICA/////wAAAP///wAAAP///wAAAP///wAAAP///wAAAP///wAA";
-    function playBeep(){
-      const a = new Audio(BEEP);
-      a.play().catch(()=>{});
-    }
-    function speak(text){
-      try{
-        if('speechSynthesis' in window){
-          window.speechSynthesis.cancel();
-          const u = new SpeechSynthesisUtterance(text);
-          u.rate = 0.95; u.pitch = 1.0;
-          window.speechSynthesis.speak(u);
-          return;
+                        <!-- User Request 2 -->
+                        <div class="border border-gray-200 rounded-xl p-4 hover:shadow-md transition-all duration-300" id="user2">
+                            <div class="flex justify-between items-center">
+                                <div>
+                                    <h3 class="font-semibold text-lg text-gray-800">Priya Thapa</h3>
+                                    <p class="text-gray-600">Username: priya_thapa</p>
+                                    <p class="text-gray-600">School: Lalitpur Secondary School</p>
+                                    <p class="text-gray-600">Grade: 9</p>
+                                </div>
+                                <div class="flex space-x-3">
+                                    <button onclick="approveUser('user2', 'Priya Thapa')" class="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-lg font-semibold transition-all duration-300 flex items-center">
+                                        <span class="mr-2">✅</span>
+                                        Approve
+                                    </button>
+                                    <button onclick="rejectUser('user2')" class="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-lg font-semibold transition-all duration-300 flex items-center">
+                                        <span class="mr-2">❌</span>
+                                        Reject
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- User Request 3 -->
+                        <div class="border border-gray-200 rounded-xl p-4 hover:shadow-md transition-all duration-300" id="user3">
+                            <div class="flex justify-between items-center">
+                                <div>
+                                    <h3 class="font-semibold text-lg text-gray-800">Anil Gurung</h3>
+                                    <p class="text-gray-600">Username: anil_gurung</p>
+                                    <p class="text-gray-600">School: Pokhara Valley School</p>
+                                    <p class="text-gray-600">Grade: 11</p>
+                                </div>
+                                <div class="flex space-x-3">
+                                    <button onclick="approveUser('user3', 'Anil Gurung')" class="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-lg font-semibold transition-all duration-300 flex items-center">
+                                        <span class="mr-2">✅</span>
+                                        Approve
+                                    </button>
+                                    <button onclick="rejectUser('user3')" class="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-lg font-semibold transition-all duration-300 flex items-center">
+                                        <span class="mr-2">❌</span>
+                                        Reject
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- User Registration Page -->
+    <div id="userRegister" class="page">
+        <div class="relative z-10 min-h-screen flex items-center justify-center px-4">
+            <div class="bg-white rounded-2xl p-8 card-shadow max-w-md w-full">
+                <div class="text-center mb-8">
+                    <div class="w-16 h-16 mx-auto mb-4 bg-yellow-100 rounded-full flex items-center justify-center">
+                        <span class="text-2xl">📝</span>
+                    </div>
+                    <h2 class="text-3xl font-bold text-gray-800">User Registration</h2>
+                    <p class="text-gray-600 mt-2">Join the GMN learning community</p>
+                </div>
+                
+                <form class="space-y-4">
+                    <div>
+                        <label class="block text-sm font-semibold text-gray-700 mb-2">Full Name</label>
+                        <input type="text" id="fullName" class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent" placeholder="Enter your full name">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-semibold text-gray-700 mb-2">Username</label>
+                        <input type="text" id="username" class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent" placeholder="Choose a username">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-semibold text-gray-700 mb-2">Password</label>
+                        <input type="password" id="password" class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent" placeholder="Create a password">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-semibold text-gray-700 mb-2">School Name</label>
+                        <input type="text" id="schoolName" class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent" placeholder="Enter your school name">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-semibold text-gray-700 mb-2">Grade</label>
+                        <select id="grade" class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                            <option value="">Select your grade</option>
+                            <option value="6">Grade 6</option>
+                            <option value="7">Grade 7</option>
+                            <option value="8">Grade 8</option>
+                            <option value="9">Grade 9</option>
+                            <option value="10">Grade 10</option>
+                            <option value="11">Grade 11</option>
+                            <option value="12">Grade 12</option>
+                        </select>
+                    </div>
+                    <button type="button" onclick="registerUser()" class="w-full btn-golden text-white py-3 px-6 rounded-xl font-semibold text-lg transition-all duration-300 hover:scale-105">
+                        Register
+                    </button>
+                </form>
+                
+                <button onclick="showPage('homepage')" class="w-full mt-4 text-gray-600 hover:text-gray-800 py-2">
+                    ← Back to Home
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- User Login Page -->
+    <div id="userLogin" class="page">
+        <div class="relative z-10 min-h-screen flex items-center justify-center px-4">
+            <div class="bg-white rounded-2xl p-8 card-shadow max-w-md w-full">
+                <div class="text-center mb-8">
+                    <div class="w-16 h-16 mx-auto mb-4 bg-green-100 rounded-full flex items-center justify-center">
+                        <span class="text-2xl">🔑</span>
+                    </div>
+                    <h2 class="text-3xl font-bold text-gray-800">User Login</h2>
+                    <p class="text-gray-600 mt-2">Access your learning portal</p>
+                </div>
+                
+                <form class="space-y-6">
+                    <div>
+                        <label class="block text-sm font-semibold text-gray-700 mb-2">Username</label>
+                        <input type="text" id="userLoginUsername" class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent" placeholder="Enter your username">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-semibold text-gray-700 mb-2">Password</label>
+                        <input type="password" id="userLoginPassword" class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent" placeholder="Enter your password">
+                    </div>
+                    <button type="button" onclick="userLogin()" class="w-full btn-primary text-white py-3 px-6 rounded-xl font-semibold text-lg transition-all duration-300 hover:scale-105">
+                        Login
+                    </button>
+                </form>
+                
+                <button onclick="showPage('homepage')" class="w-full mt-4 text-gray-600 hover:text-gray-800 py-2">
+                    ← Back to Home
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- User Landing Page -->
+    <div id="userLanding" class="page">
+        <div class="relative z-10 min-h-screen flex items-center justify-center px-4">
+            <div class="text-center max-w-4xl mx-auto">
+                <!-- Welcome Header -->
+                <div class="mb-12">
+                    <h1 class="text-6xl font-bold text-white mb-4">Welcome to GMN 🎉</h1>
+                    <p class="text-2xl text-blue-100 mb-8">Your gateway to learning, growth, and opportunities.</p>
+                </div>
+
+                <!-- Action Buttons -->
+                <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
+                    <div class="bg-white rounded-2xl p-6 card-shadow hover:scale-105 transition-all duration-300 cursor-pointer">
+                        <div class="text-4xl mb-4">📚</div>
+                        <h3 class="text-xl font-semibold text-gray-800 mb-2">Start Learning</h3>
+                        <p class="text-gray-600">Access courses and materials</p>
+                    </div>
+                    
+                    <div class="bg-white rounded-2xl p-6 card-shadow hover:scale-105 transition-all duration-300 cursor-pointer">
+                        <div class="text-4xl mb-4">🏫</div>
+                        <h3 class="text-xl font-semibold text-gray-800 mb-2">Explore Schools</h3>
+                        <p class="text-gray-600">Connect with institutions</p>
+                    </div>
+                    
+                    <div class="bg-white rounded-2xl p-6 card-shadow hover:scale-105 transition-all duration-300 cursor-pointer">
+                        <div class="text-4xl mb-4">👥</div>
+                        <h3 class="text-xl font-semibold text-gray-800 mb-2">Community</h3>
+                        <p class="text-gray-600">Join study groups</p>
+                    </div>
+                    
+                    <div class="bg-white rounded-2xl p-6 card-shadow hover:scale-105 transition-all duration-300 cursor-pointer">
+                        <div class="text-4xl mb-4">🎯</div>
+                        <h3 class="text-xl font-semibold text-gray-800 mb-2">Goals</h3>
+                        <p class="text-gray-600">Track your progress</p>
+                    </div>
+                </div>
+
+                <!-- Logout Button -->
+                <button onclick="showPage('homepage')" class="btn-golden text-white px-8 py-4 rounded-xl font-semibold text-lg transition-all duration-300 hover:scale-105 flex items-center mx-auto">
+                    <span class="mr-3">🔑</span>
+                    Logout
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Waiting for Approval Page -->
+    <div id="waitingApproval" class="page">
+        <div class="relative z-10 min-h-screen flex items-center justify-center px-4">
+            <div class="bg-white rounded-2xl p-8 card-shadow max-w-md w-full text-center">
+                <div class="w-20 h-20 mx-auto mb-6 bg-yellow-100 rounded-full flex items-center justify-center">
+                    <span class="text-3xl">⏳</span>
+                </div>
+                <h2 class="text-3xl font-bold text-gray-800 mb-4">Waiting for Admin Approval</h2>
+                <p class="text-gray-600 mb-8">Your registration is being reviewed by our admin team. You'll be able to access the portal once approved.</p>
+                
+                <div class="space-y-4">
+                    <button onclick="showPage('userLogin')" class="w-full btn-primary text-white py-3 px-6 rounded-xl font-semibold transition-all duration-300 hover:scale-105">
+                        Try Login Again
+                    </button>
+                    <button onclick="showPage('homepage')" class="w-full text-gray-600 hover:text-gray-800 py-2">
+                        ← Back to Home
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Store approved users
+        let approvedUsers = new Set();
+        let registeredUsers = new Set();
+
+        function showPage(pageId) {
+            // Hide all pages
+            document.querySelectorAll('.page').forEach(page => {
+                page.classList.remove('active');
+            });
+            
+            // Show selected page
+            document.getElementById(pageId).classList.add('active');
         }
-      }catch(e){}
-      playBeep(); // fallback
-    }
-    document.getElementById('readPage').addEventListener('click',()=>speak("Inside and outside. Read, match, drag, and choose. Do your best!"));
 
-    // Per-activity read aloud
-    document.querySelectorAll('.read-inst').forEach(btn=>{
-      btn.addEventListener('click',()=>{
-        const id = btn.getAttribute('data-read');
-        const text = {
-          a1:"Match the word to the place. Tap a word, then a place.",
-          a2:"Drag each label to the right bucket: inside or outside.",
-          a3:"Play the sound. Tick the right picture.",
-          a4:"Drag inside or outside to each blank. Then color the card.",
-          a5:"Pick the right picture for boy and girl. Then choose the right word.",
-          a6:"Read and choose inside or outside.",
-          a7:"Listen to the voice and type inside or outside in each box."
-        }[id] || "";
-        speak(text);
-      });
-    });
-
-    // Any button with data-say uses STRINGS.say key
-    document.querySelectorAll('[data-say]').forEach(btn=>{
-      btn.addEventListener('click',()=>{
-        const key = btn.getAttribute('data-say');
-        speak(STRINGS.say[key] || "Listen");
-      });
-    });
-
-    /* --------------------------
-       A11: Match (click-to-pair)
-       -------------------------- */
-    (function initA1(){
-      const area = document.getElementById('a1');
-      const fb = document.getElementById('a1fb');
-      const map = { cat:'inside', dog:'outside' };
-      let selected = null;
-      let locked = false; // <-- Add this
-
-      area.addEventListener('click', (e)=>{
-        const btn = e.target.closest('.token,.target,[data-check],[data-reset]');
-        if(!btn) return;
-
-        if(locked && !btn.dataset.reset) return; // <-- Prevent changes if locked
-
-        if(btn.matches('.token')){
-          area.querySelectorAll('.token').forEach(b=>b.classList.remove('selected'));
-          btn.classList.add('selected');
-          selected = btn.dataset.key;
-        }
-        if(btn.matches('.target')){
-          if(!selected) return;
-          const ok = (map[selected] === btn.dataset.val);
-          btn.classList.remove('success','error');
-          btn.classList.add(ok? 'success':'error');
-          fb.textContent = ok? STRINGS.correct : STRINGS.incorrect;
-          setCorrect(`a1_${selected}`, ok);
-          selected = null;
-          area.querySelectorAll('.token').forEach(b=>b.classList.remove('selected'));
-        }
-        if(btn.dataset.check==='a1'){
-          const all = ['cat','dog'].every(k=>registry.get(`a1_${k}`));
-          fb.textContent = all ? STRINGS.correct : STRINGS.incorrect + " " + STRINGS.hint;
-          locked = true; // <-- Lock after checking
-        }
-        if(btn.dataset.reset==='a1'){
-          ['cat','dog'].forEach(k=>setCorrect(`a1_${k}`, false));
-          area.querySelectorAll('.target').forEach(t=>t.classList.remove('success','error'));
-          fb.textContent = '';
-          locked = false; // <-- Unlock on reset
-        }
-      });
-
-      // Register keys
-      ['cat','dog'].forEach(k=>registry.set(`a1_${k}`, false));
-    })();
-
-    /* --------------------------
-       Generic Drag & Drop helpers
-       (also keyboard support)
-       -------------------------- */
-    function makeDraggable(chip){
-      chip.addEventListener('dragstart',ev=>{
-        chip.setAttribute('aria-grabbed','true');
-        ev.dataTransfer.setData('text/plain', JSON.stringify({
-          id: chip.dataset.id || chip.dataset.word,
-          word: chip.dataset.word,
-          correct: chip.dataset.correct
-        }));
-      });
-      chip.addEventListener('dragend',()=> chip.setAttribute('aria-grabbed','false'));
-      // Keyboard support: Space/Enter selects, then Enter on a target drops
-      chip.addEventListener('keydown', (e)=>{
-        if(e.key === ' ' || e.key === 'Enter'){
-          e.preventDefault();
-          document.querySelectorAll('.bucket,.blank').forEach(b=>b.classList.add('focus-ring'));
-          chip.classList.add('selected');
-          window.__selectedChip = chip;
-        }
-      });
-    }
-    function makeDroppable(zone, onDrop){
-      zone.addEventListener('dragover', ev=>{ ev.preventDefault(); });
-      zone.addEventListener('drop', ev=>{
-        ev.preventDefault();
-        const raw = ev.dataTransfer.getData('text/plain');
-        if(!raw) return; const data = JSON.parse(raw);
-        onDrop(zone, data);
-      });
-      zone.addEventListener('keydown', (e)=>{
-        if((e.key==='Enter' || e.key===' ') && window.__selectedChip){
-          e.preventDefault();
-          const chip = window.__selectedChip;
-          onDrop(zone,{ id: chip.dataset.id || chip.dataset.word, word: chip.dataset.word, correct: chip.dataset.correct, fromKeyboard:true, chip });
-          chip.classList.remove('selected');
-          document.querySelectorAll('.bucket,.blank').forEach(b=>b.classList.remove('focus-ring'));
-          window.__selectedChip = null;
-        }
-      });
-    }
-
-    /* --------------------------
-       A2: Drag & Drop to buckets
-       -------------------------- */
-    (function initA2(){
-      const root = document.getElementById('a2');
-      const fb = document.getElementById('a2fb');
-      root.querySelectorAll('.chip').forEach(makeDraggable);
-      root.querySelectorAll('.bucket').forEach(b=>{
-        makeDroppable(b, (bucket, data)=>{
-          const correct = data.correct === bucket.dataset.bucket;
-          bucket.classList.remove('success','error');
-          bucket.classList.add(correct? 'success':'error');
-          fb.textContent = correct ? STRINGS.correct : STRINGS.incorrect;
-
-          if(correct){
-            // place a copy, remove original
-            const exists = Array.from(bucket.children).find(c=>c.dataset && c.dataset.id===data.id);
-            if(!exists){
-              const chip = document.createElement('div');
-              chip.className='chip'; chip.textContent=data.id; chip.dataset.id=data.id; chip.setAttribute('aria-grabbed','false');
-              bucket.appendChild(chip);
-              setCorrect(`a2_${data.id}`, true);
-              const orig = root.querySelector(`.chip[data-id="${data.id}"]`);
-              if(orig) orig.remove();
+        function adminLogin() {
+            const username = document.getElementById('adminUsername').value;
+            const password = document.getElementById('adminPassword').value;
+            
+            if (username === 'Gyan Mandala Nepal' && password === 'GyanMandala2025') {
+                showPage('adminDashboard');
+            } else {
+                alert('Invalid credentials. Please use the pre-filled values.');
             }
-          } else {
-            setCorrect(`a2_${data.id}`, false);
-          }
-        });
-      });
-
-      root.addEventListener('click', (e)=>{
-        const btn = e.target.closest('[data-check],[data-reset]');
-        if(!btn) return;
-        if(btn.dataset.check==='a2'){
-          const names = ['comb','eraser','glass','scissor','notebook','pen'];
-          const all = names.every(k=>registry.get(`a2_${k}`));
-          fb.textContent = all ? STRINGS.correct : STRINGS.incorrect + " " + STRINGS.hint;
-        }
-        if(btn.dataset.reset==='a2'){
-          ['comb','eraser','glass','scissor','notebook','pen'].forEach(k=>setCorrect(`a2_${k}`, false));
-          // restore bank
-          const bank = document.getElementById('a2bank');
-          bank.innerHTML = '';
-          [
-            ['comb','inside'],['eraser','outside'],['glass','outside'],
-            ['scissor','inside'],['notebook','inside'],['pen','outside']
-          ].forEach(([id,c])=>{
-            const d=document.createElement('div');d.className='chip';d.draggable=true;d.tabIndex=0;d.role='button';
-            d.textContent=id;d.dataset.id=id;d.dataset.correct=c;d.setAttribute('aria-grabbed','false');
-            bank.appendChild(d); makeDraggable(d);
-          });
-          root.querySelectorAll('.bucket').forEach(b=>{ b.innerHTML=''; b.classList.remove('success','error'); });
-          fb.textContent='';
-        }
-      });
-
-      // Register keys
-      ['comb','eraser','glass','scissor','notebook','pen'].forEach(k=>registry.set(`a2_${k}`, false));
-    })();
-
-    /* --------------------------
-       Tick helpers for A3 & A5
-       -------------------------- */
-    function initTicks(scopeId, keys){
-      const root = document.getElementById(scopeId);
-      const fb = document.getElementById(scopeId+'fb');
-      keys.forEach(({key,correct})=>{
-        registry.set(`${scopeId}_${key}`, false);
-        const wrap = root.querySelector(`.choice-pics[data-key="${key}"]`);
-        wrap.addEventListener('click',(e)=>{
-          const btn = e.target.closest('.tick'); if(!btn) return;
-          wrap.querySelectorAll('.tick').forEach(t=>t.classList.remove('checked'));
-          btn.classList.add('checked');
-          const pick = btn.getAttribute('data-pick');
-          const ok = (pick === correct);
-          fb.textContent = ok? STRINGS.correct : STRINGS.incorrect;
-          setCorrect(`${scopeId}_${key}`, ok);
-        });
-      });
-
-      root.addEventListener('click',(e)=>{
-        const c = e.target.closest('[data-check],[data-reset]');
-        if(!c) return;
-        if(c.dataset.check===scopeId){
-          const all = keys.every(({key})=>registry.get(`${scopeId}_${key}`));
-          fb.textContent = all ? STRINGS.correct : STRINGS.incorrect + " " + STRINGS.hint;
-        }
-        if(c.dataset.reset===scopeId){
-          keys.forEach(({key})=>setCorrect(`${scopeId}_${key}`, false));
-          root.querySelectorAll('.tick').forEach(t=>t.classList.remove('checked'));
-          fb.textContent='';
-        }
-      });
-    }
-
-    // A3: scissor (inside), combs (inside)
-    initTicks('a3', [
-      {key:'a3_scissor', correct:'inside'},
-      {key:'a3_combs', correct:'inside'}
-    ]);
-
-    /* --------------------------
-       A4: Drag words to blanks + Coloring
-       -------------------------- */
-    (function initA4(){
-      const root = document.getElementById('a4');
-      const fb = document.getElementById('a4fb');
-      root.querySelectorAll('.chip').forEach(makeDraggable);
-      root.querySelectorAll('.blank').forEach(b=>{
-        makeDroppable(b, (blank, data)=>{
-          const val = data.word;
-          blank.textContent = val; blank.dataset.value = val;
-          const ok = val === blank.dataset.correct;
-          blank.classList.remove('success','error');
-          blank.classList.add(ok? 'success':'error');
-          fb.textContent = ok? STRINGS.correct : STRINGS.incorrect;
-          setCorrect(`a4_${blank.dataset.key}`, ok);
-        });
-      });
-
-      // Coloring card
-      const card = document.getElementById('wordCard');
-      const colorRow = document.getElementById('a4color');
-      colorRow.addEventListener('click',(e)=>{
-        const sw = e.target.closest('.swatch'); if(!sw) return;
-        const which = sw.getAttribute('data-c');
-        if(which==='inside'){
-          card.style.background = 'repeating-linear-gradient(45deg,#d1fae5 0 8px,#a7f3d0 8px 16px)';
-        }else{
-          card.style.background = 'repeating-linear-gradient(45deg,#fee2e2 0 8px,#fecaca 8px 16px)';
-        }
-      });
-
-      // Buttons
-      root.addEventListener('click',(e)=>{
-        const b = e.target.closest('[data-check],[data-reset]');
-        if(!b) return;
-        if(b.dataset.check==='a4'){
-          const all = ['scissor','pen','eraser'].every(k=>registry.get(`a4_${k}`));
-          fb.textContent = all ? STRINGS.correct : STRINGS.incorrect + " " + STRINGS.hint;
-        }
-        if(b.dataset.reset==='a4'){
-          ['scissor','pen','eraser'].forEach(k=>setCorrect(`a4_${k}`, false));
-          root.querySelectorAll('.blank').forEach(bl=>{ bl.textContent=''; bl.dataset.value=''; bl.classList.remove('success','error'); });
-          fb.textContent='';
-          // restore bank
-          const bank = document.getElementById('a4bank');
-          bank.innerHTML = '';
-          ['Inside','Inside','Inside','Outside','Outside','Outside'].forEach(w=>{
-            const d=document.createElement('div'); d.className='chip'; d.draggable=true; d.tabIndex=0; d.role='button';
-            d.textContent=w; d.dataset.word=w; d.setAttribute('aria-grabbed','false'); bank.appendChild(d); makeDraggable(d);
-          });
-          // reset color
-          card.style.background = '#fff';
-        }
-      });
-
-      // Register
-      ['scissor','pen','eraser'].forEach(k=>registry.set(`a4_${k}`, false));
-    })();
-
-    /* --------------------------
-       A5: Ticks + tiny selects
-       -------------------------- */
-    initTicks('a5', [
-      {key:'boy', correct:'outside'},
-      {key:'girl', correct:'inside'}
-    ]);
-
-    (function initA5Selects(){
-      const root = document.getElementById('a5');
-      const fb = document.getElementById('a5fb');
-      const answers = {boy:'outside', girl:'inside'};
-      registry.set('a5_sel_boy', false);
-      registry.set('a5_sel_girl', false);
-
-      function grade(){
-        const boyOk = root.querySelector('select[data-sel="boy"]').value === answers.boy;
-        const girlOk = root.querySelector('select[data-sel="girl"]').value === answers.girl;
-        setCorrect('a5_sel_boy', boyOk);
-        setCorrect('a5_sel_girl', girlOk);
-        fb.textContent = (boyOk && girlOk) ? STRINGS.correct : STRINGS.incorrect + " " + STRINGS.hint;
-      }
-
-      root.addEventListener('click',(e)=>{
-        const b = e.target.closest('[data-check],[data-reset]');
-        if(!b) return;
-        if(b.dataset.check==='a5'){ grade(); }
-        if(b.dataset.reset==='a5'){
-          resetKeys('a5_');
-          root.querySelectorAll('select').forEach(s=>s.value='');
-          fb.textContent='';
-          // Also untick picture choices for a5
-          root.querySelectorAll('.tick').forEach(t=>t.classList.remove('checked'));
-        }
-      });
-    })();
-
-    /* --------------------------
-       A6: MCQ buttons (ball/bat)
-       -------------------------- */
-    (function initA6(){
-      const root = document.getElementById('a6');
-      const fb = document.getElementById('a6fb');
-      const pairs = [
-        {key:'ball', correct:'inside'},
-        {key:'bat', correct:'outside'}
-      ];
-      pairs.forEach(p=>registry.set(`a6_${p.key}`, false));
-
-      root.addEventListener('click',(e)=>{
-        const btn = e.target.closest('[data-ans],[data-check],[data-reset]');
-        if(!btn) return;
-
-        if(btn.hasAttribute('data-ans')){
-          const wrap = btn.closest('.bank');
-          const key = wrap.getAttribute('data-mcq');
-          const correct = wrap.getAttribute('data-correct');
-          wrap.querySelectorAll('[data-ans]').forEach(b=>b.classList.remove('success','error'));
-          const pick = btn.getAttribute('data-ans');
-          const ok = (pick===correct);
-          btn.classList.add(ok? 'success':'error');
-          fb.textContent = ok? STRINGS.correct : STRINGS.incorrect;
-          setCorrect(`a6_${key}`, ok);
         }
 
-        if(btn.dataset.check==='a6'){
-          const all = pairs.every(p=>registry.get(`a6_${p.key}`));
-          fb.textContent = all ? STRINGS.correct : STRINGS.incorrect + " " + STRINGS.hint;
+        function approveUser(userId, userName) {
+            // Add to approved users
+            approvedUsers.add(userName.toLowerCase().replace(/\s+/g, '_'));
+            
+            // Remove the user card with animation
+            const userCard = document.getElementById(userId);
+            userCard.style.transform = 'translateX(100%)';
+            userCard.style.opacity = '0';
+            
+            setTimeout(() => {
+                userCard.style.display = 'none';
+            }, 300);
+            
+            // Show notification
+            showNotification(`${userName} approved successfully!`);
         }
-        if(btn.dataset.reset==='a6'){
-          pairs.forEach(p=>setCorrect(`a6_${p.key}`, false));
-          root.querySelectorAll('[data-ans]').forEach(b=>b.classList.remove('success','error'));
-          fb.textContent='';
+
+        function rejectUser(userId) {
+            const userCard = document.getElementById(userId);
+            userCard.style.transform = 'translateX(-100%)';
+            userCard.style.opacity = '0';
+            
+            setTimeout(() => {
+                userCard.style.display = 'none';
+            }, 300);
+            
+            showNotification('User registration rejected.');
         }
-      });
-    })();
 
-    /* --------------------------
-       Accessibility niceties
-       -------------------------- */
-    // Allow Enter/Space to trigger most buttons
-    document.addEventListener('keydown',(e)=>{
-      if((e.key==='Enter'||e.key===' ') && e.target.classList.contains('btn')){
-        e.preventDefault(); e.target.click();
-      }
-    });
-
-    // Countdown timer (5 minutes)
-    (function(){
-      let time = 5*60; // 5 minutes in seconds
-      const timerEl = document.getElementById('timer');
-      function update(){
-        const m = String(Math.floor(time/60)).padStart(2,'0');
-        const s = String(time%60).padStart(2,'0');
-        timerEl.textContent = `${m}:${s}`;
-        if(time > 0) time--;
-        else clearInterval(intv);
-      }
-      update();
-      const intv = setInterval(update,1000);
-    })();
-
-    // Remove all per-activity reset buttons (already done above).
-    // Add a global reset handler:
-    document.getElementById('resetAllBtn').addEventListener('click', function() {
-      // Reset A1
-      (function(){
-        const area = document.getElementById('a1');
-        ['cat','dog'].forEach(k=>setCorrect(`a1_${k}`, false));
-        area.querySelectorAll('.target').forEach(t=>t.classList.remove('success','error'));
-        area.querySelectorAll('.token').forEach(b=>b.classList.remove('selected'));
-        document.getElementById('a1fb').textContent = '';
-        // Unlock if locked
-        if(typeof area.locked !== "undefined") area.locked = false;
-      })();
-
-      // Reset A2
-      (function(){
-        const root = document.getElementById('a2');
-        ['comb','eraser','glass','scissor','notebook','pen'].forEach(k=>setCorrect(`a2_${k}`, false));
-        // restore bank
-        const bank = document.getElementById('a2bank');
-        bank.innerHTML = '';
-        [
-          ['comb','inside'],['eraser','outside'],['glass','outside'],
-          ['scissor','inside'],['notebook','inside'],['pen','outside']
-        ].forEach(([id,c])=>{
-          const d=document.createElement('div');d.className='chip';d.draggable=true;d.tabIndex=0;d.role='button';
-          d.textContent=id;d.dataset.id=id;d.dataset.correct=c;d.setAttribute('aria-grabbed','false');
-          bank.appendChild(d); makeDraggable(d);
-        });
-        root.querySelectorAll('.bucket').forEach(b=>{ b.innerHTML=''; b.classList.remove('success','error'); });
-        document.getElementById('a2fb').textContent='';
-      })();
-
-      // Reset A3
-      (function(){
-        const root = document.getElementById('a3');
-        ['a3_scissor','a3_combs'].forEach(k=>setCorrect(`a3_${k}`, false));
-        root.querySelectorAll('.tick').forEach(t=>t.classList.remove('checked'));
-        document.getElementById('a3fb').textContent='';
-      })();
-
-      // Reset A4
-      (function(){
-        const root = document.getElementById('a4');
-        ['scissor','pen','eraser'].forEach(k=>setCorrect(`a4_${k}`, false));
-        root.querySelectorAll('.blank').forEach(bl=>{ bl.textContent=''; bl.dataset.value=''; bl.classList.remove('success','error'); });
-        document.getElementById('a4fb').textContent='';
-        // restore bank
-        const bank = document.getElementById('a4bank');
-        bank.innerHTML = '';
-        ['Inside','Inside','Inside','Outside','Outside','Outside'].forEach(w=>{
-          const d=document.createElement('div'); d.className='chip'; d.draggable=true; d.tabIndex=0; d.role='button';
-          d.textContent=w; d.dataset.word=w; d.setAttribute('aria-grabbed','false'); bank.appendChild(d); makeDraggable(d);
-        });
-        // reset color
-        document.getElementById('wordCard').style.background = '#fff';
-      })();
-
-      // Reset A5
-      (function(){
-        const root = document.getElementById('a5');
-        ['boy','girl'].forEach(k=>setCorrect(`a5_${k}`, false));
-        setCorrect('a5_sel_boy', false);
-        setCorrect('a5_sel_girl', false);
-        root.querySelectorAll('.tick').forEach(t=>t.classList.remove('checked'));
-        root.querySelectorAll('select').forEach(s=>s.value='');
-        document.getElementById('a5fb').textContent='';
-      })();
-
-      // Reset A6
-      (function(){
-        const root = document.getElementById('a6');
-        ['ball','bat'].forEach(k=>setCorrect(`a6_${k}`, false));
-        root.querySelectorAll('[data-ans]').forEach(b=>b.classList.remove('success','error'));
-        document.getElementById('a6fb').textContent='';
-      })();
-
-      // Reset A7
-      (function(){
-        for(let i=1; i<=5; i++) {
-          registry.set('a7_'+i, false);
-          const input = document.getElementById('a7q'+i);
-          if(input) {
-            input.value = '';
-            input.style.background = '#fff';
-          }
+        function registerUser() {
+            const fullName = document.getElementById('fullName').value;
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+            const schoolName = document.getElementById('schoolName').value;
+            const grade = document.getElementById('grade').value;
+            
+            if (!fullName || !username || !password || !schoolName || !grade) {
+                alert('Please fill in all fields.');
+                return;
+            }
+            
+            // Store registered user
+            registeredUsers.add(username.toLowerCase());
+            
+            // Clear form
+            document.getElementById('fullName').value = '';
+            document.getElementById('username').value = '';
+            document.getElementById('password').value = '';
+            document.getElementById('schoolName').value = '';
+            document.getElementById('grade').value = '';
+            
+            showNotification('Registration successful! Please proceed to login.');
+            
+            // Redirect to login page
+            setTimeout(() => {
+                showPage('userLogin');
+            }, 1500);
         }
-        document.getElementById('a7fb').textContent = '';
-        document.getElementById('finalResult').style.display = 'none';
-      })();
 
-      // Reset score
-      recomputeScore();
-      // Hide done pane if open
-      document.getElementById('donePane').style.display='none';
-    });
-
-    // Activity 7: Listen and Type (Check Answers button logic)
-    // Update STRINGS.say for only 5 questions
-    STRINGS.say.a7_1 = "The cat is inside the house.";
-    STRINGS.say.a7_2 = "The dog is outside the house.";
-    STRINGS.say.a7_3 = "The pen is inside the box.";
-    STRINGS.say.a7_4 = "The bat is outside the box.";
-    STRINGS.say.a7_5 = "The glass is inside the box.";
-
-    // Register keys for Activity 7 (5 questions)
-    for(let i=1;i<=5;i++) registry.set(`a7_${i}`, false);
-
-    document.getElementById('a7check').addEventListener('click', function() {
-      const answers = ['inside', 'outside', 'inside', 'outside', 'inside'];
-      let correct = 0;
-      for(let i=1; i<=5; i++) {
-        const input = document.getElementById('a7q'+i);
-        const val = input.value.trim().toLowerCase();
-        const ok = val === answers[i-1];
-        registry.set('a7_'+i, ok);
-        if(ok) correct++;
-        input.style.background = ok ? '#dcfce7' : '#fee2e2';
-      }
-      document.getElementById('a7fb').textContent = correct === 5
-        ? STRINGS.correct
-        : STRINGS.incorrect + " " + STRINGS.hint;
-      recomputeScore();
-      showFinalResult();
-    });
-
-    // Reset for Activity 7 (5 questions)
-    document.getElementById('resetAllBtn').addEventListener('click', function() {
-      // Reset Activity 7
-      for(let i=1; i<=5; i++) {
-        registry.set('a7_'+i, false);
-        const input = document.getElementById('a7q'+i);
-        if(input) {
-          input.value = '';
-          input.style.background = '#fff';
+        function userLogin() {
+            const username = document.getElementById('userLoginUsername').value;
+            const password = document.getElementById('userLoginPassword').value;
+            
+            if (!username || !password) {
+                alert('Please enter both username and password.');
+                return;
+            }
+            
+            const usernameKey = username.toLowerCase();
+            
+            // Check if user is registered
+            if (!registeredUsers.has(usernameKey)) {
+                alert('User not found. Please register first.');
+                return;
+            }
+            
+            // Check if user is approved
+            if (approvedUsers.has(usernameKey)) {
+                showPage('userLanding');
+            } else {
+                showPage('waitingApproval');
+            }
         }
-      }
-      document.getElementById('a7fb').textContent = '';
-      document.getElementById('finalResult').style.display = 'none';
-      // Reset Activity 8
-      a8Current = 0;
-      a8Answers = Array(5).fill(null);
-      renderA8Problem(a8Current);
-      a8fb.textContent = '';
-      a8checkBtn.disabled = true;
-      a8progress.textContent = `1 / 5`;
-      a8TargetWord.textContent = a8Problems[0].target.toUpperCase();
-      recomputeScore();
-    });
-  </script>
-</body>
+
+        function showNotification(message) {
+            const notification = document.getElementById('notification');
+            const notificationText = document.getElementById('notificationText');
+            
+            notificationText.textContent = message;
+            notification.classList.add('show');
+            
+            setTimeout(() => {
+                notification.classList.remove('show');
+            }, 3000);
+        }
+
+        // Add some demo approved users for testing
+        approvedUsers.add('demo_user');
+        registeredUsers.add('demo_user');
+    </script>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'970250c965d824a6',t:'MTc1NTM2MTgxOS4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
