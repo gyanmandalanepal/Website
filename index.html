@@ -1,355 +1,97 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="utf-8" />
-<meta name="viewport" content="width=device-width,initial-scale=1" />
-<title>Gyan Mandala Nepal; Play, Learn and Discover</title>
-<style>
-:root {
-  --bg-1: #fbfdff;
-  --bg-2: #e9f6fb;
-  --muted: #6b7280;
-  --accent-orange: #ff7b00;
-  --accent-red: #B03A2E;
-  --accent-blue: #0B6FA4;
-  --accent-green: #2ecc71;
-  --radius: 12px;
-  --ease: cubic-bezier(.22,.9,.38,1);
-  --card-shadow: 0 14px 40px rgba(12,34,56,0.06);
-}
-* { box-sizing: border-box; }
-body {
-  margin: 0;
-  font-family: Inter, system-ui, sans-serif;
-  background: linear-gradient(160deg,var(--bg-1),var(--bg-2));
-  color: #071225;
-}
-header {
-  display: flex;
-  align-items: center;
-  padding: 14px 20px;
-  background: rgba(255,255,255,0.6);
-  backdrop-filter: blur(6px);
-  box-shadow: 0 8px 18px rgba(8,18,40,0.05);
-}
-#logo {
-  width:78px;
-  height:auto;
-  border-radius:10px;
-  cursor:pointer;
-}
-
-/* Pages */
-.page {
-  display: none;
-  max-width: 1120px;
-  margin: 20px auto;
-  padding: 0 18px 60px;
-  animation: fadeSlide .35s var(--ease);
-}
-.page.active { display: block; }
-@keyframes fadeSlide { from {opacity:0; transform: translateY(8px);} to {opacity:1; transform: translateY(0);} }
-
-/* HOME */
-.hero { text-align: center; padding: 40px 12px; }
-.welcome-line {
-  font-weight:800;
-  font-size: clamp(28px,5vw,44px);
-  margin: 8px 0;
-  opacity:0;
-  transform: translateY(10px);
-  animation: fadeUp .6s var(--ease) forwards;
-}
-.w1 { color: var(--accent-red); animation-delay: .1s; }
-.w2 { color: var(--accent-blue); animation-delay: .3s; }
-.w3 { color: var(--accent-orange); animation-delay: .5s; }
-@keyframes fadeUp { to {opacity:1; transform: translateY(0);} }
-.hero-sub { color: var(--muted); font-size: 15px; margin-top: 12px; }
-.btn {
-  padding: 12px 18px;
-  border-radius: 12px;
-  font-weight: 800;
-  border: none;
-  cursor: pointer;
-  font-size: 15px;
-  transition: transform .14s var(--ease), box-shadow .14s var(--ease);
-}
-.btn-primary {
-  background: linear-gradient(90deg,#ff9a3d,var(--accent-orange));
-  color: white;
-  box-shadow: 0 12px 30px rgba(255,123,0,0.12);
-}
-.btn-primary:hover {
-  transform: translateY(-3px);
-  box-shadow: 0 22px 42px rgba(255,123,0,0.18);
-}
-.btn-ghost {
-  background: transparent;
-  border: 1px solid rgba(11,111,164,0.2);
-  color: var(--accent-blue);
-}
-.cta { margin-top: 20px; display: flex; gap: 12px; justify-content: center; }
-
-/* FORM */
-.card {
-  background: white;
-  border-radius: var(--radius);
-  box-shadow: var(--card-shadow);
-  padding: 20px;
-  max-width: 600px;
-  margin: auto;
-}
-.field { display: flex; flex-direction: column; margin-bottom: 16px; }
-label { font-weight: 700; margin-bottom: 6px; }
-input, select {
-  padding: 12px;
-  border: 1px solid #d1d5db;
-  border-radius: 8px;
-  font-size: 15px;
-}
-input:focus, select:focus {
-  outline: none;
-  border-color: var(--accent-blue);
-  box-shadow: 0 0 0 3px rgba(11,111,164,0.15);
-}
-
-/* LESSONS */
-.top-info {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 10px;
-  justify-content: center;
-  margin-bottom: 15px;
-}
-.info-pill {
-  background: var(--accent-green);
-  color: white;
-  padding: 8px 14px;
-  border-radius: 20px;
-  font-weight: 700;
-}
-.lesson-guide {
-  text-align: center;
-  font-size: 18px;
-  font-weight: 800;
-  color: var(--accent-orange);
-  margin-bottom: 20px;
-  animation: pulseText 1.2s ease-in-out infinite;
-}
-@keyframes pulseText {
-  0% { opacity: 0.6; }
-  50% { opacity: 1; }
-  100% { opacity: 0.6; }
-}
-.lessons-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit,minmax(180px,1fr));
-  gap: 20px;
-  justify-items:center;
-}
-.lesson-tile {
-  width:100%;
-  max-width:220px;
-  height:98px;
-  border-radius:16px;
-  background: linear-gradient(180deg,#fff,#fbfdff);
-  border:1px solid rgba(0,0,0,0.04);
-  font-weight:900;
-  font-size:18px;
-  color:#071225;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  cursor:pointer;
-  box-shadow: 0 10px 30px rgba(12,34,56,0.06);
-  transition: transform .14s var(--ease), box-shadow .14s var(--ease);
-}
-.lesson-tile:hover {
-  transform: translateY(-10px) rotateX(2deg) scale(1.03);
-  box-shadow:0 28px 64px rgba(12,34,56,0.12);
-  filter: saturate(1.02);
-}
-footer {
-  text-align: center;
-  padding: 12px;
-  background: var(--accent-blue);
-  color: white;
-  font-weight: 700;
-}
-</style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Gyan Mandala Nepal</title>
+  <link rel="stylesheet" href="style.css">
+  <script defer src="script.js"></script>
 </head>
 <body>
+  <!-- Navbar -->
+  <header>
+    <nav class="navbar">
+      <!-- Logo -->
+      <div class="logo">
+        <img src="Logo.png" alt="Gyan Mandala Nepal Logo">
+        <span>Gyan Mandala Nepal</span>
+      </div>
 
-<header>
-  <img id="logo" src="GMN Logo.png" alt="GMN Logo" />
-</header>
+      <ul class="nav-links">
+        <li><a href="index.html">Home</a></li>
+        <li><a href="about.html">About</a></li>
+        <li class="dropdown">
+          <a href="#">Services ▾</a>
+          <ul class="dropdown-menu">
+            <li><a href="#">Training</a></li>
+            <li><a href="#">Digital Tools</a></li>
+            <li><a href="#">Community Support</a></li>
+          </ul>
+        </li>
+        <li><a href="#contact">Contact</a></li>
+      </ul>
+    </nav>
+  </header>
 
-<!-- HOME PAGE -->
-<section id="homePage" class="page active">
-  <div class="hero">
-    <div class="welcome-line w1">Welcome</div>
-    <div class="welcome-line w2">to</div>
-    <div class="welcome-line w3">Gyan Mandala Nepal</div>
-    <p class="hero-sub">Play, Learn and Discover !!!</p>
-    <div class="cta">
-      <button id="btnPortal" class="btn btn-primary">Go to Learning Portal</button>
+  <!-- Hero Section -->
+  <section class="hero">
+    <div class="hero-content">
+      <h1>Connecting People with the Latest Digital Services & Platforms</h1>
+      <p>Empowering Nepal with modern digital tools and opportunities.</p>
+      <a href="#services" class="btn">Explore Our Services</a>
     </div>
-  </div>
-</section>
+  </section>
 
-<!-- FORM PAGE -->
-<section id="formPage" class="page">
-  <div class="card">
-    <h2>Please Enter Your Information !!!</h2>
-    <div class="field">
-      <label for="schoolInput">Name of School <span style="color:red;">*</span></label>
-      <input type="text" id="schoolInput" placeholder="e.g., Gyan Mandala Secondary School" />
+  <!-- Services Section -->
+  <section id="services" class="services">
+    <h2>Our Services</h2>
+    <div class="service-grid">
+      <div class="service-card">
+        <h3>Training</h3>
+        <p>Workshops and sessions to enhance digital literacy.</p>
+      </div>
+      <div class="service-card">
+        <h3>Digital Tools</h3>
+        <p>Access to innovative tools for learning and business.</p>
+      </div>
+      <div class="service-card">
+        <h3>Community Support</h3>
+        <p>Building networks and support systems for growth.</p>
+      </div>
     </div>
-    <div class="field">
-      <label for="studentInput">Your Full Name <span style="color:red;">*</span></label>
-      <input type="text" id="studentInput" placeholder="e.g., Rishi Kesh Acharya" />
+  </section>
+
+  <!-- Credit Card Highlight Section -->
+  <section class="highlight">
+    <div class="highlight-content">
+      <div class="highlight-text">
+        <h2>💳 Buy Global Credit Card Instantly</h2>
+        <p>
+          Unlock global opportunities with instant access to our digital credit card service.  
+          Enjoy exclusive benefits:
+        </p>
+        <ul>
+          <li>✔ Free trial registration in minutes</li>
+          <li>✔ Website upgrade facilities at no cost</li>
+          <li>✔ Safe & secure online transactions worldwide</li>
+        </ul>
+        <a href="card-pricing.html" class="btn highlight-btn">Get Started Now</a>
+      </div>
+      <div class="highlight-image">
+        <img src="credit-card.png" alt="Global Credit Card">
+      </div>
     </div>
-    <div class="field">
-      <label for="gradeSelect">Select Your Grade <span style="color:red;">*</span></label>
-      <select id="gradeSelect">
-        <option value="">Select Grade</option>
-      </select>
-    </div>
-    <div class="field">
-      <label for="subjectSelect">Select the Subject <span style="color:red;">*</span></label>
-      <select id="subjectSelect">
-        <option value="">Select Subject</option>
-      </select>
-    </div>
-    <!-- New Start Learning Button -->
-    <button id="startBtn" class="btn btn-primary" style="margin-top:10px;">Start Learning!</button>
-  </div>
-</section>
+  </section>
 
-<!-- LESSONS PAGE -->
-<section id="lessonsPage" class="page">
-  <div class="top-info" id="topInfoBar"></div>
-  <div class="lesson-guide">Please choose your lesson !!!</div>
-  <div class="lessons-grid" id="lessonsGrid"></div>
-</section>
-
-<footer>© 2025 Gyan Mandala Nepal-All Rights Reserved</footer>
-
-<script>
-const state = {
-  grades: Array.from({length:10}, (_,i) => i+1),
-  subjectsLow: [
-    {id:'maths', name:'Mathematics'},
-    {id:'english', name:'English'},
-    {id:'hamro', name:'Hamro Serophero'},
-    {id:'nepali', name:'Nepali'}
-  ],
-  subjectsHigh: [
-    {id:'maths', name:'Mathematics'},
-    {id:'english', name:'English'},
-    {id:'science', name:'Science'},
-    {id:'nepali', name:'Nepali'},
-    {id:'social', name:'Social Studies'}
-  ],
-  subjectNames: {
-    maths:'Mathematics',
-    english:'English',
-    hamro:'Hamro Serophero',
-    nepali:'Nepali',
-    science:'Science',
-    social:'Social Studies'
-  },
-  formComplete: false
-};
-const $ = s => document.querySelector(s);
-
-function populateGrades() {
-  const sel = $('#gradeSelect');
-  state.grades.forEach(g => {
-    const opt = document.createElement('option');
-    opt.value = g;
-    opt.textContent = `Class ${g}`;
-    sel.appendChild(opt);
-  });
-}
-function updateSubjects(grade) {
-  const sel = $('#subjectSelect');
-  sel.innerHTML = '<option value="">Select Subject</option>';
-  if(!grade || isNaN(grade)) return; // Fix: handle empty or invalid grade
-  const list = grade <= 3 ? state.subjectsLow : state.subjectsHigh;
-  list.forEach(s => {
-    const opt = document.createElement('option');
-    opt.value = s.id;
-    opt.textContent = s.name;
-    sel.appendChild(opt);
-  });
-}
-function showPage(id) {
-  if(id === '#formPage' && state.page !== '#homePage') return;
-  if(id === '#lessonsPage' && !state.formComplete) return;
-  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-  $(id).classList.add('active');
-  state.page = id;
-}
-function isValidCombo(grade, subjectId) {
-  const list = grade <= 3 ? state.subjectsLow : state.subjectsHigh;
-  return list.some(s => s.id === subjectId);
-}
-function startLearning() {
-  const school = $('#schoolInput').value.trim();
-  const student = $('#studentInput').value.trim();
-  const grade = parseInt($('#gradeSelect').value);
-  const subjectId = $('#subjectSelect').value;
-  if(!school || !student || !grade || !subjectId) {
-    alert('Please complete all required fields.');
-    return;
-  }
-  if(!isValidCombo(grade, subjectId)) {
-    alert('Invalid class–subject combination.');
-    return;
-  }
-  state.formComplete = true;
-  // Reordered pills: School, Student, Grade, Subject
-  $('#topInfoBar').innerHTML = `
-    <div class="info-pill">School: ${school}</div>
-    <div class="info-pill">Student: ${student}</div>
-    <div class="info-pill">Grade: ${grade}</div>
-    <div class="info-pill">Subject: ${state.subjectNames[subjectId]}</div>
-  `;
-  renderLessons();
-  showPage('#lessonsPage');
-}
-function renderLessons() {
-  const grid = $('#lessonsGrid');
-  grid.innerHTML = '';
-  // Get selected grade and subject
-  const grade = parseInt($('#gradeSelect').value);
-  const subjectId = $('#subjectSelect').value;
-  for(let i=1; i<=20; i++) {
-    const btn = document.createElement('div');
-    btn.className = 'lesson-tile';
-    // Special case for Grade 1 Maths, Lesson 1
-    if(i === 1 && grade === 1 && subjectId === 'maths') {
-      btn.textContent = '1. Size and Position';
-      btn.addEventListener('click', () => {
-        sessionStorage.setItem('allow1math1', 'yes'); // Set access flag
-        window.location.href = '1math1.html';
-      });
-    } else {
-      btn.textContent = `Lesson ${i}`;
-    }
-    grid.appendChild(btn);
-  }
-}
-
-// Events
-$('#btnPortal').addEventListener('click', () => showPage('#formPage'));
-$('#gradeSelect').addEventListener('change', e => updateSubjects(parseInt(e.target.value)));
-$('#startBtn').addEventListener('click', startLearning);
-$('#logo').addEventListener('click', () => showPage('#homePage'));
-
-populateGrades();
-state.page = '#homePage';
-</script>
+  <!-- Footer -->
+  <footer id="contact">
+    <p>📧 info@gyanmandalanepal.com | ☎ +977-9760827893</p>
+    <p>
+      <a href="https://www.facebook.com/gyanmandalanepal/" target="_blank" rel="noopener noreferrer">Facebook</a>
+      <a href="#">Twitter</a> | 
+      <a href="#">LinkedIn</a>
+    </p>
+    <p>© Gyan Mandala Nepal 2025</p>
+  </footer>
 </body>
 </html>
