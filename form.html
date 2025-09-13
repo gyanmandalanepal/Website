@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Virtual Card Demand Form - Gyan Mandala Nepal</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <!-- Navbar -->
+  <header>
+    <nav class="navbar">
+      <div class="logo">
+        <img src="Logo.png" alt="Gyan Mandala Nepal Logo">
+        <span>Gyan Mandala Nepal</span>
+      </div>
+      <ul class="nav-links">
+        <li><a href="index.html">Home</a></li>
+        <li><a href="card-pricing.html">Pricing</a></li>
+        <li><a href="form.html">Demand Form</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <!-- Form Section -->
+  <section class="form-section">
+    <h2>💳 Request Your Virtual Card</h2>
+    <form id="cardForm">
+      <label for="name">Full Name:</label>
+      <input type="text" id="name" name="name" required>
+
+      <label for="email">Email Address:</label>
+      <input type="email" id="email" name="email" required>
+
+      <label for="contact">Contact Number:</label>
+      <input type="tel" id="contact" name="contact" required>
+
+      <button type="submit" class="btn">Submit Request</button>
+    </form>
+
+    <p id="responseMsg"></p>
+  </section>
+
+  <!-- Footer -->
+  <footer>
+    <p>📧 info@gyanmandalanepal.com | ☎ +977-9760827893</p>
+    <p>
+      <a href="https://www.facebook.com/gyanmandalanepal/" target="_blank" rel="noopener noreferrer">Facebook</a> | 
+      <a href="#">Twitter</a> | 
+      <a href="#">LinkedIn</a>
+    </p>
+    <p>© 2025 Gyan Mandala Nepal</p>
+  </footer>
+
+  <script>
+    // 👇 Replace with your own Web App URL from Google Apps Script
+    const scriptURL = "https://script.google.com/macros/s/AKfycbwRu1rf17kPgqpbSEYJM_lC8oL_kr8n1g8Ybv3eJHLyCcNZxcQOE1jlgFzsUz41R5kOtQ/exec";
+
+    document.getElementById("cardForm").addEventListener("submit", async function(e) {
+      e.preventDefault();
+
+      const form = e.target;
+      const formData = new FormData(form);
+
+      try {
+        let res = await fetch(scriptURL, {
+          method: "POST",
+          body: formData
+        });
+
+        let text = await res.text(); // read raw response
+        document.getElementById("responseMsg").textContent = "✅ " + text;
+        form.reset();
+      } catch (err) {
+        document.getElementById("responseMsg").textContent = "❌ Error submitting request: " + err;
+      }
+    });
+  </script>
+</body>
+</html>
